@@ -1,39 +1,52 @@
 [submodule "TwitterInternalAPIDocument"]
 	path = TwitterInternalAPIDocument
 	url = https://github.com/fa0311/TwitterInternalAPIDocument
+	ignore = untracked
 [submodule "private_bot"]
 	path = private_bot
 	url = https://github.com/fa0311/private_bot
+	ignore = untracked
 [submodule "twitter-openapi"]
 	path = twitter-openapi
 	url = https://github.com/fa0311/twitter-openapi
+	ignore = untracked
 [submodule "twitter-openapi-typescript"]
 	path = twitter-openapi-typescript
 	url = https://github.com/fa0311/twitter-openapi-typescript
+	ignore = untracked
 [submodule "twitter-secrets"]
 	path = twitter-secrets
 	url = https://github.com/fa0311/twitter-secrets.git
+	ignore = untracked
 [submodule "twitter-snap"]
 	path = twitter-snap
 	url = https://github.com/fa0311/twitter-snap
+	ignore = untracked
 [submodule "twitter-snap-api"]
 	path = twitter-snap-api
 	url = https://github.com/fa0311/twitter-snap-api
+	ignore = untracked
 [submodule "twitter-snap-bookmarklet"]
 	path = twitter-snap-bookmarklet
 	url = https://github.com/fa0311/twitter-snap-bookmarklet
+	ignore = untracked
 [submodule "twitter-snap-discord"]
 	path = twitter-snap-discord
 	url = https://github.com/fa0311/twitter-snap-discord
+	ignore = untracked
 [submodule "twitter_api_safe_relay"]
 	path = twitter_api_safe_relay
 	url = https://github.com/fa0311/twitter_api_safe_relay
+	ignore = untracked
 [submodule "twitter_api_safe_relay_skills"]
 	path = twitter_api_safe_relay_skills
 	url = https://github.com/fa0311/twitter_api_safe_relay_skills
+	ignore = untracked
 [submodule "twitter_openapi_python"]
 	path = twitter_openapi_python
 	url = https://github.com/fa0311/twitter_openapi_python
+	ignore = untracked
 [submodule "x-client-transaction-id-pair-dict"]
 	path = x-client-transaction-id-pair-dict
 	url = https://github.com/fa0311/x-client-transaction-id-pair-dict
+	ignore = untracked

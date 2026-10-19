@@ -3,6 +3,7 @@
 Facts that are not derivable from the repos or the web. History and PR numbers are in git; the current state is in `/root/workspace/HANDOVER.md`.
 
 ## Sandbox
+- `/root/workspace` is a bind mount owned by the host user; as root, git needs `safe.directory` for it (bootstrap sets it). The workspace is a git repo with the project repositories as submodules.
 - Parallel Bash calls share one shell cwd: use absolute paths and `git -C`. `pkill -f` matches the calling shell; kill by pid.
 - GPG key is passphrase-protected; the sandbox agent is unlocked by the maintainer from a VS Code terminal (long cache TTL). sops uses the writable copy `GNUPGHOME=/root/.gnupg-rw`.
 - `gh` works for `pr create`, `pr checks`, `run list/view`; GraphQL-backed commands fail (token scopes). Merge / retarget / body edits / branch deletion go through `gh api` REST, and a branch is deleted only after `pulls?state=open&base=<branch>` is empty.

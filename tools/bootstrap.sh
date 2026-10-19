@@ -3,6 +3,8 @@
 # Idempotent: restores Claude's memory from the workspace backup, prepares GNUPGHOME for sops, and reports
 # which tools are missing with the install line that worked before.
 set -u
+# the bind mount is owned by the host user; git refuses to touch it as root without this
+git config --global --get-all safe.directory 2>/dev/null | grep -qx /root/workspace || git config --global --add safe.directory /root/workspace
 MEM=/root/.claude/projects/-root-workspace/memory
 if [ ! -f "$MEM/MEMORY.md" ] && [ -f /root/workspace/.claude/memory/MEMORY.md ]; then
   mkdir -p "$MEM" && cp /root/workspace/.claude/memory/*.md "$MEM"/ && echo "memory restored from /root/workspace/.claude/memory"
