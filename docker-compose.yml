@@ -1,11 +1,11 @@
 services:
-  sandbox-twitter:
+  twitter-ecosystem:
     build:
       context: ../
       dockerfile: Dockerfile
     env_file:
       - ../.env
-    container_name: 0000-sandbox-twitter
+    container_name: twitter-ecosystem
     command: ["/bin/sh", "-c", "sleep infinity"]
     volumes:
       - .:/root/workspace
