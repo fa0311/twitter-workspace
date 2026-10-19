@@ -8,3 +8,4 @@
 - [X frontend bundle facts](project-x-frontend-bundle-facts.md) — static logged-out HTML, two operation styles, TIAD is only a detector
 - [Design preferences](feedback-design-preferences-2026-10.md) — declarative typing, no dead compat, no schema sharing, enum policy, relay/clients ignorant of each other, recordings on instruction
 - [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json is @ptcpz3, the only account to drive; verify before use, never print values
+- [X tid frontends Oct 2026](project-x-tid-frontends-2026-10.md) — x-web vs responsive-web shells, tid not enforced on UserByScreenName, extract-browser initIdConverter broken, Lqm1 verified
