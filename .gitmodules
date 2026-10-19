@@ -1,0 +1,39 @@
+[submodule "TwitterInternalAPIDocument"]
+	path = TwitterInternalAPIDocument
+	url = https://github.com/fa0311/TwitterInternalAPIDocument
+[submodule "private_bot"]
+	path = private_bot
+	url = https://github.com/fa0311/private_bot
+[submodule "twitter-openapi"]
+	path = twitter-openapi
+	url = https://github.com/fa0311/twitter-openapi
+[submodule "twitter-openapi-typescript"]
+	path = twitter-openapi-typescript
+	url = https://github.com/fa0311/twitter-openapi-typescript
+[submodule "twitter-secrets"]
+	path = twitter-secrets
+	url = https://github.com/fa0311/twitter-secrets.git
+[submodule "twitter-snap"]
+	path = twitter-snap
+	url = https://github.com/fa0311/twitter-snap
+[submodule "twitter-snap-api"]
+	path = twitter-snap-api
+	url = https://github.com/fa0311/twitter-snap-api
+[submodule "twitter-snap-bookmarklet"]
+	path = twitter-snap-bookmarklet
+	url = https://github.com/fa0311/twitter-snap-bookmarklet
+[submodule "twitter-snap-discord"]
+	path = twitter-snap-discord
+	url = https://github.com/fa0311/twitter-snap-discord
+[submodule "twitter_api_safe_relay"]
+	path = twitter_api_safe_relay
+	url = https://github.com/fa0311/twitter_api_safe_relay
+[submodule "twitter_api_safe_relay_skills"]
+	path = twitter_api_safe_relay_skills
+	url = https://github.com/fa0311/twitter_api_safe_relay_skills
+[submodule "twitter_openapi_python"]
+	path = twitter_openapi_python
+	url = https://github.com/fa0311/twitter_openapi_python
+[submodule "x-client-transaction-id-pair-dict"]
+	path = x-client-transaction-id-pair-dict
+	url = https://github.com/fa0311/x-client-transaction-id-pair-dict

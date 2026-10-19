@@ -1,0 +1,10 @@
+- [fa0311, Twitter-ecosystem OSS maintainer](user-fa0311-twitter-oss-maintainer.md) — who the user is, repos they own, GPG key
+- [Working rules for Twitter-ecosystem sessions](feedback-twitter-ecosystem-working-rules.md) — PRs yes, GitHub comments no, GPG required, minimal error handling, full autonomy
+- [Standing tasks + environment facts](project-twitter-ecosystem-standing-tasks.md) — recurring tasks; what is not in CLAUDE.md / HANDOVER.md
+- [fa0311 preferences](user-fa0311-preferences.md) — libraries over hand-written code, favorite repos, protected branches, secrets repo, zero tolerance in twitter-openapi
+- [X drift Oct 2026 and current state](project-x-drift-2026-10.md) — durable X facts, versions shipped, pending decisions
+- [Stacked PR merging rules](feedback-stacked-pr-merging.md) — retarget children before deleting merged head branches; merge commits; LGTM gating
+- [CI pitfalls: pnpm 12, static ffmpeg, CRLF](project-ci-pitfalls-pnpm12-ffmpeg.md) — ignored-builds, lockfile packageManagerDependencies, ffmpeg segfault, biome CRLF
+- [X frontend bundle facts](project-x-frontend-bundle-facts.md) — static logged-out HTML, two operation styles, TIAD is only a detector
+- [Design preferences](feedback-design-preferences-2026-10.md) — declarative typing, no dead compat, no schema sharing, enum policy, relay/clients ignorant of each other, recordings on instruction
+- [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json must be @ptcpz3; the production twitter-snap account must never be recorded or tested with

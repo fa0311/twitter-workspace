@@ -1,0 +1,12 @@
+# secrets and account data: never in git
+cookie.json
+.sops/
+# derived / disposable
+.pnpm-store/
+twitter-openapi-browser-only/
+twitter-openapi-sweep3/
+recordings/
+tools/out/
+*.log
+.venv/
+__pycache__/
