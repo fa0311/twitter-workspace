@@ -18,7 +18,9 @@ git clone --recursive https://github.com/fa0311/twitter-workspace.git
 cd twitter-workspace && docker compose up -d
 ```
 
-Secrets (`cookie.json`, `.sops/`) and the recorded X responses (`recordings/`) are not part of the repository.
+`docker-compose.yml` expects the sandbox `Dockerfile` and an `.env` (with `GITHUB_TOKEN`) in the parent directory, and mounts the
+host's gh, ssh and GPG configuration read-only. Secrets (`cookie.json`, `.sops/`) and the recorded X responses (`recordings/`) are not
+part of the repository. Named volumes keep the agent's memory and the tool caches across container recreations.
 
 ## License
 

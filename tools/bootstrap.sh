@@ -9,6 +9,10 @@ MEM=/root/.claude/projects/-root-workspace/memory
 if [ ! -f "$MEM/MEMORY.md" ] && [ -f /root/workspace/.claude/memory/MEMORY.md ]; then
   mkdir -p "$MEM" && cp /root/workspace/.claude/memory/*.md "$MEM"/ && echo "memory restored from /root/workspace/.claude/memory"
 fi
+# long passphrase cache so one unlock by the maintainer lasts; the mounted key files are read-only but the agent config is ours
+if [ ! -f /root/.gnupg/gpg-agent.conf ]; then
+  printf 'default-cache-ttl 34560000\nmax-cache-ttl 34560000\nallow-preset-passphrase\nallow-loopback-pinentry\n' > /root/.gnupg/gpg-agent.conf && gpgconf --kill gpg-agent 2>/dev/null; echo "gpg-agent.conf written"
+fi
 # sops needs a writable GNUPGHOME; the mounted /root/.gnupg files are read-only (see .sops/env.sh)
 if [ ! -d /root/.gnupg-rw ]; then
   mkdir -m700 /root/.gnupg-rw && cp -r /root/.gnupg/private-keys-v1.d /root/.gnupg/pubring.kbx /root/.gnupg/trustdb.gpg /root/.gnupg-rw/ && echo "/root/.gnupg-rw created"

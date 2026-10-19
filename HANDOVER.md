@@ -9,9 +9,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   repositories are submodules pinned at the commits in use. To rebuild elsewhere: `git clone --recursive <workspace remote> /root/workspace`,
   then add `cookie.json` and `.sops/` from the maintainer. `recordings/`, `tools/out/`, the two spec worktrees and `.pnpm-store/` are
   ignored (large or derived); the recordings can be regenerated with `tools/sweep_tweets.py` and strict runs.
-- Only `/root/workspace` (bind mount) survives the container being recreated. `/root/.claude` does not: memory is mirrored in
-  `.claude/memory/`, and `sh tools/bootstrap.sh` restores it, recreates the writable GPG home sops needs, and reports missing tools.
-  Chat scratch space is wiped too; keep anything valuable under this directory.
+- `/root/workspace` is a bind mount; `/root/.claude` (memory, sessions), `/root/.cache` and `/root/.local` are named volumes since
+  2026-10-19, so they survive a recreate as long as the volumes are kept. Memory is still mirrored in `.claude/memory/` and
+  `sh tools/bootstrap.sh` restores it when needed, writes the gpg-agent config, recreates the writable GPG home sops needs and reports
+  missing tools. Chat scratch space (`/tmp`) is wiped; keep anything valuable under this directory.
 - Credentials: `cookie.json` is the sandbox account @ptcpz3, the only account to drive (verify before use, never print values);
   `.sops/age-key.txt` decrypts `twitter-secrets/secrets.enc.yaml`; GPG key material and `gh` config are mounted read-only.
   If signing fails the gpg-agent is locked and the maintainer unlocks it from a VS Code terminal.

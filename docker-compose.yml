@@ -10,6 +10,9 @@ services:
     volumes:
       - .:/root/workspace
       - vscode-data:/root/.vscode-server
+      - claude-data:/root/.claude          # agent memory, sessions, settings
+      - tool-cache:/root/.cache             # Playwright browsers, uv and pnpm caches
+      - tool-local:/root/.local             # uv and other user-level installs
       - ${HOME}/.zshrc:/root/.zshrc:ro
       - ${HOME}/.ssh:/root/.ssh:ro
       - ${HOME}/.config/gh:/root/.config/gh:ro
@@ -21,3 +24,6 @@ services:
 
 volumes:
   vscode-data:
+  claude-data:
+  tool-cache:
+  tool-local:
