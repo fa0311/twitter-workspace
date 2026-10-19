@@ -7,4 +7,4 @@
 - [CI pitfalls: pnpm 12, static ffmpeg, CRLF](project-ci-pitfalls-pnpm12-ffmpeg.md) — ignored-builds, lockfile packageManagerDependencies, ffmpeg segfault, biome CRLF
 - [X frontend bundle facts](project-x-frontend-bundle-facts.md) — static logged-out HTML, two operation styles, TIAD is only a detector
 - [Design preferences](feedback-design-preferences-2026-10.md) — declarative typing, no dead compat, no schema sharing, enum policy, relay/clients ignorant of each other, recordings on instruction
-- [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json must be @ptcpz3; the production twitter-snap account must never be recorded or tested with
+- [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json is @ptcpz3, the only account to drive; verify before use, never print values

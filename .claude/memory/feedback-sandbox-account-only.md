@@ -1,14 +1,12 @@
 ---
 name: feedback-sandbox-account-only
-description: Only the sandbox account @ptcpz3 may be used for recording, tests and CI; the twitter-snap production account must never appear in cookies, placeholders or catalogs
+description: Every live call, recording and test uses the sandbox account @ptcpz3 in cookie.json; verify the account before touching X and never print cookie values
 metadata:
   type: feedback
 ---
 
-On 2026-10-16 the session in `cookie.json` (and every copy: worktrees, wrapper test dirs, the sops `cookie_json` secret) turned out to be the user's **production twitter-snap account** (user id 1788224200639160320, @the production twitter-snap account (id in twitter-secrets, never written down here)). The user replaced it with the **development sandbox account @ptcpz3**, which the strict harness already expects (`UserByScreenName == "ptcpz3"`).
+`/root/workspace/cookie.json` holds the session of the sandbox account **@ptcpz3**, the only account this workspace may drive. Before recording, testing or rotating secrets, confirm the session is that account (for example `UserByScreenName` for the viewer, or the `twid` cookie), and keep every copy (worktrees, wrapper test dirs, the sops secret) in step with it. Never print cookie values.
 
-**Why:** recordings put the logged-in account's id / screen name into placeholder.json, the relay catalog and generated docs (ListOwnerships, UsersVerifiedAvatars, GenericTimelineById's base64 timelineId, Likes, ProfileSpotlightsQuery, ...), and tests mutate the account.
+**Why:** the generated clients and the relay are tested against this account by many sessions; a wrong session would mix another account's data into recordings and placeholders.
 
-**How to apply:** before any recording, test or sops rotation, check the `twid` cookie of the file in use is not the production id; never print cookie values; scrub the production identifiers from anything public (placeholder, catalog, docs) and re-record on the sandbox account. Copies of cookie.json live in twitter-openapi, twitter-openapi-browser-only, TwitterInternalAPIDocument, twitter-snap-api, twitter_openapi_python/twitter_openapi_python, twitter-openapi-typescript/twitter-openapi-typescript (cookies.json). See [[user-fa0311-preferences]].
-
-The constraint is about *use* (never record, test or act with the production account); its id appearing in notes or commit history is not a problem for the maintainer (2026-10-19).
+**How to apply:** check the account once at session start, treat any other session as wrong and stop. Related: [[feedback-twitter-ecosystem-working-rules]].

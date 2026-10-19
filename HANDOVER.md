@@ -12,7 +12,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Only `/root/workspace` (bind mount) survives the container being recreated. `/root/.claude` does not: memory is mirrored in
   `.claude/memory/`, and `sh tools/bootstrap.sh` restores it, recreates the writable GPG home sops needs, and reports missing tools.
   Chat scratch space is wiped too; keep anything valuable under this directory.
-- Credentials: `cookie.json` is the sandbox account @ptcpz3 (never the production twitter-snap account, never print values);
+- Credentials: `cookie.json` is the sandbox account @ptcpz3, the only account to drive (verify before use, never print values);
   `.sops/age-key.txt` decrypts `twitter-secrets/secrets.enc.yaml`; GPG key material and `gh` config are mounted read-only.
   If signing fails the gpg-agent is locked and the maintainer unlocks it from a VS Code terminal.
 - The `gh` token has no GraphQL scopes: merging, retargeting and editing PR bodies go through `gh api` REST calls.
@@ -43,4 +43,3 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Drift seen but not acted on: TIAD shows newer queryIds for DelegatedAccountListQuery, affiliatesQuery, PremiumContentQuery,
   useSubscriptionProductDetailsQuery, AboutAccountQuery. X still accepts the old ids; a recording is the only valid fix.
 - Only one untyped spec site remains (`TweetInterstitialRevealText`). Sports-related HAR operations were skipped on purpose.
-- Decisions with the maintainer: yank or rewrite history for the 0.1.0-0.1.1 client docs that carried production identifiers; revoke the production session.
