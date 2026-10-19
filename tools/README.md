@@ -1,4 +1,4 @@
-# Local tools (not pushed to GitHub)
+# Tools of the workspace (tracked here, not in any project repository)
 
 Run them from a twitter-openapi checkout (`cd /root/workspace/twitter-openapi && uv run python /root/workspace/tools/<script>`); they import `tools/update_placeholder.py` and read `cookie.json` there. Never run two account-mutating scripts at once.
 
