@@ -10,3 +10,5 @@ On 2026-10-16 the session in `cookie.json` (and every copy: worktrees, wrapper t
 **Why:** recordings put the logged-in account's id / screen name into placeholder.json, the relay catalog and generated docs (ListOwnerships, UsersVerifiedAvatars, GenericTimelineById's base64 timelineId, Likes, ProfileSpotlightsQuery, ...), and tests mutate the account.
 
 **How to apply:** before any recording, test or sops rotation, check the `twid` cookie of the file in use is not the production id; never print cookie values; scrub the production identifiers from anything public (placeholder, catalog, docs) and re-record on the sandbox account. Copies of cookie.json live in twitter-openapi, twitter-openapi-browser-only, TwitterInternalAPIDocument, twitter-snap-api, twitter_openapi_python/twitter_openapi_python, twitter-openapi-typescript/twitter-openapi-typescript (cookies.json). See [[user-fa0311-preferences]].
+
+The constraint is about *use* (never record, test or act with the production account); its id appearing in notes or commit history is not a problem for the maintainer (2026-10-19).
