@@ -5,7 +5,7 @@ metadata:
   type: feedback
 ---
 
-On 2026-10-16 the session in `cookie.json` (and every copy: worktrees, wrapper test dirs, the sops `cookie_json` secret) turned out to be the user's **production twitter-snap account** (user id 1788224200639160320, @0y1kOJxopr65402). The user replaced it with the **development sandbox account @ptcpz3**, which the strict harness already expects (`UserByScreenName == "ptcpz3"`).
+On 2026-10-16 the session in `cookie.json` (and every copy: worktrees, wrapper test dirs, the sops `cookie_json` secret) turned out to be the user's **production twitter-snap account** (user id 1788224200639160320, @the production twitter-snap account (id in twitter-secrets, never written down here)). The user replaced it with the **development sandbox account @ptcpz3**, which the strict harness already expects (`UserByScreenName == "ptcpz3"`).
 
 **Why:** recordings put the logged-in account's id / screen name into placeholder.json, the relay catalog and generated docs (ListOwnerships, UsersVerifiedAvatars, GenericTimelineById's base64 timelineId, Likes, ProfileSpotlightsQuery, ...), and tests mutate the account.
 
