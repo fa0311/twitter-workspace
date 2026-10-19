@@ -1,11 +1,11 @@
 services:
-  twitter-ecosystem:
+  twitter-workspace:
     build:
       context: ../
       dockerfile: Dockerfile
     env_file:
       - ../.env
-    container_name: twitter-ecosystem
+    container_name: twitter-workspace
     command: ["/bin/sh", "-c", "sleep infinity"]
     volumes:
       - .:/root/workspace
