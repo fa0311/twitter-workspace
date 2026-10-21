@@ -37,10 +37,14 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-10-19)
+## State (2026-10-21)
 
-- Nothing open. Spec `main` clean on the nightly; clients 0.1.3 (lag `main` by one small nightly fix, next regeneration is 0.1.4 when
-  a batch justifies it); twitter-snap on ^0.1.3; relay 0.4.0 (everything under `/i/api`); spec, clients and relay cross-link in their docs.
+- Open, LGTM-gated: twitter-openapi #128 (nightly 2026-10-21: `AdMetadataContainer.remove_promoted_attribution_for_preroll`, strict 130/130),
+  twitter-snap-api #14 (`.gitignore` dist), dependabot bumps twitter_openapi_python #67 (ruff), twitter-openapi-typescript #156 (vitest)
+  and #157 (typescript 7, already used by twitter-snap and the relay). All CI-clean.
+- Clients 0.1.3 lag spec `main` by two small nightly fixes; regenerate as 0.1.4 when a batch justifies it. twitter-snap on ^0.1.3; relay 0.4.0.
+- The sandbox account was locked once (2026-10-20, cleared by the maintainer; symptoms in memory). Space out heavy live use: one strict
+  run per day on top of the nightly is the norm, sweeps only on instruction.
 - Drift seen but not acted on: TIAD shows newer queryIds for DelegatedAccountListQuery, affiliatesQuery, PremiumContentQuery,
   useSubscriptionProductDetailsQuery, AboutAccountQuery. X still accepts the old ids; a recording is the only valid fix.
 - Only one untyped spec site remains (`TweetInterstitialRevealText`). Sports-related HAR operations were skipped on purpose.
