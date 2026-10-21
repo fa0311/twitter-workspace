@@ -15,7 +15,8 @@ cookies = json.load(open("cookie.json"))
 if isinstance(cookies, list):
     cookies = {c["name"]: c["value"] for c in cookies}
 header = requests.get("https://raw.githubusercontent.com/fa0311/latest-user-agent/refs/heads/main/header.json", timeout=60).json()
-headers = {**ts.get_header(header, "chrome-fetch"), "authorization": "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
+headers = {**ts.get_header(header, "chrome-fetch"), "accept-encoding": "identity",  # requests cannot decode br / zstd
+           "authorization": "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA",
            "x-twitter-auth-type": "OAuth2Session", "x-twitter-client-language": "en", "x-twitter-active-user": "yes", "x-csrf-token": cookies["ct0"],
            "x-client-transaction-id": ts.get_transaction_id(name), "cookie": "; ".join(f"{k}={v}" for k, v in cookies.items()), "referer": "https://x.com/home"}
 params = {"variables": json.dumps(entry["variables"] | override)}
