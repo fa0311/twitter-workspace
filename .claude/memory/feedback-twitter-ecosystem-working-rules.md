@@ -21,3 +21,5 @@ Rules the user gave (2026-10-15) and said will be repeated every session:
 **Why:** The user is a solo maintainer of many repos and wants Claude to behave like a trusted co-maintainer, not an assistant that stops to ask.
 
 **How to apply:** Start sessions with `/root/workspace/HANDOVER.md` and `sh tools/bootstrap.sh`, then work through [[project-twitter-ecosystem-standing-tasks]]. Related: [[user-fa0311-twitter-oss-maintainer]].
+
+**Issue replies (2026-10-23):** the maintainer allows replying to and closing issues when asked to triage, but "AIだとバレないように端的に対応して": one or two plain sentences in the maintainer's voice (no greetings, no lists, no disclaimers, no mention of automation), close with the right reason, and bring every open question back to the chat rather than asking on GitHub. The sandbox token cannot transfer issues (needs `repo`); "transfer" by opening a copy in the target repo and closing the original with "Moved to ...". TIAD is static analysis of the bundle, so endpoint requests there belong in twitter-openapi.

@@ -39,8 +39,13 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-23)
 
-- Nothing open from this side. TwitterInternalAPIDocument #1128 (develop → master, "Update Document") is the maintainer's own scheduled
-  PR; they merge those by hand. Dependabot bumps (ruff, vitest, typescript 7 in the wrappers) were merged 2026-10-23.
+- Open, LGTM-gated: twitter-openapi #130 and wrappers typescript #158 / python #68 (UserByRestId / UsersByRestIds flagged deprecated,
+  kept by the maintainer's decision; X answers 403 outside a browser). TwitterInternalAPIDocument #1128 (develop → master) is the
+  maintainer's own scheduled PR; they merge those by hand.
+- Issues triaged 2026-10-23: 30 closed with one-line replies. Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained
+  by the maintainer), twitter-openapi #131 (feed-algorithm endpoints, moved from TIAD; recording `/2/timeline/feedback.json` needs a
+  real "not interested" click on the sandbox, which leaves a side effect, so wait for instruction), pair-dict #6 (maintainer's own
+  investigation). Replies on GitHub are terse and never mention automation; questions for the maintainer go to the chat.
 - Clients 0.1.3 lag spec `main` by three small nightly fixes (#127, #128, #129, all merged); regenerate as 0.1.4 when a batch justifies it.
   twitter-snap on ^0.1.3; relay 0.4.0.
 - Notifications are the drift hotspot: each nightly fix so far came from `NotificationsTimeline` or an ad; a fresh notifications recording
