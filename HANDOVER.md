@@ -39,9 +39,8 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-23)
 
-- Open, LGTM-gated: twitter-snap-api #14 (`.gitignore` dist), dependabot bumps twitter_openapi_python #67 (ruff), twitter-openapi-typescript #156 (vitest)
-  and #157 (typescript 7, already used by twitter-snap and the relay). All CI-clean. TwitterInternalAPIDocument #1128 (develop → master,
-  "Update Document") is the maintainer's own scheduled PR; they merge those by hand.
+- Nothing open from this side. TwitterInternalAPIDocument #1128 (develop → master, "Update Document") is the maintainer's own scheduled
+  PR; they merge those by hand. Dependabot bumps (ruff, vitest, typescript 7 in the wrappers) were merged 2026-10-23.
 - Clients 0.1.3 lag spec `main` by three small nightly fixes (#127, #128, #129, all merged); regenerate as 0.1.4 when a batch justifies it.
   twitter-snap on ^0.1.3; relay 0.4.0.
 - Notifications are the drift hotspot: each nightly fix so far came from `NotificationsTimeline` or an ad; a fresh notifications recording
