@@ -39,12 +39,11 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-26)
 
-- Open, LGTM-gated: twitter-openapi #134 (nightly 2026-10-26: `TimelineTweet.prerollMetadata`, video pre-roll ads; strict 130/130),
-  the deprecation trio twitter-openapi #130 / typescript #158 / python #68 (UserByRestId / UsersByRestIds kept but flagged), and
-  dependabot bumps: twitter-openapi #132 #133, twitter_openapi_python #69 #70, twitter-snap #80-#84, TIAD #1129 #1130. All CI-clean.
-  TwitterInternalAPIDocument #1131 (develop → master, "Update Document") is the maintainer's own scheduled PR; they merge those by hand.
-- Clients 0.1.3 lag spec `main` by the nightly fixes since #127; regenerate as 0.1.4 once #130 and #134 land (the deprecation flag
-  only reaches users through a regeneration). twitter-snap on ^0.1.3; relay 0.4.0.
+- Open, LGTM-gated once their e2e suites have run: twitter_openapi_python #72 and twitter-openapi-typescript #159 (clients 0.1.4 from spec
+  `8535fd9`; #159 also carries the TypeScript 7 build fix: `module: node16`, no `baseUrl` / `typeRoots`). Their e2e runs wait for the
+  account unlock; run them one at a time. Everything else LGTM'd on 2026-10-26 was merged (spec #130 #132 #133 #134, wrappers #158 #68,
+  dependabot in python / twitter-snap / TIAD). TwitterInternalAPIDocument #1131 (develop → master) is the maintainer's own scheduled PR.
+- After #72 / #159 merge: the TS lockfile follow-up PR, then twitter-snap to ^0.1.4 (lockfile), as for 0.1.3. twitter-snap on ^0.1.3; relay 0.4.0.
 - Issues triaged 2026-10-23 (30 closed). Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained by the maintainer),
   twitter-openapi #131 (feed-algorithm endpoints, moved from TIAD; recording `/2/timeline/feedback.json` needs a real "not interested"
   click on the sandbox, which leaves a side effect, so wait for instruction), pair-dict #6 (maintainer's own investigation). Replies on
