@@ -39,9 +39,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-26)
 
-- Open, LGTM-gated once their e2e suites have run: twitter_openapi_python #72 and twitter-openapi-typescript #159 (clients 0.1.4 from spec
-  `8535fd9`; #159 also carries the TypeScript 7 build fix: `module: node16`, no `baseUrl` / `typeRoots`). Their e2e runs wait for the
-  account unlock; run them one at a time. Everything else LGTM'd on 2026-10-26 was merged (spec #130 #132 #133 #134, wrappers #158 #68,
+- Open, LGTM-gated, e2e verified: twitter_openapi_python #72 (83 passed after a converter fix: `TweetUnavailable` / `TweetPreviewDisplay`
+  items are skipped like tombstones) and twitter-openapi-typescript #159 (89 passed; also the TypeScript 7 build fix: `module: node16`,
+  no `baseUrl` / `typeRoots`). Clients 0.1.4 from spec `8535fd9`. Everything else LGTM'd on 2026-10-26 was merged (spec #130 #132 #133 #134, wrappers #158 #68,
   dependabot in python / twitter-snap / TIAD). TwitterInternalAPIDocument #1131 (develop → master) is the maintainer's own scheduled PR.
 - After #72 / #159 merge: the TS lockfile follow-up PR, then twitter-snap to ^0.1.4 (lockfile), as for 0.1.3. twitter-snap on ^0.1.3; relay 0.4.0.
 - Issues triaged 2026-10-23 (30 closed). Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained by the maintainer),
