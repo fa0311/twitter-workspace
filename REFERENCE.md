@@ -8,6 +8,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - GPG key is passphrase-protected; the sandbox agent is unlocked by the maintainer from a VS Code terminal (long cache TTL). sops uses the writable copy `GNUPGHOME=/root/.gnupg-rw`.
 - `gh` works for `pr create`, `pr checks`, `run list/view`; GraphQL-backed commands fail (token scopes). Merge / retarget / body edits / branch deletion go through `gh api` REST, and a branch is deleted only after `pulls?state=open&base=<branch>` is empty.
 - Secrets: `source .sops/env.sh && SOPS_AGE_KEY_FILE=.sops/age-key.txt sops decrypt --extract '["proxy_list"]' twitter-secrets/secrets.enc.yaml` (same for `cookie_json`).
+- A nightly that fails before its first `Try:` line with a proxy connection error is a proxy outage, not drift: `gh run rerun <id> --failed` first.
 - The sandbox reaches X directly. GitHub-hosted runners get a Cloudflare challenge, so CI goes through the maintainer's HTTP CONNECT proxies (`proxy_list` in twitter-secrets, one `http://user:pass@host:port` per line, fastest first; exits fluctuate, so reruns are legitimate). Chromium only authenticates against HTTP proxies.
 
 ## X behaviour

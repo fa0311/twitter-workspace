@@ -37,19 +37,20 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-10-23)
+## State (2026-10-26)
 
-- Open, LGTM-gated: twitter-openapi #130 and wrappers typescript #158 / python #68 (UserByRestId / UsersByRestIds flagged deprecated,
-  kept by the maintainer's decision; X answers 403 outside a browser). TwitterInternalAPIDocument #1128 (develop → master) is the
-  maintainer's own scheduled PR; they merge those by hand.
-- Issues triaged 2026-10-23: 30 closed with one-line replies. Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained
-  by the maintainer), twitter-openapi #131 (feed-algorithm endpoints, moved from TIAD; recording `/2/timeline/feedback.json` needs a
-  real "not interested" click on the sandbox, which leaves a side effect, so wait for instruction), pair-dict #6 (maintainer's own
-  investigation). Replies on GitHub are terse and never mention automation; questions for the maintainer go to the chat.
-- Clients 0.1.3 lag spec `main` by three small nightly fixes (#127, #128, #129, all merged); regenerate as 0.1.4 when a batch justifies it.
-  twitter-snap on ^0.1.3; relay 0.4.0.
-- Notifications are the drift hotspot: each nightly fix so far came from `NotificationsTimeline` or an ad; a fresh notifications recording
-  belongs in every nightly investigation (`tools/graphql_get.py NotificationsTimeline` with `DUMP_TO`).
+- Open, LGTM-gated: twitter-openapi #134 (nightly 2026-10-26: `TimelineTweet.prerollMetadata`, video pre-roll ads; strict 130/130),
+  the deprecation trio twitter-openapi #130 / typescript #158 / python #68 (UserByRestId / UsersByRestIds kept but flagged), and
+  dependabot bumps: twitter-openapi #132 #133, twitter_openapi_python #69 #70, twitter-snap #80-#84, TIAD #1129 #1130. All CI-clean.
+  TwitterInternalAPIDocument #1131 (develop → master, "Update Document") is the maintainer's own scheduled PR; they merge those by hand.
+- Clients 0.1.3 lag spec `main` by the nightly fixes since #127; regenerate as 0.1.4 once #130 and #134 land (the deprecation flag
+  only reaches users through a regeneration). twitter-snap on ^0.1.3; relay 0.4.0.
+- Issues triaged 2026-10-23 (30 closed). Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained by the maintainer),
+  twitter-openapi #131 (feed-algorithm endpoints, moved from TIAD; recording `/2/timeline/feedback.json` needs a real "not interested"
+  click on the sandbox, which leaves a side effect, so wait for instruction), pair-dict #6 (maintainer's own investigation). Replies on
+  GitHub are terse and never mention automation; questions for the maintainer go to the chat.
+- Drift hotspots: notifications and ads. Each nightly fix so far came from `NotificationsTimeline` or a promoted / pre-roll item in
+  `HomeTimeline`; a nightly that fails before its first `Try:` line with a proxy connection error is infrastructure, rerun it first.
 - The sandbox account was locked once (2026-10-20, cleared by the maintainer; symptoms in memory). Space out heavy live use: one strict
   run per day on top of the nightly is the norm, sweeps only on instruction.
 - Drift seen but not acted on: TIAD shows newer queryIds for DelegatedAccountListQuery, affiliatesQuery, PremiumContentQuery,
