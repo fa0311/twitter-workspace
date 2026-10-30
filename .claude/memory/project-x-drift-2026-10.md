@@ -12,7 +12,7 @@ X facts that still shape the work (verified Oct 2026):
 - Enum values X keeps extending (Community Notes icons, feedback kinds, conversation sections) show up in every sweep; the enum policy in twitter-openapi `CONTRIBUTING.md` decides enum vs string.
 - The X bundle defines operations in two styles; TwitterInternalAPIDocument parses only one, so "gone from TIAD" never means gone. TIAD is a drift detector, never a source of placeholder values.
 
-Where things stand (2026-10-26): twitter-openapi main 252713a plus open #134 (pre-roll ads) and #130 (deprecations); nightly fixes #127-#129 merged; drift hotspots are notifications and ads; twitter-openapi `main` is clean on the nightly strict test; twitter_openapi_python / twitter-openapi-typescript 0.1.3 (spec 82d12f1 + helpers for every spec operation); twitter-snap on those; twitter_api_safe_relay 0.4.0 (everything under `/i/api`); docs cross-link spec, clients and relay. Five placeholder queryIds are newer in TIAD (DelegatedAccountListQuery, affiliatesQuery, PremiumContentQuery, useSubscriptionProductDetailsQuery, AboutAccountQuery) and await a recording on the maintainer's instruction.
+Where things stand (2026-10-30): clients 0.1.4 shipped from spec 8535fd9 (PyPI + npm); spec main 24b82ab adds #136 (ad click tracker override, mention user without core); follow-ups twitter-openapi-typescript #163 and twitter-snap #85 await LGTM; nightly fixes so far all came from notifications or ads;
 
 **Why:** the next session should start from the state, not rediscover it; the history is in the repos.
 

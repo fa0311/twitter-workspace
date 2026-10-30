@@ -37,14 +37,16 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-10-30)
+## State (2026-10-30, evening)
 
-- Open, LGTM-gated: twitter-openapi #136 (nightlies 10-27 / 10-29: ad `clickTrackingInfo.urlOverride`, `UserLabelMentionUser` without
-  `core`; strict 130/130), the verified 0.1.4 clients twitter_openapi_python #72 and twitter-openapi-typescript #159 (the
-  latter also fixes the TypeScript 7 build), and dependabot bumps twitter-openapi #135, python #71 #73, typescript #160 #161, TIAD #1132.
-  All CI-clean. TwitterInternalAPIDocument #1133 (develop → master) is the maintainer's own scheduled PR.
-- After #72 / #159 merge: the TS lockfile follow-up PR, then twitter-snap to ^0.1.4 (lockfile), as for 0.1.3. twitter-snap on ^0.1.3; relay 0.4.0.
-- Spec `main` (8535fd9) will lag the 0.1.4 clients by #136 once it lands; a 0.1.5 is not worth a release on its own.
+- Shipped 2026-10-30: spec #136 / #135, clients 0.1.4 (twitter_openapi_python #72, twitter-openapi-typescript #159 with the TypeScript 7
+  build fix) on PyPI and npm, dependabot bumps in python / typescript / TIAD.
+- Open, LGTM-gated follow-ups: twitter-openapi-typescript #163 (wrapper lockfile resolves generated 0.1.4) and twitter-snap #85
+  (^0.1.4 + lockfile; typecheck / build / 49 tests green locally). TwitterInternalAPIDocument #1133 (develop → master) is the
+  maintainer's own scheduled PR.
+- Spec `main` (24b82ab) is ahead of the 0.1.4 clients by #136 only; not worth a release on its own.
+- Publish workflows: a run can fail on a transient sigstore / registry step while a later run on the same version succeeds (seen for
+  python 0.1.4); check the registry version before treating a red publish run as a problem.
 - Issues triaged 2026-10-23 (30 closed). Left open on purpose: twitter-openapi #33 (missing-API checklist, maintained by the maintainer),
   twitter-openapi #131 (feed-algorithm endpoints, moved from TIAD; recording `/2/timeline/feedback.json` needs a real "not interested"
   click on the sandbox, which leaves a side effect, so wait for instruction), pair-dict #6 (maintainer's own investigation). Replies on
