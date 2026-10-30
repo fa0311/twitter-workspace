@@ -1,8 +1,11 @@
 ---
 name: feedback-design-preferences-2026-10
-description: fa0311's design calls - declarative typed definitions, no dead compatibility, POST where X uses it, recordings and guest runs on instruction only, no schema sharing across sites, enum policy, relay and clients ignorant of each other, simple GitHub Actions
+description: "fa0311's design calls - declarative typed definitions, no dead compatibility, POST where X uses it, recordings and guest runs on instruction only, no schema sharing across sites, enum policy, relay and clients ignorant of each other, simple GitHub Actions"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 0650167e-5ffa-4364-b61a-870599f5819c
+  modified: 2026-10-30T16:40:29.726Z
 ---
 
 - **Declarative over procedural**: registries are typed literal definitions, not registration calls (twitter-snap's render definitions).
@@ -13,6 +16,7 @@ metadata:
 - **Enum policy** ("腕の見せ所"; "重要な部分は攻めて、内部のどうでもいい値はどうでもいい"): enum when the value decides shape or branching, or is user-facing and closed; plain string with known values in a comment for UI plumbing. twitter-snap is the reference consumer. Written in twitter-openapi `CONTRIBUTING.md`.
 - **Relay and clients know nothing of each other**: the typed clients only document that the endpoint is configurable; the relay README carries the recipe.
 - **GitHub Actions stay simple and readable**: one `jq` line over shell gymnastics; an action's own option over a hand-rolled check.
+- **twitter-snap wraps text like a browser (UAX #14), no prettier**: phrase-level Japanese wrapping (BudouX / `word-break: auto-phrase`) was offered with sample images and declined ("不要", 2026-10-30). Images should break lines where X.com does.
 - **TIAD**: avoid changes unless asked.
 
 **Why:** these settle recurring judgement calls so they are not re-asked.
