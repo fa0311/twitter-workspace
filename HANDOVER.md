@@ -43,7 +43,8 @@ This file holds what those cannot: the environment and the state of the work. Up
   build fix) on PyPI and npm, dependabot bumps in python / typescript / TIAD.
 - Follow-ups merged the same day: twitter-openapi-typescript #163 (wrapper lockfile) and twitter-snap #85 (^0.1.4). Nothing open from
   this side; TwitterInternalAPIDocument #1133 (develop → master) is the maintainer's own scheduled PR. twitter-snap on ^0.1.4; relay 0.4.0.
-- twitter-snap #86 (merged 2026-10-30, not yet released): text wrapping comes from `linebreak` (UAX #14) instead of one flex item
+- twitter-snap 0.1.2 released 2026-10-30 (#87; publish.yml publishes on master when the version is new on npm, registry lagged ~1 min
+  behind the green run). It carries #85 (^0.1.4) and #86: text wrapping comes from `linebreak` (UAX #14) instead of one flex item
   per non-Latin character, so Japanese no longer breaks before 。、ー / small kana and newlines after non-Latin characters are kept.
   Verified with guest renders (build `dist` first: `bin/dev.js` runs the stale dist). Phrase-level wrapping (BudouX) was offered and
   declined: wrapping stays browser-equivalent.
