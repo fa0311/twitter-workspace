@@ -40,7 +40,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 ## State (2026-10-30)
 
 - Open, LGTM-gated: twitter-openapi #136 (nightlies 10-27 / 10-29: ad `clickTrackingInfo.urlOverride`, `UserLabelMentionUser` without
-  `core`; strict on the branch pending), the verified 0.1.4 clients twitter_openapi_python #72 and twitter-openapi-typescript #159 (the
+  `core`; strict 130/130), the verified 0.1.4 clients twitter_openapi_python #72 and twitter-openapi-typescript #159 (the
   latter also fixes the TypeScript 7 build), and dependabot bumps twitter-openapi #135, python #71 #73, typescript #160 #161, TIAD #1132.
   All CI-clean. TwitterInternalAPIDocument #1133 (develop → master) is the maintainer's own scheduled PR.
 - After #72 / #159 merge: the TS lockfile follow-up PR, then twitter-snap to ^0.1.4 (lockfile), as for 0.1.3. twitter-snap on ^0.1.3; relay 0.4.0.
