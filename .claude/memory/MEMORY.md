@@ -10,3 +10,4 @@
 - [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json is @ptcpz3, the only account to drive; verify before use, never print values
 - [X tid frontends Oct 2026](project-x-tid-frontends-2026-10.md) — x-web vs responsive-web shells, tid not enforced on UserByScreenName, extract-browser initIdConverter broken, Lqm1 verified
 - [twitter-snap dev facts](project-twitter-snap-dev-facts.md) — master is default; bin/dev.js runs stale dist (build first); guest renders need no cookie; text = flex-wrap of UAX#14 units
+- [Screenshot location and sample choice](feedback-screenshots.md) — ./screenshot/{date}/, samples must be pleasant to look at
