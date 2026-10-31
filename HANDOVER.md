@@ -60,7 +60,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   defaults to 600). The shared renderer moved closer to the browser, so the other themes changed slightly (line heights, photo carousel,
   quote box, count format, framed video blank); approved by the maintainer ("既存テーマのデザインが若干変わっても良い"). Renders in
   `screenshot/2026-10-31/xref-*.png` next to `x-reference-*.png` (real page) and `default-*-after.png`. Measurements: 12 posts dumped
-  with `tools/x_dom_styles.py` (JSON in the session scratchpad only; re-dump when needed). Merge order: #88 first, then #89 retargeted.
+  with `tools/x_dom_styles.py` (JSON in the session scratchpad only; re-dump when needed). Second commit (0e8243f): videos sit in the media row / carousel like
+  photos (poster + duration pill on images; on video output the first video's frame is painted `#ff00fe` and found again on the rendered
+  PNG with `pngjs`, overlay done in RGB so the marker's chroma does not bleed), whitespace-only lines are blank lines. Merge order: #88 first,
+  then #89 retargeted.
 
 ## State (2026-10-30, evening)
 
