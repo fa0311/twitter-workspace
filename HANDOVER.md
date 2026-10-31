@@ -64,8 +64,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   photos (poster + duration pill on images; on video output the first video's frame is painted `#ff00fe` and found again on the rendered
   PNG with `pngjs`, overlay done in RGB so the marker's chroma does not bleed), whitespace-only lines are blank lines. Third commit: each video's frame has its own marker (`#ff00fe`, `#ff00fd`, …) and
   every video plays in its own frame (first video's sound; frames cut off by the carousel get none); quoted dates always carry the
-  year. `test.yml` runs only for PRs against master, so the stacked PR shows no CI until it is retargeted. mp4 samples are in
-  `screenshot/2026-10-31/*.mp4`. Merge order: #88 first, then #89 retargeted.
+  year. `test.yml` runs only for PRs against master, so the stacked PR shows no CI until it is retargeted. Fourth commit: media stacked at full width again (master's layout, every photo stays in the picture), videos one after
+  another in one marker-colored frame, and a `timeDependent` flag: the X theme shows views / counts / time left / controls, the plain
+  themes do not (no views, running polls show choices + end date). Screenshots: `screenshot/2026-10-31/{x-reference,default,x.com}/<sample>.png`
+  plus mp4 samples under `x-reference/`. Merge order: #88 first, then #89 retargeted.
 
 ## State (2026-10-30, evening)
 

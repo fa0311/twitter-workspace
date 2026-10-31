@@ -9,4 +9,6 @@ Screenshots and before / after renders the maintainer should look at go to `/roo
 
 **Why:** the maintainer opens the images from VS Code at any time, including over meals, and a fixed dated folder is easy to find.
 
+Layout since 2026-10-31 (after "わかりにくい" about a flat folder of 38 files): `screenshot/{date}/<theme>/<sample>.png` with subfolders such as `x-reference/`, `default/`, `x.com/` (the real page), the same sample names in each, and mp4 samples next to their `-frame.png`.
+
 **How to apply:** render samples into `screenshot/{date}/`, name them `<feature>-before.png` / `<feature>-after.png` (`-dark` for the dark theme), check the media of a candidate tweet before using it, and point to the folder in the chat. Related: [[feedback-design-preferences-2026-10]], [[project-twitter-snap-dev-facts]].
