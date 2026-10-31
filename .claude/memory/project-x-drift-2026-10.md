@@ -12,7 +12,7 @@ X facts that still shape the work (verified Oct 2026):
 - Enum values X keeps extending (Community Notes icons, feedback kinds, conversation sections) show up in every sweep; the enum policy in twitter-openapi `CONTRIBUTING.md` decides enum vs string.
 - The X bundle defines operations in two styles; TwitterInternalAPIDocument parses only one, so "gone from TIAD" never means gone. TIAD is a drift detector, never a source of placeholder values.
 
-Where things stand (2026-10-31): clients 0.1.4 shipped from spec 8535fd9 (PyPI + npm); spec main 24b82ab adds #136 (ad click tracker override, mention user without core); twitter-snap 0.2.0 released 2026-10-31 (polls, Community Notes, RenderXReference themes, shared renderer closer to the browser); nightly fixes so far all came from notifications or ads;
+Where things stand (2026-10-31): clients 0.1.4 shipped from spec 8535fd9 (PyPI + npm); spec main 24b82ab adds #136 (ad click tracker override, mention user without core); twitter-snap 0.2.1 released 2026-10-31 (0.2.0: polls, Community Notes, RenderXReference themes, shared renderer closer to the browser; 0.2.1: marker rows under videos fixed, README samples); nightly fixes so far all came from notifications or ads;
 
 **Why:** the next session should start from the state, not rediscover it; the history is in the repos.
 
