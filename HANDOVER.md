@@ -39,17 +39,19 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-31)
 
-- Open PRs from this side, all awaiting the maintainer's LGTM (2026-10-31 evening, "4まで並列してやろう" batch):
-  twitter-snap #92 `--thread` (the author's self-reply chain through a tweet in one image / video; also honors
-  `displayTextRange` for every tweet and composes several video frames one after another); twitter_api_safe_relay #40
-  rate-limit visibility (X's `x-rate-limit-*` headers passed through on relay responses, latest per profile x endpoint in
-  `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2) and #41 (README recipe for the endpoint factories, merge after
-  the client releases); twitter-openapi-typescript #165 `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75
-  `get_client_from_endpoint(host, headers)` (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5,
-  publish on merge). Verified end to end: a relay built from #40 with the sandbox session answered both factories and the typed
-  clients read the rate-limit headers from it. twitter-snap #93 `--translate <lang>` (sets `x-twitter-client-language` on the session and renders the embedded
-  Grok translation under the original text with x.com's "Translated from <language>" line; needs a logged-in session, a guest
-  gets `is_available: false`). Local checkouts are back on their default branches; the PR branches live on GitHub.
+- Merged 2026-10-31 night on the maintainer's LGTM, with merge commits, head branches deleted: twitter-snap #99 (README trim),
+  #92 `--thread` (the author's self-reply chain through a tweet in one image / video; honors `displayTextRange`; composes several
+  video frames one after another) and #93 `--translate <lang>` (sets `x-twitter-client-language` on the session and shows the
+  post as x.com shows a translated post, see below). master is 9c5324d; not released yet (last release 0.2.1), the release is
+  the maintainer's call. #92 and #93 both touched the README example block and `tweetRender`, so each later one got master
+  merged in (a merge commit, not a rebase: the branches had two commits whose intermediate state conflicted) and CI ran again
+  before the merge; the resolved tree was verified by rendering a thread and a translation from it.
+- Still open from this side, awaiting LGTM: twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*` headers
+  passed through on relay responses, latest per profile x endpoint in `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2)
+  and #41 (README recipe for the endpoint factories, merge after the client releases); twitter-openapi-typescript #165
+  `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75 `get_client_from_endpoint(host, headers)`
+  (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5, publish on merge). Verified end to end: a
+  relay built from #40 with the sandbox session answered both factories and the typed clients read the rate-limit headers from it.
 - README policy settled 2026-10-31 ("READMEいじる意味ある？"): twitter-snap's README is a list of one-line examples plus the oclif
   usage block; features get `# comment` + command in the example block and nothing else. No explanatory paragraphs (PR description)
   and no per-feature sample images in `docs/img` (samples: issue #47, or `screenshot/` for the maintainer). #92 and #93 were trimmed
@@ -67,7 +69,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   `tools/x_dom_styles.py` (`tools/out/translate_ui/`, screenshots copied to `screenshot/2026-10-31/translate/x.com-{light,dark}.png`):
   the translation replaces the text; above it a 13/16 line "[Grok] Translated from Japanese  Show original [gear]" (4px above,
   24px to the text), below it "Rate this translation: [thumbs]" (14/16, 24px buttons with 16px icons, 12px above), then the media.
-  twitter-snap #93 now does the same: every theme swaps the text for the translation under a Grok-marked line; the X reference
+  twitter-snap (#93, merged) does the same: every theme swaps the text for the translation under a Grok-marked line; the X reference
   theme adds Show original, the gear and the rating row; the plain themes keep only the line (page controls stay out of them).
   The original text is no longer in the image, as on x.com.
 - Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10),
