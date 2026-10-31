@@ -50,6 +50,14 @@ This file holds what those cannot: the environment and the state of the work. Up
   clients read the rate-limit headers from it. twitter-snap #93 `--translate <lang>` (sets `x-twitter-client-language` on the session and renders the embedded
   Grok translation under the original text with x.com's "Translated from <language>" line; needs a logged-in session, a guest
   gets `is_available: false`). Local checkouts are back on their default branches; the PR branches live on GitHub.
+- README policy settled 2026-10-31 ("READMEいじる意味ある？"): twitter-snap's README is a list of one-line examples plus the oclif
+  usage block; features get `# comment` + command in the example block and nothing else. No explanatory paragraphs (PR description)
+  and no per-feature sample images in `docs/img` (samples: issue #47, or `screenshot/` for the maintainer). #92 and #93 were trimmed
+  to that shape and twitter-snap #99 does the same to the merged x.com reference section (drops its paragraph and four images,
+  1 MB). The three PRs touch the same example block, so whichever merges later is rebased.
+- Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10)
+  merged with merge commits, branches deleted (master 7cc142f). #95 (@oclif/plugin-warn-if-update-available) and #96
+  (@oclif/plugin-help) conflicted on the lockfile after the first merge and wait for dependabot's rebase + green CI.
 - Translation (recorded 2026-10-31, `recordings/translate/`, tools `record_translate.py` / `rest_call.py`): x.com no longer calls
   a translation endpoint for posts. TweetDetail / TweetResultByRestId carry `grok_translated_post_with_availability` (already
   typed) and the destination language follows the request header `x-twitter-client-language`; replies are often

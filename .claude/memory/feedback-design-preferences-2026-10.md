@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 0650167e-5ffa-4364-b61a-870599f5819c
-  modified: 2026-10-30T16:40:29.726Z
+  modified: 2026-10-31T16:40:00.000Z
 ---
 
 - **Declarative over procedural**: registries are typed literal definitions, not registration calls (twitter-snap's render definitions).
@@ -21,6 +21,7 @@ metadata:
 - **Two premises for twitter-snap themes** (2026-10-31): the plain themes are read later and must not depend on when the snap was taken (no views, a running poll shows choices + end date, no page controls); the X reference theme may depend on the moment (views, counts, time left, mute / Grok / more / Rate it / share) and copies the web as far as it can. Both keep media complete: photos stacked at full width at their own proportions (master's layout, "画像の比率はツイートごとにかなり異なる"), videos one after another in one frame; x.com's carousel is not copied because media falls out of the picture ("致命的").
 - **Dates in snapshots always carry the year** (2026-10-31, quoted tweets: "Oct 22, 2024 みたいな表示固定でいい、わかりにくい"): x.com drops the year inside the current year, twitter-snap does not, because the image is read later.
 - **No helper whose semantics are debatable** (2026-10-31, `paginate()` PRs closed unmerged: "議論の余地があるなら実装しないほうが良い"): a cursor loop, its limit, rate-limit waiting and cancellation are the caller's responsibility; the wrappers expose the cursor and the rate-limit headers and stop there. Prefer no API over an API with arguable defaults.
+- **twitter-snap README stays a list of one-line examples** (2026-10-31, "READMEいじる意味ある？ x.com reference theme の時も思った"): a feature gets `# comment` + command in the example block, nothing more. No explanatory paragraphs (they belong in the PR description), no per-feature sample images in `docs/img` (samples go to issue #47 by the maintainer, or to `screenshot/` for them to look at); the oclif usage block (`node replace.js`) documents the flags. The x.com reference / Thread / Translation sections were trimmed back to one line each (#99, #92, #93).
 - **TIAD**: avoid changes unless asked.
 - **Feature ideas 2026-10-31**: the maintainer approved the idea list (twitter-snap poll / Community Notes rendering and thread mode, client pagination iterators and relay session helper, translation API after recording, MCP snap tool, relay rate-limit visibility, spec candidates from the relay catalog) and declined a catalog freshness check in CI (`recordedAt` age warning): not wanted. **X reference theme (approved 2026-10-31, "いいね！")**: a twitter-snap theme that reproduces the x.com tweet layout from measured values; it may share code with the existing themes and the existing themes' design may shift slightly as a result ("既存テーマと共通化してもいいよ、既存テーマのデザインが若干変わっても良い"). Translation, when it comes, takes the target language as an explicit argument (`--translate <lang>` style): X now renders in the viewer's translation language by default, so an implicit default would be ambiguous (2026-10-31).
 
