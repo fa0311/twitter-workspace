@@ -62,8 +62,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   `screenshot/2026-10-31/xref-*.png` next to `x-reference-*.png` (real page) and `default-*-after.png`. Measurements: 12 posts dumped
   with `tools/x_dom_styles.py` (JSON in the session scratchpad only; re-dump when needed). Second commit (0e8243f): videos sit in the media row / carousel like
   photos (poster + duration pill on images; on video output the first video's frame is painted `#ff00fe` and found again on the rendered
-  PNG with `pngjs`, overlay done in RGB so the marker's chroma does not bleed), whitespace-only lines are blank lines. Merge order: #88 first,
-  then #89 retargeted.
+  PNG with `pngjs`, overlay done in RGB so the marker's chroma does not bleed), whitespace-only lines are blank lines. Third commit: each video's frame has its own marker (`#ff00fe`, `#ff00fd`, …) and
+  every video plays in its own frame (first video's sound; frames cut off by the carousel get none); quoted dates always carry the
+  year. `test.yml` runs only for PRs against master, so the stacked PR shows no CI until it is retargeted. mp4 samples are in
+  `screenshot/2026-10-31/*.mp4`. Merge order: #88 first, then #89 retargeted.
 
 ## State (2026-10-30, evening)
 
