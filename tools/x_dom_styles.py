@@ -2,8 +2,10 @@
 every element in it (light and dark), as the reference for twitter-snap layout work.
 
     uv run --project /root/workspace/twitter-openapi python -I tools/x_dom_styles.py <outdir> <name>=<url> ...
+
+ARTICLES=all takes the whole conversation column instead (every <article> of the thread view, screenshot and styles).
 """
-import json, sys, time
+import json, os, sys, time
 from playwright.sync_api import sync_playwright
 
 out = sys.argv[1]
@@ -44,7 +46,10 @@ with sync_playwright() as p:
             time.sleep(4)
             if "/account/access" in page.url:
                 print("LOCKED 326"); sys.exit(1)
-            article = page.locator('article[data-testid="tweet"]').first
+            if os.environ.get("ARTICLES") == "all":
+                article = page.locator('[aria-label="Timeline: Conversation"]').first
+            else:
+                article = page.locator('article[data-testid="tweet"]').first
             article.screenshot(path=f"{out}/{name}-{theme}.png")
             rows = article.evaluate(JS)
             json.dump(rows, open(f"{out}/{name}-{theme}.json", "w"), ensure_ascii=False, indent=0)

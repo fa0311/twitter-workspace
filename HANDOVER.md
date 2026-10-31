@@ -39,6 +39,22 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-31)
 
+- Open PRs from this side, all awaiting the maintainer's LGTM (2026-10-31 evening, "4まで並列してやろう" batch):
+  twitter-snap #92 `--thread` (the author's self-reply chain through a tweet in one image / video; also honors
+  `displayTextRange` for every tweet and composes several video frames one after another); twitter_api_safe_relay #40
+  rate-limit visibility (X's `x-rate-limit-*` headers passed through on relay responses, latest per profile x endpoint in
+  `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2) and #41 (README recipe for the endpoint factories, merge after
+  the client releases); twitter-openapi-typescript #165 `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75
+  `get_client_from_endpoint(host, headers)` (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5,
+  publish on merge). Verified end to end: a relay built from #40 with the sandbox session answered both factories and the typed
+  clients read the rate-limit headers from it. twitter-snap `--translate <lang>` (branch `feat/translate`, worktree in the chat
+  scratchpad) was in progress when the session ended; check `gh pr list -R fa0311/twitter-snap`.
+- Translation (recorded 2026-10-31, `recordings/translate/`, tools `record_translate.py` / `rest_call.py`): x.com no longer calls
+  a translation endpoint for posts. TweetDetail / TweetResultByRestId carry `grok_translated_post_with_availability` (already
+  typed) and the destination language follows the request header `x-twitter-client-language`; replies are often
+  `is_available: false` until someone clicks. On-demand translation is a Grok streaming POST (`/2/grok/translation.json`, NDJSON
+  without content-type) that the generated clients cannot consume, and the old strato `translateTweet` is only a code fallback the
+  web client no longer sends. So: no spec change; twitter-snap sets the header itself and renders the embedded translation.
 - twitter-snap #88 (polls + Community Notes) and #89 (RenderXReference theme) were merged 2026-10-31 with merge commits (master
   a9eb14c), head branches deleted. Released as twitter-snap 0.2.0 the same day (#90 `release/0.2.0`, merge 3e39f38, publish run
   41186046218, npm shows 0.2.0; the README usage block was refreshed with `node replace.js` after a build). 0.2.0 has a defect:
@@ -47,20 +63,23 @@ This file holds what those cannot: the environment and the state of the work. Up
   the x.com reference samples: Elon Musk and official accounts only, never private individuals (also scrubbed from the #88 / #89
   descriptions). `test.yml` runs only for PRs against master and a
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
-  stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
-  `video2.mp4` was still re-rendering with the final code when the session ended).
+  stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com,thread,translate}/`.
 - Merged 2026-10-31 evening: twitter-snap-api #15 (twitter-snap ^0.2.1, LGTM'd) and the dependabot batch the maintainer delegated
   (twitter-openapi #137 / #138, twitter-openapi-typescript #162, TwitterInternalAPIDocument #1135–#1137), all with merge commits,
-  branches deleted. Nothing is open in the ecosystem from this side.
+  branches deleted. Dependabot merges are delegated from now on (CI first where a repo has it, merge commits).
 - `paginate()` (twitter-openapi-typescript #164, twitter_openapi_python #74) was closed unmerged: limit / waiting / cancellation are the
-  caller's business, and a helper with debatable semantics is worse than none. Backlog item 2 is therefore done-by-decision.
-- Backlog after that (approved order): relay session helper in the clients, thread mode in twitter-snap, translation (recording first,
-  language as an argument), `snap_tweet` MCP tool, rate-limit visibility in the relay, spec candidates from the relay catalog.
+  caller's business, and a helper with debatable semantics is worse than none.
+- Backlog after this batch: `snap_tweet` MCP tool (where it lives is undecided), spec candidates from the relay catalog (recording
+  only on instruction). Waiting on the maintainer: twitter-openapi #131 feedback.json recording, TIAD queryId drift recordings,
+  whether to delete `screenshot/2026-10-31/`.
 - Design decisions of 2026-10-31 (also in memory): plain themes do not depend on when the snap was taken (no views, running polls show
   choices + end date, no controls); RenderXReference copies the page including views / counts / time left / controls; media is
   stacked at full width (x.com's carousel is not copied: media would fall out of the picture); videos play one after another in one
   frame found by its marker color; quoted dates always carry the year; width defaults stay 650 / 600 (both give x.com's 566px column).
+  A thread is the author's own reply chain through the tweet (never other people's tweets); ancestors and continuation are compact
+  with the avatar line, the tweet itself in full, as x.com's conversation page.
 - Guest TweetResultByRestId returns both the poll card and `birdwatch_pivot`, so renderer work for these needs no cookie.
+- The relay's `dispatch` resolves to X's parsed body only; response headers come from Playwright's `page.on("response")`.
 
 ## State (2026-10-30, evening)
 
