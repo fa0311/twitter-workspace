@@ -55,6 +55,12 @@ This file holds what those cannot: the environment and the state of the work. Up
   PinTimeline / UnpinTimeline, MuteList / UnmuteList, ListSubscribe, UpdateList, ConversationControlChange) — an operation enters the
   spec only after it was recorded from the real client and replayed live, on instruction. Declined: a catalog freshness check in CI.
 - Guest TweetResultByRestId returns both the poll card and `birdwatch_pivot`, so renderer work for these needs no cookie.
+- twitter-snap #89 (`feat/x-reference-theme` → `feat/poll-community-note`, stacked on #88) awaits an LGTM: themes `RenderXReference` /
+  `RenderXReferenceDark` rebuild x.com's post page from measured values (600px column, 17/24 text, icons, time line, action bar; width
+  defaults to 600). The shared renderer moved closer to the browser, so the other themes changed slightly (line heights, photo carousel,
+  quote box, count format, framed video blank); approved by the maintainer ("既存テーマのデザインが若干変わっても良い"). Renders in
+  `screenshot/2026-10-31/xref-*.png` next to `x-reference-*.png` (real page) and `default-*-after.png`. Measurements: 12 posts dumped
+  with `tools/x_dom_styles.py` (JSON in the session scratchpad only; re-dump when needed). Merge order: #88 first, then #89 retargeted.
 
 ## State (2026-10-30, evening)
 
