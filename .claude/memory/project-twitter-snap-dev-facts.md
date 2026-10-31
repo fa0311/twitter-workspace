@@ -15,6 +15,8 @@ twitter-snap (fa0311/twitter-snap) facts learned 2026-10-30:
 - `node bin/run.js <url> --sessionType="guest" --simpleLog -o=<path>` renders public tweets and pixiv artworks without any cookie, so renderer verification costs no sandbox-account calls. `--theme RenderMakeItAQuote` for the quote card.
 - Tweet text is laid out as a flex-wrap `<p>` of `<span display:flex>` units (satori has no inline flow); since PR fix/line-break the units come from `linebreak` (UAX #14, same lib satori uses) via `src/utils/text.ts`. A `height: 1em` spacer is applied only to blank-line units.
 - Old CI tests (`test/commands/*.test.ts`) run live with guest session; CI `test.yml` runs build/lint/typecheck/test on pull_request.
+- Guest `TweetResultByRestId` carries poll cards and `birdwatch_pivot` but never `callToAction` (rating row); a cookie session (`--sessionType=file --cookiesFile=/root/workspace/cookie.json`) renders the whole TweetDetail conversation, so a fixed `-o` name needs `--limit=1`.
+- Layout reference for X UI work: `tools/x_dom_styles.py` (Playwright + account cookie) dumps computed styles and screenshots of the real article; match sizes/colors from that, not from memory (2026-10-31: note box 16px radius, header band, 14px bold title, 13px footer outside the box).
 
 **Why:** the dev entry point fooled a first verification; guest rendering keeps the account-lock budget untouched.
 **How to apply:** build, then render with bin/run.js; compare before/after PNGs with `cmp`. See [[project-twitter-ecosystem-standing-tasks]].

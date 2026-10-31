@@ -13,6 +13,7 @@ Run them from a twitter-openapi checkout (`cd /root/workspace/twitter-openapi &&
 | `sweep_tweets.py <outdir>` | broad strict sweep (searches, user timelines, tweet details, lists, communities, notifications), rate-limit aware; `SWEEP_TERMS` / `SWEEP_NAMES` / `SWEEP_SEED` vary the sample; writes raws + `failures.json` (see `recordings/README.md`) |
 | `json_to_schema.py <response.json> <Op>` | drafts twitter-openapi style schemas from one recording (required = present in every sample); check its shared-type guesses |
 | `sweep_leftovers.py` | lists (`CLEAN=1` removes) leftovers of the recording scripts on the account: "placeholder check" lists, drafts, tweets |
+| `x_dom_styles.py <outdir> <name>=<url> ...` | opens tweet pages with the account, screenshots the main `<article>` and dumps the computed styles of its DOM (light + dark JSON) as the layout reference for twitter-snap: sizes, colors, spacing, icon paths |
 | `bootstrap.sh` | after a container recreate: restores Claude's memory from `.claude/memory/`, creates `/root/.gnupg-rw`, reports missing tools and the gpg / gh / cookie state |
 
 `out/` holds older recordings (`actions_recorded.json`, `pages_recorded*.json`, `responses/*.json`, part of the validation set) and screenshots.

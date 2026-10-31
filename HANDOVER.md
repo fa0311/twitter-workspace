@@ -42,6 +42,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 - twitter-snap #88 (`feat/poll-community-note` → master) is open and awaits an LGTM: poll cards render as bars (they were an empty link
   card) and a tweet's `birdwatch_pivot` renders as a Community Note box; the tweet body's line-breaking `<p>` became a shared `paragraph`
   widget and the three e2e tweets render byte-identical to master. Before / after PNGs: `screenshot/2026-10-31/` (screenshots always go to `screenshot/{date}/`, samples must be pleasant to look at).
+  Second commit lays the note box out as x.com does (measured with `tools/x_dom_styles.py`): header band + icon, body, rating row only
+  when the API sends `callToAction` (logged-in sessions; guests never get it), footer outside the box. `x-reference-*.png` in the
+  screenshot folder are the real x.com renders. A cookie session renders the whole conversation, so a fixed `-o` name needs `--limit=1`.
 - Feature backlog approved by the maintainer on 2026-10-31, in the order proposed: (1) poll / Community Notes in twitter-snap (#88);
   (2) pagination iterators in both clients, using the rate-limit headers to wait; (3) a relay session helper in the clients (no header
   building when the relay supplies the session); (4) thread mode in twitter-snap; (5) translation: needs a recording of the translate
