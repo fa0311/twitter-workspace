@@ -23,5 +23,7 @@ twitter-snap (fa0311/twitter-snap) facts learned 2026-10-30:
 - Video blank must have even inner sides (the video is scaled to even sides for yuv420p); an odd blank leaves marker-colored rows under the video (0.2.0 defect, fixed in 0.2.1). Check video renders with a full-frame scan for `r>150,g<120,b>150` pixels, not only the corners.
 - Layout reference for X UI work: `tools/x_dom_styles.py` (Playwright + account cookie) dumps computed styles and screenshots of the real article; match sizes/colors from that, not from memory (2026-10-31: note box 16px radius, header band, 14px bold title, 13px footer outside the box).
 
+- A status URL with a cookie session renders the conversation (TweetDetail) up to `--limit` (default 20), not just the tweet of the URL; a fixed `-o name.png` is overwritten by each entry and ends with a related post. For one tweet use `--limit 1` or keep `{id}` in the output name (2026-10-31).
+
 **Why:** the dev entry point fooled a first verification; guest rendering keeps the account-lock budget untouched.
 **How to apply:** build, then render with bin/run.js; compare before/after PNGs with `cmp`. See [[project-twitter-ecosystem-standing-tasks]].

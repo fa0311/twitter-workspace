@@ -55,6 +55,14 @@ This file holds what those cannot: the environment and the state of the work. Up
   and no per-feature sample images in `docs/img` (samples: issue #47, or `screenshot/` for the maintainer). #92 and #93 were trimmed
   to that shape and twitter-snap #99 does the same to the merged x.com reference section (drops its paragraph and four images,
   1 MB). The three PRs touch the same example block, so whichever merges later is rebased.
+  Review material for the maintainer (the earlier renders had disappeared from `screenshot/2026-10-31/`, the folder is
+  gitignored): `screenshot/2026-10-31/readme/` holds every README version rendered with GitHub's own markdown API
+  (`gh api /markdown`) + github-markdown-css in Playwright (`<version>.png` full page, `<version>-examples.png` the example block;
+  `all-merged` is a local composition of the three PRs); `thread/` and `translate/` hold fresh renders from the PR heads
+  (SpaceX EVA thread 1786759044948189202, Tesla Japan 2113567187046993971 with `--translate en`, four themes each, cookie
+  session, 13 account calls, no 326). Pitfall met on the way: with a cookie session a status URL renders the whole
+  conversation up to `--limit` (default 20), so a fixed `-o name.png` ends up holding the last entry (a related post), not the
+  tweet of the URL; use `--limit 1` or keep `{id}` in the output name.
 - Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10),
   #95 (@oclif/plugin-warn-if-update-available) and #96 (@oclif/plugin-help) merged with merge commits, branches deleted (master
   c4d8af0). #95 / #96 conflicted on the lockfile after the first merge; dependabot rebased them by itself within ~15 min and CI
@@ -73,7 +81,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   the x.com reference samples: Elon Musk and official accounts only, never private individuals (also scrubbed from the #88 / #89
   descriptions). `test.yml` runs only for PRs against master and a
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
-  stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com,thread,translate}/`.
+  stream parser is used.
 - Merged 2026-10-31 evening: twitter-snap-api #15 (twitter-snap ^0.2.1, LGTM'd) and the dependabot batch the maintainer delegated
   (twitter-openapi #137 / #138, twitter-openapi-typescript #162, TwitterInternalAPIDocument #1135–#1137), all with merge commits,
   branches deleted. Dependabot merges are delegated from now on (CI first where a repo has it, merge commits).
