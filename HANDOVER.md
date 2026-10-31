@@ -41,7 +41,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 - twitter-snap #88 (polls + Community Notes) and #89 (RenderXReference theme) were merged 2026-10-31 with merge commits (master
   a9eb14c), head branches deleted. Released as twitter-snap 0.2.0 the same day (#90 `release/0.2.0`, merge 3e39f38, publish run
-  41186046218, npm shows 0.2.0; the README usage block was refreshed with `node replace.js` after a build). `test.yml` runs only for PRs against master and a
+  41186046218, npm shows 0.2.0; the README usage block was refreshed with `node replace.js` after a build). 0.2.0 has a defect:
+  one or two rows of the marker color stay under a video whose frame is an odd pixel tall; twitter-snap #91 (`fix/video-blank-even`,
+  fix + `update 0.2.1`) is open for it and publishes 0.2.1 on merge. `test.yml` runs only for PRs against master and a
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
   stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
   `video2.mp4` was still re-rendering with the final code when the session ended).
