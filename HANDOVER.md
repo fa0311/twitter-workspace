@@ -47,8 +47,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   the client releases); twitter-openapi-typescript #165 `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75
   `get_client_from_endpoint(host, headers)` (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5,
   publish on merge). Verified end to end: a relay built from #40 with the sandbox session answered both factories and the typed
-  clients read the rate-limit headers from it. twitter-snap `--translate <lang>` (branch `feat/translate`, worktree in the chat
-  scratchpad) was in progress when the session ended; check `gh pr list -R fa0311/twitter-snap`.
+  clients read the rate-limit headers from it. twitter-snap #93 `--translate <lang>` (sets `x-twitter-client-language` on the session and renders the embedded
+  Grok translation under the original text with x.com's "Translated from <language>" line; needs a logged-in session, a guest
+  gets `is_available: false`). Local checkouts are back on their default branches; the PR branches live on GitHub.
 - Translation (recorded 2026-10-31, `recordings/translate/`, tools `record_translate.py` / `rest_call.py`): x.com no longer calls
   a translation endpoint for posts. TweetDetail / TweetResultByRestId carry `grok_translated_post_with_availability` (already
   typed) and the destination language follows the request header `x-twitter-client-language`; replies are often
