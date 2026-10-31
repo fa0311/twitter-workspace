@@ -13,6 +13,9 @@ CI pitfalls met on 2026-10-15 while greening twitter-snap #68 and the pnpm-based
 - **biome `check` fails on Windows runners when git checks out CRLF.** `.gitattributes` with `* text=auto eol=lf` (and `*.cmd text eol=crlf` for `bin/dev.cmd`) fixes it.
 - Sandbox shell: zsh has an alias `g`; parallel Bash calls share the cwd, so use absolute paths / `git -C`.
 
+- **pngjs on Node 25**: `PNG.sync.read` calls `zlib.Inflate` as a function and throws `Class constructor Inflate cannot be invoked without 'new'` on the `latest` Node of twitter-snap's matrix (lts/* and lts/-1 pass). Use `new PNG().parse(buffer, cb)` (stream-based). Seen 2026-10-31 in twitter-snap #89.
+- **Stacked PRs get no CI**: twitter-snap `test.yml` runs for `pull_request` against master only, and retargeting a PR (`edited`) does not trigger it; run `gh workflow run test.yml --ref <branch>` or push a commit after retargeting.
+
 **Why:** these took most of a night to pin down; they recur in every pnpm/ffmpeg repo of the user.
 
 **How to apply:** before pushing a pnpm change run `CI=true pnpm install --frozen-lockfile`; never add the johnvansickle action back; keep `.gitattributes` in repos with biome. Related: [[project-x-drift-2026-10]], [[project-twitter-ecosystem-standing-tasks]].

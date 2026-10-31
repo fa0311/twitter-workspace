@@ -39,36 +39,17 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-10-31)
 
-- twitter-snap #88 (`feat/poll-community-note` → master) is open and awaits an LGTM: poll cards render as bars (they were an empty link
-  card) and a tweet's `birdwatch_pivot` renders as a Community Note box; the tweet body's line-breaking `<p>` became a shared `paragraph`
-  widget and the three e2e tweets render byte-identical to master. Before / after PNGs: `screenshot/2026-10-31/` (screenshots always go to `screenshot/{date}/`, samples must be pleasant to look at).
-  Second commit lays the note box out as x.com does (measured with `tools/x_dom_styles.py`): header band + icon, body, rating row only
-  when the API sends `callToAction` (logged-in sessions; guests never get it), footer outside the box. `x-reference-*.png` in the
-  screenshot folder are the real x.com renders. A cookie session renders the whole conversation, so a fixed `-o` name needs `--limit=1`.
-- Feature backlog approved by the maintainer on 2026-10-31, in the order proposed: (1) poll / Community Notes in twitter-snap (#88);
-  (2) pagination iterators in both clients, using the rate-limit headers to wait; (3) a relay session helper in the clients (no header
-  building when the relay supplies the session); (4) thread mode in twitter-snap; (5) translation: needs a recording of the translate
-  endpoint first, and the target language must be an explicit argument (X renders in the viewer's language by default); (6) a `snap_tweet`
-  MCP tool; (7) rate-limit visibility in the relay dashboard / health; (8) spec candidates from the relay catalog, about 30 GraphQL
-  operations the web app sends that the spec lacks (Viewer, GetUserClaims, ListMemberships, MutedAccounts, BlockedAccountsAll,
-  ConversationControlsQuery, ModeratedTimeline, UserAccountLabel, AudienceAndTaggingQuery; reversible mutations PinTweet / UnpinTweet,
-  PinTimeline / UnpinTimeline, MuteList / UnmuteList, ListSubscribe, UpdateList, ConversationControlChange) — an operation enters the
-  spec only after it was recorded from the real client and replayed live, on instruction. Declined: a catalog freshness check in CI.
+- twitter-snap #88 (polls + Community Notes) and #89 (RenderXReference theme) were merged 2026-10-31 with merge commits (master
+  a9eb14c), head branches deleted. Not released yet: master is 0.1.2 + these features; the next release is the maintainer's call
+  (existing themes changed slightly, so a minor bump such as 0.2.0 would fit). `test.yml` runs only for PRs against master and a
+  retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
+  stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
+  `video2.mp4` was still re-rendering with the final code when the session ended).
+- Design decisions of 2026-10-31 (also in memory): plain themes do not depend on when the snap was taken (no views, running polls show
+  choices + end date, no controls); RenderXReference copies the page including views / counts / time left / controls; media is
+  stacked at full width (x.com's carousel is not copied: media would fall out of the picture); videos play one after another in one
+  frame found by its marker color; quoted dates always carry the year; width defaults stay 650 / 600 (both give x.com's 566px column).
 - Guest TweetResultByRestId returns both the poll card and `birdwatch_pivot`, so renderer work for these needs no cookie.
-- twitter-snap #89 (`feat/x-reference-theme` → `feat/poll-community-note`, stacked on #88) awaits an LGTM: themes `RenderXReference` /
-  `RenderXReferenceDark` rebuild x.com's post page from measured values (600px column, 17/24 text, icons, time line, action bar; width
-  defaults to 600). The shared renderer moved closer to the browser, so the other themes changed slightly (line heights, photo carousel,
-  quote box, count format, framed video blank); approved by the maintainer ("既存テーマのデザインが若干変わっても良い"). Renders in
-  `screenshot/2026-10-31/xref-*.png` next to `x-reference-*.png` (real page) and `default-*-after.png`. Measurements: 12 posts dumped
-  with `tools/x_dom_styles.py` (JSON in the session scratchpad only; re-dump when needed). Second commit (0e8243f): videos sit in the media row / carousel like
-  photos (poster + duration pill on images; on video output the first video's frame is painted `#ff00fe` and found again on the rendered
-  PNG with `pngjs`, overlay done in RGB so the marker's chroma does not bleed), whitespace-only lines are blank lines. Third commit: each video's frame has its own marker (`#ff00fe`, `#ff00fd`, …) and
-  every video plays in its own frame (first video's sound; frames cut off by the carousel get none); quoted dates always carry the
-  year. `test.yml` runs only for PRs against master, so the stacked PR shows no CI until it is retargeted. Fourth commit: media stacked at full width again (master's layout, every photo stays in the picture), videos one after
-  another in one marker-colored frame, and a `timeDependent` flag: the X theme shows views / counts / time left / controls, the plain
-  themes do not (no views, running polls show choices + end date). Screenshots: `screenshot/2026-10-31/{x-reference,default,x.com}/<sample>.png`
-  plus mp4 samples under `x-reference/`. Fifth commit: border + radius back on the image itself (satori does not clip an
-  image by a rounded parent) and a rounded alpha mask on the video overlay. Merge order: #88 first, then #89 retargeted.
 
 ## State (2026-10-30, evening)
 
