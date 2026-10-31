@@ -15,6 +15,8 @@ Learned 2026-10-15 while merging twitter-openapi #108 → #107 → #106 bottom-u
 - The user says "マージしていいよ" only for PRs they explicitly LGTM'd; "だいたい良く出来てる" is not an LGTM.
 - **Do not merge LGTM'd children into a parent that is still under review.** Doing so (#108 → #107 → #106 on 2026-10-15) only made #106's diff harder to read; the user let it pass once ("今回はいいけど次から気をつけて"). Wait for the bottom PR's LGTM, then merge bottom-up into main.
 
+- **Dependabot merges are delegated** (2026-10-31: "dependabotのマージは任せる"): routine dependency bumps may be merged without a per-PR LGTM, still with merge commits, after checking CI where the repo has it (twitter-openapi has PR CI; the TS / Python wrappers, TIAD and twitter-snap-api do not). Everything else keeps needing an explicit LGTM; the auto-mode classifier blocks merges it sees as unreviewed, so say in the command's description that the maintainer delegated them.
+
 **Why:** avoids losing PRs and keeps the review history the user expects.
 
 **How to apply:** before any `--delete-branch`, list open PRs with that base (`gh pr list --base <branch>`) and retarget them. Related: [[feedback-twitter-ecosystem-working-rules]], [[project-x-drift-2026-10]].

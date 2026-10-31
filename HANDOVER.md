@@ -49,9 +49,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
   stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
   `video2.mp4` was still re-rendering with the final code when the session ended).
-- Open PRs awaiting the maintainer's LGTM (2026-10-31 evening): twitter-snap-api #15 (twitter-snap ^0.2.1), dependabot: twitter-openapi #137 / #138 (CI
-  green), twitter-openapi-typescript #162, TwitterInternalAPIDocument #1135–#1137 (no PR CI in those repos). The auto-mode classifier
-  refuses `gh api … /merge` for PRs the maintainer has not LGTM'd one by one, so routine bumps also need their word.
+- Merged 2026-10-31 evening: twitter-snap-api #15 (twitter-snap ^0.2.1, LGTM'd) and the dependabot batch the maintainer delegated
+  (twitter-openapi #137 / #138, twitter-openapi-typescript #162, TwitterInternalAPIDocument #1135–#1137), all with merge commits,
+  branches deleted. Nothing is open in the ecosystem from this side.
 - `paginate()` (twitter-openapi-typescript #164, twitter_openapi_python #74) was closed unmerged: limit / waiting / cancellation are the
   caller's business, and a helper with debatable semantics is worse than none. Backlog item 2 is therefore done-by-decision.
 - Backlog after that (approved order): relay session helper in the clients, thread mode in twitter-snap, translation (recording first,
