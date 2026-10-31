@@ -67,7 +67,8 @@ This file holds what those cannot: the environment and the state of the work. Up
   year. `test.yml` runs only for PRs against master, so the stacked PR shows no CI until it is retargeted. Fourth commit: media stacked at full width again (master's layout, every photo stays in the picture), videos one after
   another in one marker-colored frame, and a `timeDependent` flag: the X theme shows views / counts / time left / controls, the plain
   themes do not (no views, running polls show choices + end date). Screenshots: `screenshot/2026-10-31/{x-reference,default,x.com}/<sample>.png`
-  plus mp4 samples under `x-reference/`. Merge order: #88 first, then #89 retargeted.
+  plus mp4 samples under `x-reference/`. Fifth commit: border + radius back on the image itself (satori does not clip an
+  image by a rounded parent) and a rounded alpha mask on the video overlay. Merge order: #88 first, then #89 retargeted.
 
 ## State (2026-10-30, evening)
 
