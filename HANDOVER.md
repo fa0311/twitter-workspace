@@ -49,6 +49,13 @@ This file holds what those cannot: the environment and the state of the work. Up
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
   stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
   `video2.mp4` was still re-rendering with the final code when the session ended).
+- Open PRs awaiting the maintainer's LGTM (2026-10-31 evening): twitter-snap-api #15 (twitter-snap ^0.2.1), twitter-openapi-typescript
+  #164 and twitter_openapi_python #74 (`paginate()` walks a timeline through its bottom cursor, waits on the rate limit; wrapper
+  0.1.5 each, publishes on merge; verified with 30 tweets over two pages on the sandbox), dependabot: twitter-openapi #137 / #138 (CI
+  green), twitter-openapi-typescript #162, TwitterInternalAPIDocument #1135–#1137 (no PR CI in those repos). The auto-mode classifier
+  refuses `gh api … /merge` for PRs the maintainer has not LGTM'd one by one, so routine bumps also need their word.
+- Backlog after that (approved order): relay session helper in the clients, thread mode in twitter-snap, translation (recording first,
+  language as an argument), `snap_tweet` MCP tool, rate-limit visibility in the relay, spec candidates from the relay catalog.
 - Design decisions of 2026-10-31 (also in memory): plain themes do not depend on when the snap was taken (no views, running polls show
   choices + end date, no controls); RenderXReference copies the page including views / counts / time left / controls; media is
   stacked at full width (x.com's carousel is not copied: media would fall out of the picture); videos play one after another in one
