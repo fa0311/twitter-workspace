@@ -55,9 +55,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   and no per-feature sample images in `docs/img` (samples: issue #47, or `screenshot/` for the maintainer). #92 and #93 were trimmed
   to that shape and twitter-snap #99 does the same to the merged x.com reference section (drops its paragraph and four images,
   1 MB). The three PRs touch the same example block, so whichever merges later is rebased.
-- Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10)
-  merged with merge commits, branches deleted (master 7cc142f). #95 (@oclif/plugin-warn-if-update-available) and #96
-  (@oclif/plugin-help) conflicted on the lockfile after the first merge and wait for dependabot's rebase + green CI.
+- Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10),
+  #95 (@oclif/plugin-warn-if-update-available) and #96 (@oclif/plugin-help) merged with merge commits, branches deleted (master
+  c4d8af0). #95 / #96 conflicted on the lockfile after the first merge; dependabot rebased them by itself within ~15 min and CI
+  went green again, so lockfile conflicts in a dependabot batch only need waiting, not a manual rebase.
 - Translation (recorded 2026-10-31, `recordings/translate/`, tools `record_translate.py` / `rest_call.py`): x.com no longer calls
   a translation endpoint for posts. TweetDetail / TweetResultByRestId carry `grok_translated_post_with_availability` (already
   typed) and the destination language follows the request header `x-twitter-client-language`; replies are often
