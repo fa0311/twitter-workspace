@@ -63,6 +63,13 @@ This file holds what those cannot: the environment and the state of the work. Up
   session, 13 account calls, no 326). Pitfall met on the way: with a cookie session a status URL renders the whole
   conversation up to `--limit` (default 20), so a fixed `-o name.png` ends up holding the last entry (a related post), not the
   tweet of the URL; use `--limit 1` or keep `{id}` in the output name.
+- Translation UI (2026-10-31 evening, "TwitterのtranslateのUIにもっとよせて"): x.com's translated post was measured with
+  `tools/x_dom_styles.py` (`tools/out/translate_ui/`, screenshots copied to `screenshot/2026-10-31/translate/x.com-{light,dark}.png`):
+  the translation replaces the text; above it a 13/16 line "[Grok] Translated from Japanese  Show original [gear]" (4px above,
+  24px to the text), below it "Rate this translation: [thumbs]" (14/16, 24px buttons with 16px icons, 12px above), then the media.
+  twitter-snap #93 now does the same: every theme swaps the text for the translation under a Grok-marked line; the X reference
+  theme adds Show original, the gear and the rating row; the plain themes keep only the line (page controls stay out of them).
+  The original text is no longer in the image, as on x.com.
 - Dependabot in twitter-snap 2026-10-31 evening: #94 (@oclif/plugin-plugins), #97 (puppeteer 25.16.0), #98 (@oclif/core 5.1.10),
   #95 (@oclif/plugin-warn-if-update-available) and #96 (@oclif/plugin-help) merged with merge commits, branches deleted (master
   c4d8af0). #95 / #96 conflicted on the lockfile after the first merge; dependabot rebased them by itself within ~15 min and CI
