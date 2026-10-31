@@ -40,8 +40,8 @@ This file holds what those cannot: the environment and the state of the work. Up
 ## State (2026-10-31)
 
 - twitter-snap #88 (polls + Community Notes) and #89 (RenderXReference theme) were merged 2026-10-31 with merge commits (master
-  a9eb14c), head branches deleted. Not released yet: master is 0.1.2 + these features; the next release is the maintainer's call
-  (existing themes changed slightly, so a minor bump such as 0.2.0 would fit). `test.yml` runs only for PRs against master and a
+  a9eb14c), head branches deleted. Released as twitter-snap 0.2.0 the same day (#90 `release/0.2.0`, merge 3e39f38, publish run
+  41186046218, npm shows 0.2.0; the README usage block was refreshed with `node replace.js` after a build). `test.yml` runs only for PRs against master and a
   retarget does not trigger it (`gh workflow run test.yml --ref <branch>` does). pngjs's `PNG.sync.read` breaks on Node 25; the
   stream parser is used. Renders for the maintainer: `screenshot/2026-10-31/{x-reference,default,x.com}/` (+ mp4 under `x-reference/`,
   `video2.mp4` was still re-rendering with the final code when the session ended).
