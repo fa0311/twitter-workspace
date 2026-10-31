@@ -18,6 +18,7 @@ metadata:
 - **GitHub Actions stay simple and readable**: one `jq` line over shell gymnastics; an action's own option over a hand-rolled check.
 - **twitter-snap wraps text like a browser (UAX #14), no prettier**: phrase-level Japanese wrapping (BudouX / `word-break: auto-phrase`) was offered with sample images and declined ("不要", 2026-10-30). Images should break lines where X.com does.
 - **TIAD**: avoid changes unless asked.
+- **Feature ideas 2026-10-31**: the maintainer approved the idea list (twitter-snap poll / Community Notes rendering and thread mode, client pagination iterators and relay session helper, translation API after recording, MCP snap tool, relay rate-limit visibility, spec candidates from the relay catalog) and declined a catalog freshness check in CI (`recordedAt` age warning): not wanted. Translation, when it comes, takes the target language as an explicit argument (`--translate <lang>` style): X now renders in the viewer's translation language by default, so an implicit default would be ambiguous (2026-10-31).
 
 **Why:** these settle recurring judgement calls so they are not re-asked.
 

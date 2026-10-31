@@ -37,6 +37,22 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
+## State (2026-10-31)
+
+- twitter-snap #88 (`feat/poll-community-note` → master) is open and awaits an LGTM: poll cards render as bars (they were an empty link
+  card) and a tweet's `birdwatch_pivot` renders as a Community Note box; the tweet body's line-breaking `<p>` became a shared `paragraph`
+  widget and the three e2e tweets render byte-identical to master. Before / after PNGs: `tools/out/screenshots/2026-10-31-poll-community-note/`.
+- Feature backlog approved by the maintainer on 2026-10-31, in the order proposed: (1) poll / Community Notes in twitter-snap (#88);
+  (2) pagination iterators in both clients, using the rate-limit headers to wait; (3) a relay session helper in the clients (no header
+  building when the relay supplies the session); (4) thread mode in twitter-snap; (5) translation: needs a recording of the translate
+  endpoint first, and the target language must be an explicit argument (X renders in the viewer's language by default); (6) a `snap_tweet`
+  MCP tool; (7) rate-limit visibility in the relay dashboard / health; (8) spec candidates from the relay catalog, about 30 GraphQL
+  operations the web app sends that the spec lacks (Viewer, GetUserClaims, ListMemberships, MutedAccounts, BlockedAccountsAll,
+  ConversationControlsQuery, ModeratedTimeline, UserAccountLabel, AudienceAndTaggingQuery; reversible mutations PinTweet / UnpinTweet,
+  PinTimeline / UnpinTimeline, MuteList / UnmuteList, ListSubscribe, UpdateList, ConversationControlChange) — an operation enters the
+  spec only after it was recorded from the real client and replayed live, on instruction. Declined: a catalog freshness check in CI.
+- Guest TweetResultByRestId returns both the poll card and `birdwatch_pivot`, so renderer work for these needs no cookie.
+
 ## State (2026-10-30, evening)
 
 - Shipped 2026-10-30: spec #136 / #135, clients 0.1.4 (twitter_openapi_python #72, twitter-openapi-typescript #159 with the TypeScript 7
