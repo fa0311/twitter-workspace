@@ -71,7 +71,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   `RateLimitPage.tsx` added, sidebar back to main's version; PR body updated). The running relay serves the new build from
   the dashboard's `dist` without a restart (`screenshot/2026-11-01/relay40-rate-limits-page.png`, `-requests-page.png`).
   "v1.1 系のAPIが叩け無い、404になる" (2026-11-01, asked again "v1.1は再現できなかった？"): reproduced and fixed in
-  twitter_api_safe_relay #43 (merged 2026-11-01 on "LGTM", merge commit 74213d9, head branch deleted, local checkout on main; publish / docker runs for it were watched, result recorded below once known). Cause: relay 0.4.0 (2026-10-17)
+  twitter_api_safe_relay #43 (merged 2026-11-01 on "LGTM", merge commit 74213d9, head branch deleted, local checkout on main; publish run 41332967464 and docker run 41332967444 both succeeded: npm has twitter-api-safe-relay 0.4.2 (depends on dashboard 0.2.3), twitter-api-safe-relay-dashboard 0.2.3, twitter-api-safe-mcp 0.4.1; ghcr `latest-relay*` = 0.4.2-*, `latest-mcp*` = 0.4.1-* as of 17:47 UTC, so `docker compose pull` on the maintainer's side gets the fixed dashboard). Cause: relay 0.4.0 (2026-10-17)
   moved REST from `/1.1/*`, `/2/*` to `/i/api/1.1/*`, `/i/api/2/*`, but the dashboard's JavaScript tab still generated
   `fetch("/1.1/...")` for REST entries (GraphQL snippets had `/i/api`), so Execute got the relay's own 404. Fix: one `relayPath`
   for both, Vite dev proxy `/i/api`, versions dashboard 0.2.3 / relay 0.4.2 / mcp 0.4.1 (the docker workflow pushes an image
