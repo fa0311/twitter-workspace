@@ -1,0 +1,12 @@
+{
+  "hostname": "127.0.0.1",
+  "port": 3777,
+  "dashboard": true,
+  "logger": { "level": "info" },
+  "profiles": [
+    {
+      "name": "sandbox",
+      "browser": { "type": "launch", "headless": true, "userDataDir": "/tmp/relay-profile/sandbox" }
+    }
+  ]
+}

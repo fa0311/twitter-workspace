@@ -12,3 +12,4 @@
 - [twitter-snap dev facts](project-twitter-snap-dev-facts.md) — master is default; bin/dev.js runs stale dist (build first); guest renders need no cookie; text = flex-wrap of UAX#14 units
 - [Screenshot location and sample choice](feedback-screenshots.md) — ./screenshot/{date}/, samples must be pleasant to look at
 - [X translation mechanics Oct 2026](project-x-translation-2026-10.md) — embedded Grok translation keyed by x-twitter-client-language, no typeable endpoint, twitter-snap sets the header
+- [Local relay run for reviews](project-relay-local-run.md) — tools/relay_local, port 3777, session-cookie and pkill pitfalls

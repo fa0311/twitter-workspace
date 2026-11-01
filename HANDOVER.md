@@ -46,16 +46,28 @@ This file holds what those cannot: the environment and the state of the work. Up
   the maintainer's call. #92 and #93 both touched the README example block and `tweetRender`, so each later one got master
   merged in (a merge commit, not a rebase: the branches had two commits whose intermediate state conflicted) and CI ran again
   before the merge; the resolved tree was verified by rendering a thread and a translation from it.
-- Still open from this side, awaiting LGTM: twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*` headers
-  passed through on relay responses, latest per profile x endpoint in `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2)
-  and #41 (README recipe for the endpoint factories, merge after the client releases; 2026-11-01 the maintainer objected to
-  "(0.1.5 and later)" in the recipe, "それはgitから確認できる", so 17244b2 rewrites it as one sentence without a version:
-  READMEs never say which release introduced something) and #42 (2026-11-01, "Tests 節なおして": the README's Tests section
-  keeps only the three test commands; the `X_COOKIE_FILE` / `X_PROXY_URL` / twitter-secrets notes added 2026-10-15 were CI
-  plumbing, documented in the workflow and in `packages/test-utils/src/integration.ts`); twitter-openapi-typescript #165
-  `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75 `get_client_from_endpoint(host, headers)`
-  (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5, publish on merge). Verified end to end: a
-  relay built from #40 with the sandbox session answered both factories and the typed clients read the rate-limit headers from it.
+- Merged 2026-11-01 on the maintainer's LGTM ("1 2 3 は LGTM", then "#42 LGTM"), merge commits, head branches deleted:
+  twitter-openapi-typescript #165 `getClientFromEndpoint(basePath, headers)` (1e83cdb) and twitter_openapi_python #75
+  `get_client_from_endpoint(host, headers)` (1ad5b71), both 0.1.5 and published by the push-to-master workflows (npm run
+  41265700136, PyPI run 41265703296, both registries checked before the next step); then twitter_api_safe_relay #41 README
+  recipe on the factories (69353ec, merged only after the registries showed 0.1.5) and #42 Tests section without the CI
+  plumbing (3deb5f7). Local checkouts of the two client repos are on master.
+- Still open: twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*` headers passed through on relay responses,
+  latest per profile x endpoint in `/health` and a dashboard panel; relay 0.4.1, dashboard 0.2.2). The maintainer's review
+  stopped at its README ("READMEの問題が残っている", then "Rate limitsの節いる？"): the "Rate limits" section is gone entirely
+  (7011bcd shortened and moved it, 7074457 removed it; `packages/server/README.md` is identical to main now, the PR body
+  carries the explanation). Code unchanged since the review request; awaiting LGTM.
+  For the review the relay from `feat/rate-limit` is running in the sandbox ("手元で見たいからサーバー建てて"): port 3777,
+  `twitter_api_safe_relay` checked out on `feat/rate-limit` with `pnpm build` done, started with
+  `node packages/server/dist/server.js <settings>` (settings and the profile seeder are kept in `tools/relay_local/`, the
+  running instance uses the session scratchpad copy; log `scratchpad/relay40/relay.log`). The maintainer reaches it through a
+  VS Code port forward of 3777: `http://localhost:3777/` is the dashboard (the rate-limit panel is at the bottom of the sidebar
+  and works without debug mode), `/health` the JSON. One `UserByScreenName` was sent through it so the panel has a row;
+  `screenshot/2026-11-01/relay40-dashboard.png` shows it. The process dies with the container; restart with the tools recipe.
+  Pitfalls met: cookies added with `addCookies` without `expires` are session cookies and vanish when the seeding context
+  closes, so the relay's `launch` profile opened x.com logged out and every `/i/api/*` request hung forever (`waitStartup`
+  has no timeout; `/health` still answered). Seed with `expires`. Do not `pkill -f` a pattern that also matches the shell
+  running the relay command.
 - README policy settled 2026-10-31 ("READMEいじる意味ある？"): twitter-snap's README is a list of one-line examples plus the oclif
   usage block; features get `# comment` + command in the example block and nothing else. No explanatory paragraphs (PR description)
   and no per-feature sample images in `docs/img` (samples: issue #47, or `screenshot/` for the maintainer). #92 and #93 were trimmed

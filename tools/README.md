@@ -35,3 +35,14 @@ for f in glob.glob(src + "/*.json"):
 json.dump(args, open("/root/workspace/recordings/validate_args.json", "w"), indent=0)
 EOF
 ```
+
+## relay_local/ — run twitter_api_safe_relay with the sandbox session
+
+`seed.cjs` seeds a persistent headless Chromium profile from `cookie.json` (persistent cookies, verified by a reopen); `settings.json`
+is a one-profile relay config on 127.0.0.1:3777 with the dashboard. Run from the built relay checkout so `playwright` resolves:
+
+```sh
+cd /root/workspace/twitter_api_safe_relay && pnpm install && pnpm build
+cd packages/server && NODE_PATH=$PWD/node_modules node /root/workspace/tools/relay_local/seed.cjs /tmp/relay-profile/sandbox /root/workspace/cookie.json
+node dist/server.js /root/workspace/tools/relay_local/settings.json   # dashboard http://localhost:3777/, JSON /health
+```
