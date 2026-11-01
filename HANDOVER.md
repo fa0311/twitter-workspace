@@ -55,7 +55,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Merged 2026-11-01 ("LGTM" after the page change): twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*`
   headers passed through on relay responses, latest per profile x endpoint in `/health` and a dashboard page; relay 0.4.1,
   dashboard 0.2.2), merge commit 3c5a695, head branch deleted, local checkout back on main. Push-to-main runs: publish
-  41268901924, docker 41268901930, test 41268901919 (outcome in the next bullet once known). No PR of ours is open anywhere.
+  41268901924 and docker 41268901930 both succeeded (npm shows twitter-api-safe-relay 0.4.1 and twitter-api-safe-relay-dashboard 0.2.2), test 41268901919. No PR of ours is open anywhere.
   Review history: it first stopped at the README ("READMEの問題が残っている", then "Rate limitsの節いる？"): the "Rate limits"
   section went away entirely (7011bcd, 7074457; the PR body carries the explanation).
   For the review the relay from `feat/rate-limit` is running in the sandbox ("手元で見たいからサーバー建てて"): port 3777,
