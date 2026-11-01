@@ -70,15 +70,22 @@ This file holds what those cannot: the environment and the state of the work. Up
   `#rate-limits`, full-height table with a text filter, `/health` polled only while open; `RateLimitPanel.tsx` deleted,
   `RateLimitPage.tsx` added, sidebar back to main's version; PR body updated). The running relay serves the new build from
   the dashboard's `dist` without a restart (`screenshot/2026-11-01/relay40-rate-limits-page.png`, `-requests-page.png`).
-  "v1.1 系のAPIが叩け無い、404になる" is not reproduced yet; measured through the running relay: `/i/api/1.1/*` and
-  `/i/api/2/*` GET/POST answer 200 for the endpoints the web app uses (account/settings, users/show, users/lookup,
-  account/multi/list, friendships/show, friends/following/list, account/verify_credentials, badge_count); `/1.1/...`
-  without the `/i/api` prefix and any method other than GET/POST are Hono's own 404 (text/plain); an endpoint X does not
-  serve on `x.com/i/api` (statuses/show, anything unknown) makes X's client throw `ApiError ... HTTP-404 codes:[1003]`,
-  which the relay turns into 500 "Internal Server Error" (the debug capture shows the 404); a form-encoded POST body is
-  also a 500 (`c.req.json()`); search/tweets and statuses/user_timeline answer 200 with an empty string. The maintainer
-  had debug enabled and sent HomeTimeline through the relay. Asked them for the exact URL / method; candidates once known:
-  pass X's status and body through instead of 500, accept form bodies on v1.1 POST, maybe accept api.x.com-shaped paths.
+  "v1.1 系のAPIが叩け無い、404になる" (2026-11-01, asked again "v1.1は再現できなかった？"): reproduced and fixed in
+  twitter_api_safe_relay PR from branch `fix/dashboard-rest-snippet` (open, awaiting LGTM). Cause: relay 0.4.0 (2026-10-17)
+  moved REST from `/1.1/*`, `/2/*` to `/i/api/1.1/*`, `/i/api/2/*`, but the dashboard's JavaScript tab still generated
+  `fetch("/1.1/...")` for REST entries (GraphQL snippets had `/i/api`), so Execute got the relay's own 404. Fix: one `relayPath`
+  for both, Vite dev proxy `/i/api`, versions dashboard 0.2.3 / relay 0.4.2 / mcp 0.4.1 (the docker workflow pushes an image
+  only when `<version>-<suffix>` is new, so the bumps are what refresh `latest-relay*` / `latest-mcp*`). Measured on the
+  running relay with Playwright (`screenshot/2026-11-01/relay-dashboard-v11-execute-{before,after}.png`): before
+  `GET /1.1/users/show.json -> 404`, after `GET /i/api/1.1/users/show.json -> 200`. Other paths checked and fine: the skill
+  (`$B/i/api<path>`), the MCP (dispatches directly), curl per the README. Direct relay facts from the probes: `/1.1/...`
+  without `/i/api` and non GET/POST methods are Hono 404s; an endpoint X does not serve (statuses/show) is X's
+  `ApiError HTTP-404 codes:[1003]`, relayed as 500; a form-encoded POST body is a 500 (`c.req.json()`).
+  "docker系にデプロイしてるやつもアップデートしよう": the maintainer's own relay runs from `docker/docker-compose.yml`
+  (kasmweb + `latest-relay-slim`, relay at localhost:6900 as in the skills README); nothing in the sandbox to update (no
+  docker here). ghcr got `0.4.1-*` / `latest-*` for relay, relay-slim, relay-firefox, relay-webkit at 03:23–03:25 today;
+  the dashboard fix reaches the images once its PR is merged (new tags 0.4.2-*, 0.4.1-mcp*). `docker compose pull` on
+  their side then picks them up. twitter-snap-api (docker) depends on twitter-snap ^0.2.1, nothing newer released.
   The typed TS wrapper has no v1.1 helpers (`getV11GetApi().api` is the generated class, which wants every placeholder
   parameter), so a v1.1 call from the typed clients is the generated API with the endpoint as base path.
   Pitfalls met: cookies added with `addCookies` without `expires` are session cookies and vanish when the seeding context

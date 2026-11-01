@@ -13,7 +13,10 @@ VS Code port forward (`http://localhost:3777/`, `/health`). Full commands in `to
 Pitfalls: (1) `context.addCookies` without `expires` creates session cookies that are gone once the seeding context closes, so the relay
 opens x.com logged out and every `/i/api/*` request hangs forever (`waitStartup` has no timeout) while `/health` keeps answering; seed
 with `expires`, and verify by reopening the profile. (2) `pkill -f 'dist/server.js'` matches the shell that is about to start the relay.
-(3) The first request launches the browser, so it takes a few seconds; later ones ~2 s.
+(3) The first request launches the browser, so it takes a few seconds; later ones ~2 s. (4) The running relay serves the dashboard
+straight from `packages/dashboard/dist`, so `pnpm --filter twitter-api-safe-relay-dashboard build` shows up on reload without a
+restart. (5) Dashboard entries exist only while a page is connected to `/api/events`: open the page first, then send the request.
+(6) Execute on the JavaScript tab ignores the result; watch it with Playwright `page.on("response")`.
 
 **Why:** reproducing a logged-in relay in the sandbox cost an hour the first time; the hang looks like a relay bug but is the profile.
 
