@@ -71,7 +71,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   `RateLimitPage.tsx` added, sidebar back to main's version; PR body updated). The running relay serves the new build from
   the dashboard's `dist` without a restart (`screenshot/2026-11-01/relay40-rate-limits-page.png`, `-requests-page.png`).
   "v1.1 系のAPIが叩け無い、404になる" (2026-11-01, asked again "v1.1は再現できなかった？"): reproduced and fixed in
-  twitter_api_safe_relay PR from branch `fix/dashboard-rest-snippet` (open, awaiting LGTM). Cause: relay 0.4.0 (2026-10-17)
+  twitter_api_safe_relay #43 (branch `fix/dashboard-rest-snippet`, open, awaiting LGTM). Cause: relay 0.4.0 (2026-10-17)
   moved REST from `/1.1/*`, `/2/*` to `/i/api/1.1/*`, `/i/api/2/*`, but the dashboard's JavaScript tab still generated
   `fetch("/1.1/...")` for REST entries (GraphQL snippets had `/i/api`), so Execute got the relay's own 404. Fix: one `relayPath`
   for both, Vite dev proxy `/i/api`, versions dashboard 0.2.3 / relay 0.4.2 / mcp 0.4.1 (the docker workflow pushes an image
