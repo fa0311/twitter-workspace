@@ -64,6 +64,22 @@ This file holds what those cannot: the environment and the state of the work. Up
   VS Code port forward of 3777: `http://localhost:3777/` is the dashboard (the rate-limit panel is at the bottom of the sidebar
   and works without debug mode), `/health` the JSON. One `UserByScreenName` was sent through it so the panel has a row;
   `screenshot/2026-11-01/relay40-dashboard.png` shows it. The process dies with the container; restart with the tools recipe.
+  Review feedback so far and what was done: "Rate Limitは無限に増えていくだろうから、別のページに作ったほうが良いのでは？" →
+  c64da1f moves the table out of the request sidebar onto its own page (header switch Requests / Rate limits, hash
+  `#rate-limits`, full-height table with a text filter, `/health` polled only while open; `RateLimitPanel.tsx` deleted,
+  `RateLimitPage.tsx` added, sidebar back to main's version; PR body updated). The running relay serves the new build from
+  the dashboard's `dist` without a restart (`screenshot/2026-11-01/relay40-rate-limits-page.png`, `-requests-page.png`).
+  "v1.1 系のAPIが叩け無い、404になる" is not reproduced yet; measured through the running relay: `/i/api/1.1/*` and
+  `/i/api/2/*` GET/POST answer 200 for the endpoints the web app uses (account/settings, users/show, users/lookup,
+  account/multi/list, friendships/show, friends/following/list, account/verify_credentials, badge_count); `/1.1/...`
+  without the `/i/api` prefix and any method other than GET/POST are Hono's own 404 (text/plain); an endpoint X does not
+  serve on `x.com/i/api` (statuses/show, anything unknown) makes X's client throw `ApiError ... HTTP-404 codes:[1003]`,
+  which the relay turns into 500 "Internal Server Error" (the debug capture shows the 404); a form-encoded POST body is
+  also a 500 (`c.req.json()`); search/tweets and statuses/user_timeline answer 200 with an empty string. The maintainer
+  had debug enabled and sent HomeTimeline through the relay. Asked them for the exact URL / method; candidates once known:
+  pass X's status and body through instead of 500, accept form bodies on v1.1 POST, maybe accept api.x.com-shaped paths.
+  The typed TS wrapper has no v1.1 helpers (`getV11GetApi().api` is the generated class, which wants every placeholder
+  parameter), so a v1.1 call from the typed clients is the generated API with the endpoint as base path.
   Pitfalls met: cookies added with `addCookies` without `expires` are session cookies and vanish when the seeding context
   closes, so the relay's `launch` profile opened x.com logged out and every `/i/api/*` request hung forever (`waitStartup`
   has no timeout; `/health` still answered). Seed with `expires`. Do not `pkill -f` a pattern that also matches the shell
