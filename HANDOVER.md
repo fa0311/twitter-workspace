@@ -37,7 +37,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-10-31)
+## State (2026-11-01)
 
 - Merged 2026-10-31 night on the maintainer's LGTM, with merge commits, head branches deleted: twitter-snap #99 (README trim),
   #92 `--thread` (the author's self-reply chain through a tweet in one image / video; honors `displayTextRange`; composes several
@@ -48,7 +48,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   before the merge; the resolved tree was verified by rendering a thread and a translation from it.
 - Still open from this side, awaiting LGTM: twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*` headers
   passed through on relay responses, latest per profile x endpoint in `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2)
-  and #41 (README recipe for the endpoint factories, merge after the client releases); twitter-openapi-typescript #165
+  and #41 (README recipe for the endpoint factories, merge after the client releases; 2026-11-01 the maintainer objected to
+  "(0.1.5 and later)" in the recipe, "それはgitから確認できる", so 17244b2 rewrites it as one sentence without a version:
+  READMEs never say which release introduced something); twitter-openapi-typescript #165
   `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75 `get_client_from_endpoint(host, headers)`
   (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5, publish on merge). Verified end to end: a
   relay built from #40 with the sandbox session answered both factories and the typed clients read the rate-limit headers from it.
