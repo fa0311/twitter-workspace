@@ -52,18 +52,19 @@ This file holds what those cannot: the environment and the state of the work. Up
   41265700136, PyPI run 41265703296, both registries checked before the next step); then twitter_api_safe_relay #41 README
   recipe on the factories (69353ec, merged only after the registries showed 0.1.5) and #42 Tests section without the CI
   plumbing (3deb5f7). Local checkouts of the two client repos are on master.
-- Still open: twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*` headers passed through on relay responses,
-  latest per profile x endpoint in `/health` and a dashboard panel; relay 0.4.1, dashboard 0.2.2). The maintainer's review
-  stopped at its README ("READMEの問題が残っている", then "Rate limitsの節いる？"): the "Rate limits" section is gone entirely
-  (7011bcd shortened and moved it, 7074457 removed it; `packages/server/README.md` is identical to main now, the PR body
-  carries the explanation). Code unchanged since the review request; awaiting LGTM.
+- Merged 2026-11-01 ("LGTM" after the page change): twitter_api_safe_relay #40 rate-limit visibility (X's `x-rate-limit-*`
+  headers passed through on relay responses, latest per profile x endpoint in `/health` and a dashboard page; relay 0.4.1,
+  dashboard 0.2.2), merge commit 3c5a695, head branch deleted, local checkout back on main. Push-to-main runs: publish
+  41268901924, docker 41268901930, test 41268901919 (outcome in the next bullet once known). No PR of ours is open anywhere.
+  Review history: it first stopped at the README ("READMEの問題が残っている", then "Rate limitsの節いる？"): the "Rate limits"
+  section went away entirely (7011bcd, 7074457; the PR body carries the explanation).
   For the review the relay from `feat/rate-limit` is running in the sandbox ("手元で見たいからサーバー建てて"): port 3777,
   `twitter_api_safe_relay` checked out on `feat/rate-limit` with `pnpm build` done, started with
   `node packages/server/dist/server.js <settings>` (settings and the profile seeder are kept in `tools/relay_local/`, the
   running instance uses the session scratchpad copy; log `scratchpad/relay40/relay.log`). The maintainer reaches it through a
   VS Code port forward of 3777: `http://localhost:3777/` is the dashboard (the rate-limit panel is at the bottom of the sidebar
   and works without debug mode), `/health` the JSON. One `UserByScreenName` was sent through it so the panel has a row;
-  `screenshot/2026-11-01/relay40-dashboard.png` shows it. The process dies with the container; restart with the tools recipe.
+  `screenshot/2026-11-01/relay40-dashboard.png` shows it. The process dies with the container; restart with the tools recipe. It kept running after the merge (its dist is the branch build, same content as main); `kill $(pgrep -f dist/server.js)` ends it.
   Review feedback so far and what was done: "Rate Limitは無限に増えていくだろうから、別のページに作ったほうが良いのでは？" →
   c64da1f moves the table out of the request sidebar onto its own page (header switch Requests / Rate limits, hash
   `#rate-limits`, full-height table with a text filter, `/health` polled only while open; `RateLimitPanel.tsx` deleted,
