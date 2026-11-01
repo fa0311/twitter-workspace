@@ -50,7 +50,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   passed through on relay responses, latest per profile x endpoint in `/health` and the dashboard; relay 0.4.1, dashboard 0.2.2)
   and #41 (README recipe for the endpoint factories, merge after the client releases; 2026-11-01 the maintainer objected to
   "(0.1.5 and later)" in the recipe, "それはgitから確認できる", so 17244b2 rewrites it as one sentence without a version:
-  READMEs never say which release introduced something); twitter-openapi-typescript #165
+  READMEs never say which release introduced something) and #42 (2026-11-01, "Tests 節なおして": the README's Tests section
+  keeps only the three test commands; the `X_COOKIE_FILE` / `X_PROXY_URL` / twitter-secrets notes added 2026-10-15 were CI
+  plumbing, documented in the workflow and in `packages/test-utils/src/integration.ts`); twitter-openapi-typescript #165
   `getClientFromEndpoint(basePath, headers)` and twitter_openapi_python #75 `get_client_from_endpoint(host, headers)`
   (placeholder only, no cookie / bearer / browser headers / transaction id; both 0.1.5, publish on merge). Verified end to end: a
   relay built from #40 with the sandbox session answered both factories and the typed clients read the rate-limit headers from it.
