@@ -53,8 +53,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Release round of 2026-11-04 ("全パッケージ、リリースいれよう"), in dependency order: done: twitter_openapi_python 0.1.6 / generated 0.1.5
   (PyPI), twitter-openapi-typescript 0.1.6 / generated 0.1.5 (npm, lockfile follow-up #169 merged), twitter-snap 0.3.0 (npm; image on
   node:26-alpine with corepack installed; publish on Node 26), private_bot on the 0.1.6 clients with a Node 26 image, Node 26 images for
-  twitter-snap-discord / -bookmarklet / twitter_api_safe_relay (all with corepack installed from npm). Open, LGTM-gated: twitter-snap-api
-  #16 (twitter-snap ^0.3.0, Node 26 image). Relay packages have nothing else unreleased; x-client-transaction-pair-dict is not on npm.
+  twitter-snap-discord / -bookmarklet / twitter_api_safe_relay (all with corepack installed from npm). twitter-snap-api #16 (twitter-snap ^0.3.0, Node 26 image)
+  merged last (main 83a4ccc). Nothing open from this side. Relay packages have nothing else unreleased; x-client-transaction-pair-dict
+  is not on npm.
 - Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
   body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
 - Open: dependabot bumps twitter_openapi_python #76 #77 #78 and twitter-openapi-typescript #166 #167 (all clean, no CI in those
