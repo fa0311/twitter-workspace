@@ -20,3 +20,4 @@ Learned 2026-10-15 while merging twitter-openapi #108 → #107 → #106 bottom-u
 **Why:** avoids losing PRs and keeps the review history the user expects.
 
 **How to apply:** before any `--delete-branch`, list open PRs with that base (`gh pr list --base <branch>`) and retarget them. Related: [[feedback-twitter-ecosystem-working-rules]], [[project-x-drift-2026-10]].
+- **Delete a head branch only after the merge response says `"merged":true`** (2026-11-04: during a GitHub "Minor Service Outage" the merge API returned an empty body, the script deleted the branch anyway and GitHub closed two LGTM'd PRs unmerged; recovery was: recreate the branch from the local commit, push once GitHub accepted pushes again, `PATCH pulls/N -f state=open`, merge). Check `githubstatus.com/api/v2/status.json` when API calls return odd bodies, and never chain a branch deletion unconditionally after a merge call.
