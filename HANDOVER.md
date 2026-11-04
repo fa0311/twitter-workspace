@@ -43,10 +43,17 @@ This file holds what those cannot: the environment and the state of the work. Up
   `get_client_from_endpoint`) on npm and PyPI; relay 0.4.2 / dashboard 0.2.3 / mcp 0.4.1 published and on ghcr;
   twitter-snap 0.2.1 released (RenderXReference theme, polls, Community Notes), master also has `--thread` and `--translate`
   unreleased: the release is the maintainer's call.
-- Open, LGTM-gated, stacked: twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults, no option tables;
-  the Twitter mux asks ffmpeg whether the container holds audio) and on top of it #100 (README: examples reshaped, sample gallery
-  with an animated WebP made by twitter-snap, More Samples link dropped). Merge #101 into master first, then retarget #100. Open: dependabot bumps twitter_openapi_python #76 #77 #78 and
-  twitter-openapi-typescript #166 #167 (all clean, no CI in those repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
+- twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults) and #100 (README gallery with two animated WebPs made
+  by twitter-snap) merged 2026-11-04 (master d5ffe8f), unreleased.
+- Release round in progress ("全パッケージ、リリースいれよう", 2026-11-04), in dependency order, each step LGTM-gated and waiting for the
+  registry before the next: (1) twitter_openapi_python 0.1.6 on generated 0.1.5 (PR open, e2e 83 passed) and twitter-openapi-typescript
+  0.1.6 on generated 0.1.5 (PR open, vitest pending) from spec 9751966; TS lockfile follow-up after npm has generated 0.1.5;
+  (2) twitter-snap 0.3.0: deps ^0.1.6, lockfile, version bump (`update 0.3.0` commit pattern, README usage block via `node replace.js`
+  after a build); (3) twitter-snap-api ^0.3.0 lockfile, private_bot clients ^0.1.6 (twitter-snap-discord / -bookmarklet carry no
+  dependency on twitter-snap). Relay packages (0.4.2 / 0.2.3 / 0.4.1) have nothing unreleased; x-client-transaction-pair-dict is not
+  on npm (consumed from raw GitHub), nothing to release there.
+- Open: dependabot bumps twitter_openapi_python #76 #77 #78 and twitter-openapi-typescript #166 #167 (all clean, no CI in those
+  repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
   current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
   own scheduled PR.
 - Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
