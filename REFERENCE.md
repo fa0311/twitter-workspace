@@ -34,7 +34,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - The TS wrapper's `cookie.json` is not gitignored; the Python wrapper's is.
 
 ## twitter_api_safe_relay
-- Everything the relay serves lives under `/i/api` like the X web app; dispatch paths inside are relative to `https://x.com/i/api`. `x-profile-name` selects a profile.
+- Everything the relay serves lives under `/i/api` like the X web app; dispatch paths inside are relative to `https://x.com/i/api`. `x-profile-name` selects a profile. Anything else is a Hono 404; a form-encoded POST body or an endpoint X itself rejects (its `ApiError` 404) comes back as a relay 500.
 - Its tests and a throwaway relay for e2e take `X_COOKIE_FILE` through `twitter-api-safe-test-utils` (headless Chromium with the cookies added); `node file.ts` runs TypeScript directly on Node 24.
 - The catalog `packages/server/requests.ndjson` is recorded with `twitter-api-safe-dump` (`--cookies`, `--headless`), merged line by line, `recordedAt` stamped.
 
