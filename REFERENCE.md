@@ -42,4 +42,5 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - TwitterInternalAPIDocument: generator needs a cookie; docs on `develop`, merged to `master` by the scheduled workflow; branches `develop`, `legacy-twitter`, `for/kaonasi-biwa/Twitter-UI-Customizer`, `twitter-login`, `twitter-blue` must never be deleted.
 - x-client-transaction-id-pair-dict: `pnpm start` yields 30 pairs in a few minutes without a proxy; pairs stay valid for weeks.
 - twitter-snap: pnpm + biome + vitest; tests hit X as guest and need ffmpeg (BtbN builds; the johnvansickle static build segfaults on https input); `@vercel/og` stays 0.x; some media only serve `?name=orig`.
+- `node:26` images (and newer) do not ship corepack: Dockerfiles run `npm install -g corepack && corepack enable`; the pnpm version still comes from `packageManager`.
 - pnpm 12 in CI: every dependency with a build script needs an `allowBuilds` entry; Dockerfiles must copy `pnpm-workspace.yaml`; a lockfile from an older 12.x breaks `--frozen-lockfile`.
