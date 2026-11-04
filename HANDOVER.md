@@ -51,10 +51,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 - twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults) and #100 (README gallery with two animated WebPs made
   by twitter-snap) merged 2026-11-04 (master d5ffe8f), unreleased.
 - Release round in progress ("全パッケージ、リリースいれよう", 2026-11-04), in dependency order, each step LGTM-gated and waiting for the
-  registry before the next: (1) done: twitter_openapi_python 0.1.6 / generated 0.1.5 on PyPI; twitter-openapi-typescript #168 merged
-  (0.1.6 / generated 0.1.5), npm propagation and the lockfile follow-up PR in flight; (2) twitter-snap 0.3.0: local branch
-  `release/0.3.0` holds the version bump, Node 26 image with corepack installed and the publish workflow on Node 26; still to do once
-  npm has wrapper 0.1.6: deps ^0.1.6, `pnpm install`, guest tests, push, PR; (3) twitter-snap-api ^0.3.0 + Node 26 image, private_bot
+  registry before the next: (1) done: twitter_openapi_python 0.1.6 / generated 0.1.5 on PyPI, twitter-openapi-typescript 0.1.6 / generated 0.1.5 on npm; the
+  wrapper lockfile follow-up #169 is open; (2) twitter-snap #102 `release/0.3.0` open (deps ^0.1.6, Node 26 image with corepack,
+  publish on Node 26, guest tests 57/57); (3) twitter-snap-api ^0.3.0 + Node 26 image, private_bot
   clients ^0.1.6 + Node 26 image. Done on the side: Node 26 images for twitter-snap-discord / -bookmarklet (merged, then their builds
   failed on the missing corepack: fix PRs #14 / #7 open, LGTM-gated) and twitter_api_safe_relay #44 (merged with the corepack fix,
   images and npm publish green). Relay packages have nothing else unreleased; x-client-transaction-pair-dict is not on npm.
