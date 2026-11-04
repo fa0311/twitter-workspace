@@ -30,6 +30,11 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## Routine
 
+- Account budget: the nightly plus at most one strict run or one wrapper e2e suite per day, never two suites at once, and a push to a
+  twitter_api_safe_relay PR counts as three logins (its CI runs a live browser session per Node version). The account was locked on
+  2026-10-20, 10-26 and 11-04 after days heavier than that; `tools/graphql_get.py UserByScreenName` showing `code 326` means stop and
+  tell the maintainer (they clear it at x.com/account/access).
+
 - twitter-openapi runs a nightly strict live test (`live-test.yaml`, 23:00 UTC, often delayed); it is the main drift signal.
   A failure means: reproduce in a worktree, type the new field from the raw response, validate the recordings set, run strict, PR.
 - Recordings of X requests happen on the maintainer's instruction; placeholder values come only from them.
