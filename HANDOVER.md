@@ -51,12 +51,15 @@ This file holds what those cannot: the environment and the state of the work. Up
 - twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults) and #100 (README gallery with two animated WebPs made
   by twitter-snap) merged 2026-11-04 (master d5ffe8f), unreleased.
 - Release round in progress ("全パッケージ、リリースいれよう", 2026-11-04), in dependency order, each step LGTM-gated and waiting for the
-  registry before the next: (1) twitter_openapi_python 0.1.6 on generated 0.1.5 (PR open, e2e 83 passed) and twitter-openapi-typescript
-  0.1.6 on generated 0.1.5 (PR open, vitest pending) from spec 9751966; TS lockfile follow-up after npm has generated 0.1.5;
-  (2) twitter-snap 0.3.0: deps ^0.1.6, lockfile, version bump (`update 0.3.0` commit pattern, README usage block via `node replace.js`
-  after a build); (3) twitter-snap-api ^0.3.0 lockfile, private_bot clients ^0.1.6 (twitter-snap-discord / -bookmarklet carry no
-  dependency on twitter-snap). Relay packages (0.4.2 / 0.2.3 / 0.4.1) have nothing unreleased; x-client-transaction-pair-dict is not
-  on npm (consumed from raw GitHub), nothing to release there.
+  registry before the next: (1) done: twitter_openapi_python 0.1.6 / generated 0.1.5 on PyPI; twitter-openapi-typescript #168 merged
+  (0.1.6 / generated 0.1.5), npm propagation and the lockfile follow-up PR in flight; (2) twitter-snap 0.3.0: local branch
+  `release/0.3.0` holds the version bump, Node 26 image with corepack installed and the publish workflow on Node 26; still to do once
+  npm has wrapper 0.1.6: deps ^0.1.6, `pnpm install`, guest tests, push, PR; (3) twitter-snap-api ^0.3.0 + Node 26 image, private_bot
+  clients ^0.1.6 + Node 26 image. Done on the side: Node 26 images for twitter-snap-discord / -bookmarklet (merged, then their builds
+  failed on the missing corepack: fix PRs #14 / #7 open, LGTM-gated) and twitter_api_safe_relay #44 (merged with the corepack fix,
+  images and npm publish green). Relay packages have nothing else unreleased; x-client-transaction-pair-dict is not on npm.
+- Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
+  body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
 - Open: dependabot bumps twitter_openapi_python #76 #77 #78 and twitter-openapi-typescript #166 #167 (all clean, no CI in those
   repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
   current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
