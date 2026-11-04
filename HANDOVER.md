@@ -43,12 +43,16 @@ This file holds what those cannot: the environment and the state of the work. Up
   `get_client_from_endpoint`) on npm and PyPI; relay 0.4.2 / dashboard 0.2.3 / mcp 0.4.1 published and on ghcr;
   twitter-snap 0.2.1 released (RenderXReference theme, polls, Community Notes), master also has `--thread` and `--translate`
   unreleased: the release is the maintainer's call.
-- Open: dependabot bumps twitter_openapi_python #76 #77 #78 and twitter-openapi-typescript #166 #167 (all clean, no CI in those
-  repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
+- Open, LGTM-gated: twitter-snap #100 (README: examples reshaped, new sample gallery, More Samples link dropped) and #101
+  (output formats: the post decides still or motion, the extension picks the encoding; webp / gif / webm added). They touch the
+  same README example block, so the later one gets master merged in. Open: dependabot bumps twitter_openapi_python #76 #77 #78 and
+  twitter-openapi-typescript #166 #167 (all clean, no CI in those repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
   current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
   own scheduled PR.
 - Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
   queryId drift recordings, whether to delete `screenshot/2026-10-31/` and `screenshot/2026-11-01/` (gitignored review renders).
-- Backlog: `snap_tweet` MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
+- Backlog: an animated WebP sample in the README once #101 ships (the maintainer has not decided; candidates in
+  `screenshot/2026-11-04/video/`), `RenderTransparentShadow` fails on `background: none` (pre-existing, also in 0.2.1), `snap_tweet`
+  MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
 - Decisions of 2026-10-31 / 11-01 live in memory (design preferences, README policy, screenshots, sandbox account budget); the
   translation mechanics and the local relay recipe are memory files too. Nothing in the sandbox is running.

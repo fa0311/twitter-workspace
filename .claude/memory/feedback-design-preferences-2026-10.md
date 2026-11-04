@@ -32,3 +32,4 @@ metadata:
 **Why:** these settle recurring judgement calls so they are not re-asked.
 
 **How to apply:** apply them silently; when a new judgement call appears, decide in their spirit and say so. Related: [[user-fa0311-preferences]], [[feedback-twitter-ecosystem-working-rules]].
+- **Output format rule (2026-11-04, twitter-snap)**: the post decides still vs motion, the `-o` extension only picks the encoding. Formats that hold a still only (png, jpg, svg, pdf) give a still (non-png falls back to png); mp4 / webm hold motion only (a still becomes the 5 s loop); webp / gif hold both and follow the post (one frame or animated). Encoders come from a table in `src/utils/video.ts` and `--ffmpegAdditonalOption` is appended after it, so it still overrides. Animated images carry no sound track, so the audio filter chain is built only for containers that hold audio.
