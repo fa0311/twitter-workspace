@@ -43,9 +43,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   `get_client_from_endpoint`) on npm and PyPI; relay 0.4.2 / dashboard 0.2.3 / mcp 0.4.1 published and on ghcr;
   twitter-snap 0.2.1 released (RenderXReference theme, polls, Community Notes), master also has `--thread` and `--translate`
   unreleased: the release is the maintainer's call.
-- Open, LGTM-gated: twitter-snap #100 (README: examples reshaped, new sample gallery, More Samples link dropped) and #101
-  (output formats: the post decides still or motion, the extension picks the encoding; webp / gif / webm added). They touch the
-  same README example block, so the later one gets master merged in. Open: dependabot bumps twitter_openapi_python #76 #77 #78 and
+- Open, LGTM-gated, stacked: twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults, no option tables;
+  the Twitter mux asks ffmpeg whether the container holds audio) and on top of it #100 (README: examples reshaped, sample gallery
+  with an animated WebP made by twitter-snap, More Samples link dropped). Merge #101 into master first, then retarget #100. Open: dependabot bumps twitter_openapi_python #76 #77 #78 and
   twitter-openapi-typescript #166 #167 (all clean, no CI in those repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
   current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
   own scheduled PR.
