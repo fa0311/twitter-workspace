@@ -17,7 +17,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - New GraphQL query versions have no `User.legacy`; old queryIds keep returning it and keep working for a while.
 - Logged-out x.com is static HTML; guest-token GraphQL still works. `UserByRestId` / `UsersByRestIds` are 403 for non-browser clients. Other users' likes are empty. Every list answers `ListByRestId` with a partial `BadRequestError`, so the harness skips it.
 - X frequently returns complete data next to partial `errors`; the harness logs these as warnings, not failures.
-- The web app sends REST under `/i/api/1.1/...`; `HomeTimeline` is GET; mutations no longer send `dark_request`.
+- The web app sends REST under `/i/api/1.1/...`; `HomeTimeline` is GET at launch and POST once `seenTweetIds` / a cursor is sent; mutations no longer send `dark_request`.
+- "Not interested in this post" is `POST /i/api/2/timeline/feedback.json` with the query of the timeline's `feedbackUrl` and a form body `feedback_type=…&undo=false`; Undo repeats it with `undo=true`; the answer is `{"objects":{},"response":{}}`. `live_pipeline/update_subscriptions` lives on `api.x.com` and needs the `livepipeline-session` of the open `live_pipeline/events` stream.
 - Rate limits per 15 minutes vary by an order of magnitude between operations (search is the scarce one); read `x-rate-limit-*`.
 
 ## twitter-openapi (spec)
@@ -42,6 +43,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 ## Other repos
 - TwitterInternalAPIDocument: generator needs a cookie; docs on `develop`, merged to `master` by the scheduled workflow; branches `develop`, `legacy-twitter`, `for/kaonasi-biwa/Twitter-UI-Customizer`, `twitter-login`, `twitter-blue` must never be deleted.
 - x-client-transaction-id-pair-dict: `pnpm start` yields 30 pairs in a few minutes without a proxy; pairs stay valid for weeks.
-- twitter-snap: pnpm + biome + vitest; tests hit X as guest and need ffmpeg (BtbN builds; the johnvansickle static build segfaults on https input); `@vercel/og` stays 0.x; some media only serve `?name=orig`.
+- twitter-snap: pnpm + biome + vitest; tests hit X as guest and need ffmpeg (BtbN builds; the johnvansickle static build segfaults on https input); `@vercel/og` stays 0.x (1.0.x does not load on Node: "Dynamic require of fs"; 0.11.1 ships satori 0.25.0 inside its bundle, so a satori alert cannot be fixed by a bump, and it rasterizes with sharp when sharp is installed); some media only serve `?name=orig`.
 - `node:26` images (and newer) do not ship corepack: Dockerfiles run `npm install -g corepack && corepack enable`; the pnpm version still comes from `packageManager`.
+- Dependabot's security-update jobs fail in the pnpm repositories ("VulnerabilityAuditor: missing lockfile"), so alerts are fixed by hand: `pnpm update <pkg> --no-save` (add `-r --depth 99` in a workspace) moves a transitive package inside its range; when the package is also a direct dependency, add a temporary `overrides` entry, install, remove it and install again; a version outside the parent's range needs a lasting `overrides` entry in `pnpm-workspace.yaml`. Alerts are readable with `gh api repos/fa0311/<repo>/dependabot/alerts`.
 - pnpm 12 in CI: every dependency with a build script needs an `allowBuilds` entry; Dockerfiles must copy `pnpm-workspace.yaml`; a lockfile from an older 12.x breaks `--frozen-lockfile`.

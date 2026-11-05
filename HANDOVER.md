@@ -48,20 +48,29 @@ This file holds what those cannot: the environment and the state of the work. Up
   dashboard 0.2.3 / mcp 0.4.1 (npm and ghcr), twitter-snap 0.3.0 (npm); every image is on Node 26 with corepack installed from npm.
   x-client-transaction-id-pair-dict is not on npm.
 - Unreleased: twitter-snap master 4b3d891 has #103 (even dimensions by `crop`, so a lossless WebP of a still matches the PNG pixel for
-  pixel); a 0.3.1 is the maintainer's call. Nothing else is unreleased.
-- No PR open from this side. Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no
-  approval in the current conversation, so get a go in the chat first. TwitterInternalAPIDocument's "Update Document" PRs are the
-  maintainer's own.
+  pixel); it ships with the 0.3.1 of the round below.
+- Round of 2026-11-05 ("すべてやって", fewest releases): the maintainer asked for the security alerts, the stale queryIds, issue #131,
+  the transparent themes and the example directories in one go. Merge and release in this order, each step after an LGTM:
+  1. twitter-openapi #139: placeholder re-recorded 2026-11-05 (39 operations on the frontend's current query versions,
+     `SmarttagTag.rest_id`) and `postTimelineFeedback` (#131; `live_pipeline/update_subscriptions` left out, see REFERENCE).
+  2. Clients: regenerate both (generated 0.1.6, wrappers 0.1.7) with a wrapper method for `postTimelineFeedback`;
+     twitter-openapi-typescript #170 (removes `example/`) goes in before that release.
+  3. twitter-snap: #104 (transparent themes wrote no file: `background: none`) and #105 (sharp / @hono/node-server overrides,
+     fflate) are open; then one release PR (0.3.1: these, #103, the new clients).
+  4. twitter-snap-api (twitter-snap ^0.3.1, the same sharp override, minimatch) and private_bot (new clients, body-parser and
+     undici inside their ranges): one PR each, not started.
+  twitter_api_safe_relay is independent: branch `chore/catalog-2026-11` exists only locally (catalog of 2026-11-05, the dump
+  `--responses` fix, body-parser / qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2). Push it on a day without a
+  strict run or suite (its CI logs in three times), then PR.
+- Left open on purpose: the satori alert in twitter-snap / twitter-snap-api (not fixable by a bump, see REFERENCE); 18 placeholder
+  operations the browser session did not send (listed in #139); the GET form of `HomeTimeline` still carries `seenTweetIds`, which
+  the frontend only sends by POST (raised with the maintainer, no decision).
+- Account use on 2026-11-05: nightly, one catalog recording session, one feedback click (undone), one strict run.
+- Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the current
+  conversation, so get a go in the chat first. TwitterInternalAPIDocument's "Update Document" PRs are the maintainer's own.
 - twitter_openapi_python no longer has an `example/` (its login went through the archived tweepy-authlib); the README Usage reads
-  cookies from a file. twitter-openapi-typescript keeps a similar `example/`; the maintainer has not said whether it goes too.
-- Open dependabot alerts, all in `pnpm-lock.yaml`: twitter_api_safe_relay 7, twitter-snap 6, twitter-snap-api 4, private_bot 14
-  (`gh api repos/fa0311/<repo>/dependabot/alerts` works with the sandbox token). Dependabot's security-update jobs fail in the pnpm
-  repositories ("VulnerabilityAuditor: missing lockfile", with pnpm 11 and pnpm 12 pins alike; cause not established) while its
-  version-update PRs still arrive, so these need hand-made bumps. Proposed to the maintainer, no decision yet.
-- Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
-  queryId drift recordings, a poll-with-image post URL to check twitter-snap's poll rendering, whether to delete
-  `screenshot/2026-10-31/` and `screenshot/2026-11-01/` (gitignored review renders).
-- Backlog: `RenderTransparentShadow` fails on `background: none` (pre-existing), `snap_tweet` MCP tool (home undecided), spec
-  candidates from the relay catalog (recording only on instruction).
+  cookies from a file.
+- Waiting on the maintainer: a poll-with-image post URL to check twitter-snap's poll rendering (they are looking too).
+- Backlog: `snap_tweet` MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
 - Decisions live in memory (design preferences, README policy, screenshots, sandbox account budget); the translation mechanics and
   the local relay recipe are memory files too. Nothing in the sandbox is running.
