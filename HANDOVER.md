@@ -51,17 +51,21 @@ This file holds what those cannot: the environment and the state of the work. Up
   pixel); it ships with the 0.3.1 of the round below.
 - Round of 2026-11-05 ("すべてやって", fewest releases): the maintainer asked for the security alerts, the stale queryIds, issue #131,
   the transparent themes and the example directories in one go. Merge and release in this order, each step after an LGTM:
-  1. twitter-openapi #139: placeholder re-recorded 2026-11-05 (39 operations on the frontend's current query versions,
-     `SmarttagTag.rest_id`) and `postTimelineFeedback` (#131; `live_pipeline/update_subscriptions` left out, see REFERENCE).
-  2. Clients: regenerate both (generated 0.1.6, wrappers 0.1.7) with a wrapper method for `postTimelineFeedback`;
-     twitter-openapi-typescript #170 (removes `example/`) goes in before that release.
-  3. twitter-snap: #104 (transparent themes wrote no file: `background: none`) and #106 (fflate 0.7.5, lockfile only) are open;
-     then one release PR (0.3.1: these, #103, the new clients).
+  1. Done: twitter-openapi #139 merged (main 45a5fb4): placeholder re-recorded 2026-11-05 (39 operations on the frontend's current
+     query versions, `SmarttagTag.rest_id`) and `postTimelineFeedback` (#131; `live_pipeline/update_subscriptions` left out, see
+     REFERENCE). twitter-openapi-typescript #170 (no `example/`), twitter-snap #104 (transparent themes) and #106 (fflate 0.7.5 in
+     the lockfile) are merged too (twitter-snap master a58f303).
+  2. Open, LGTM-gated: twitter_openapi_python #81 and twitter-openapi-typescript #171 (generated 0.1.6, wrappers 0.1.7 with
+     `post_timeline_feedback` / `postTimelineFeedback`; the new e2e test of each passed once on the sandbox). Merging publishes;
+     then the TS lockfile follow-up PR.
+  3. twitter-snap: one release PR (0.3.1: #103, #104, #106, the new clients) once npm has the clients.
   4. twitter-snap-api (twitter-snap ^0.3.1; none of its alerts has a fix inside the ranges) and private_bot (new clients,
      body-parser and undici inside their ranges): one PR each, not started.
   twitter_api_safe_relay is independent: branch `chore/catalog-2026-11` exists only locally (catalog of 2026-11-05, the dump
   `--responses` fix, body-parser / qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2). Push it on a day without a
   strict run or suite (its CI logs in three times), then PR.
+- Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
+  `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
   the ranges `@vercel/og` 0.11.1 and `@hono/vite-dev-server` ask for; the maintainer rejected overrides, #105 was closed); 18 placeholder
   operations the browser session did not send (listed in #139); the GET form of `HomeTimeline` still carries `seenTweetIds`, which
