@@ -58,7 +58,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   is not on npm.
 - Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
   body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
-- Nothing open from this side (2026-11-05): twitter-snap #103 (even dimensions by `crop`, so a lossless WebP of a still matches the
+- Open, LGTM-gated: twitter_openapi_python #80 (removes `example/`, whose login went through the archived tweepy-authlib and whose
+  lockfile caused the failing dependabot security update; the README Usage reads cookies from a file). twitter-openapi-typescript
+  keeps a similar `example/`; the maintainer has not said whether it goes too.
+- Otherwise nothing open from this side (2026-11-05): twitter-snap #103 (even dimensions by `crop`, so a lossless WebP of a still matches the
   PNG pixel for pixel) is merged on master 4b3d891 and unreleased (0.3.0 is the last release; a 0.3.1 is the maintainer's call), and
   the dependabot bumps in twitter_openapi_python, twitter-openapi-typescript and twitter-snap-api were merged on the maintainer's go.
   Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the current
