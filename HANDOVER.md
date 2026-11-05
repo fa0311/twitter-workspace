@@ -58,11 +58,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   is not on npm.
 - Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
   body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
-- Open, LGTM-gated: twitter-snap #103 (even dimensions by `crop` instead of `scale`: a lossless WebP of a still is then pixel-identical
-  to the PNG; CI green). Open: dependabot bumps twitter_openapi_python #76 #77 #78, twitter-openapi-typescript #166 #167 and
-  twitter-snap-api #17 #18 (all clean). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
-  current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
-  own scheduled PR.
+- Nothing open from this side (2026-11-05): twitter-snap #103 (even dimensions by `crop`, so a lossless WebP of a still matches the
+  PNG pixel for pixel) is merged on master 4b3d891 and unreleased (0.3.0 is the last release; a 0.3.1 is the maintainer's call), and
+  the dependabot bumps in twitter_openapi_python, twitter-openapi-typescript and twitter-snap-api were merged on the maintainer's go.
+  Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the current
+  conversation, so get a go in the chat first. TwitterInternalAPIDocument's "Update Document" PRs are the maintainer's own.
 - Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
   queryId drift recordings, whether to delete `screenshot/2026-10-31/` and `screenshot/2026-11-01/` (gitignored review renders).
 - Backlog: an animated WebP sample in the README once #101 ships (the maintainer has not decided; candidates in
