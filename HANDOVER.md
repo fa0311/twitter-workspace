@@ -42,7 +42,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-11-04)
+## State (2026-11-05)
 
 - Nightly green since 2026-10-31. Spec `main` 24b82ab; clients 0.1.5 (endpoint factories `getClientFromEndpoint` /
   `get_client_from_endpoint`) on npm and PyPI; relay 0.4.2 / dashboard 0.2.3 / mcp 0.4.1 published and on ghcr;
@@ -58,8 +58,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   is not on npm.
 - Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
   body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
-- Open: dependabot bumps twitter_openapi_python #76 #77 #78 and twitter-openapi-typescript #166 #167 (all clean, no CI in those
-  repos). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
+- Open, LGTM-gated: twitter-snap #103 (even dimensions by `crop` instead of `scale`: a lossless WebP of a still is then pixel-identical
+  to the PNG; CI green). Open: dependabot bumps twitter_openapi_python #76 #77 #78, twitter-openapi-typescript #166 #167 and
+  twitter-snap-api #17 #18 (all clean). Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the
   current conversation, so get a go from the maintainer in the chat first. TwitterInternalAPIDocument #1140 is the maintainer's
   own scheduled PR.
 - Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
