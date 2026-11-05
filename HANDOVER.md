@@ -55,14 +55,15 @@ This file holds what those cannot: the environment and the state of the work. Up
      `SmarttagTag.rest_id`) and `postTimelineFeedback` (#131; `live_pipeline/update_subscriptions` left out, see REFERENCE).
   2. Clients: regenerate both (generated 0.1.6, wrappers 0.1.7) with a wrapper method for `postTimelineFeedback`;
      twitter-openapi-typescript #170 (removes `example/`) goes in before that release.
-  3. twitter-snap: #104 (transparent themes wrote no file: `background: none`) and #105 (sharp / @hono/node-server overrides,
-     fflate) are open; then one release PR (0.3.1: these, #103, the new clients).
-  4. twitter-snap-api (twitter-snap ^0.3.1, the same sharp override, minimatch) and private_bot (new clients, body-parser and
-     undici inside their ranges): one PR each, not started.
+  3. twitter-snap: #104 (transparent themes wrote no file: `background: none`) and #106 (fflate 0.7.5, lockfile only) are open;
+     then one release PR (0.3.1: these, #103, the new clients).
+  4. twitter-snap-api (twitter-snap ^0.3.1, what the lockfile can fix inside the ranges) and private_bot (new clients,
+     body-parser and undici inside their ranges): one PR each, not started.
   twitter_api_safe_relay is independent: branch `chore/catalog-2026-11` exists only locally (catalog of 2026-11-05, the dump
   `--responses` fix, body-parser / qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2). Push it on a day without a
   strict run or suite (its CI logs in three times), then PR.
-- Left open on purpose: the satori alert in twitter-snap / twitter-snap-api (not fixable by a bump, see REFERENCE); 18 placeholder
+- Left open on purpose: the satori, sharp and @hono/node-server alerts in twitter-snap / twitter-snap-api (their fixes are outside
+  the ranges `@vercel/og` 0.11.1 and `@hono/vite-dev-server` ask for; the maintainer rejected overrides, #105 was closed); 18 placeholder
   operations the browser session did not send (listed in #139); the GET form of `HomeTimeline` still carries `seenTweetIds`, which
   the frontend only sends by POST (raised with the maintainer, no decision).
 - Account use on 2026-11-05: nightly, one catalog recording session, one feedback click (undone), one strict run.
