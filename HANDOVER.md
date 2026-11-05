@@ -44,32 +44,24 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 ## State (2026-11-05)
 
-- Nightly green since 2026-10-31. Spec `main` 24b82ab; clients 0.1.5 (endpoint factories `getClientFromEndpoint` /
-  `get_client_from_endpoint`) on npm and PyPI; relay 0.4.2 / dashboard 0.2.3 / mcp 0.4.1 published and on ghcr;
-  twitter-snap 0.2.1 released (RenderXReference theme, polls, Community Notes), master also has `--thread` and `--translate`
-  unreleased: the release is the maintainer's call.
-- twitter-snap #101 (webp / gif / webm outputs by ffmpeg's container defaults) and #100 (README gallery with two animated WebPs made
-  by twitter-snap) merged 2026-11-04 (master d5ffe8f), unreleased.
-- Release round of 2026-11-04 ("全パッケージ、リリースいれよう"), in dependency order: done: twitter_openapi_python 0.1.6 / generated 0.1.5
-  (PyPI), twitter-openapi-typescript 0.1.6 / generated 0.1.5 (npm, lockfile follow-up #169 merged), twitter-snap 0.3.0 (npm; image on
-  node:26-alpine with corepack installed; publish on Node 26), private_bot on the 0.1.6 clients with a Node 26 image, Node 26 images for
-  twitter-snap-discord / -bookmarklet / twitter_api_safe_relay (all with corepack installed from npm). twitter-snap-api #16 (twitter-snap ^0.3.0, Node 26 image)
-  merged last (main 83a4ccc). Nothing open from this side. Relay packages have nothing else unreleased; x-client-transaction-pair-dict
-  is not on npm.
-- Side finding: dependabot's security-update jobs in twitter_api_safe_relay have failed since 2026-11-01 (minimatch, qs, glob,
-  body-parser, fast-uri); the updater uses pnpm 12 against the repo's pnpm 11 lockfile. Not part of the release; raised with the maintainer.
-- twitter_openapi_python no longer has an `example/` (#80, merged 2026-11-05: its login went through the archived tweepy-authlib and
-  its lockfile caused a failing dependabot security update); the README Usage reads cookies from a file. twitter-openapi-typescript
-  keeps a similar `example/`; the maintainer has not said whether it goes too.
-- Nothing open from this side (2026-11-05): twitter-snap #103 (even dimensions by `crop`, so a lossless WebP of a still matches the
-  PNG pixel for pixel) is merged on master 4b3d891 and unreleased (0.3.0 is the last release; a 0.3.1 is the maintainer's call), and
-  the dependabot bumps in twitter_openapi_python, twitter-openapi-typescript and twitter-snap-api were merged on the maintainer's go.
-  Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no approval in the current
-  conversation, so get a go in the chat first. TwitterInternalAPIDocument's "Update Document" PRs are the maintainer's own.
+- Nightly green since 2026-10-30. Spec `main` 9751966. Published: clients 0.1.6 on generated 0.1.5 (PyPI and npm), relay 0.4.2 /
+  dashboard 0.2.3 / mcp 0.4.1 (npm and ghcr), twitter-snap 0.3.0 (npm); every image is on Node 26 with corepack installed from npm.
+  x-client-transaction-id-pair-dict is not on npm.
+- Unreleased: twitter-snap master 4b3d891 has #103 (even dimensions by `crop`, so a lossless WebP of a still matches the PNG pixel for
+  pixel); a 0.3.1 is the maintainer's call. Nothing else is unreleased.
+- No PR open from this side. Dependabot merges are delegated, but the sandbox's auto-mode classifier refuses a merge that has no
+  approval in the current conversation, so get a go in the chat first. TwitterInternalAPIDocument's "Update Document" PRs are the
+  maintainer's own.
+- twitter_openapi_python no longer has an `example/` (its login went through the archived tweepy-authlib); the README Usage reads
+  cookies from a file. twitter-openapi-typescript keeps a similar `example/`; the maintainer has not said whether it goes too.
+- Open dependabot alerts, all in `pnpm-lock.yaml`: twitter_api_safe_relay 7, twitter-snap 6, twitter-snap-api 4, private_bot 14
+  (`gh api repos/fa0311/<repo>/dependabot/alerts` works with the sandbox token). Dependabot's security-update jobs fail in the pnpm
+  repositories ("VulnerabilityAuditor: missing lockfile", with pnpm 11 and pnpm 12 pins alike; cause not established) while its
+  version-update PRs still arrive, so these need hand-made bumps. Proposed to the maintainer, no decision yet.
 - Waiting on the maintainer: twitter-openapi #131 (feed-algorithm endpoints need a real "not interested" click to record), TIAD
-  queryId drift recordings, whether to delete `screenshot/2026-10-31/` and `screenshot/2026-11-01/` (gitignored review renders).
-- Backlog: an animated WebP sample in the README once #101 ships (the maintainer has not decided; candidates in
-  `screenshot/2026-11-04/video/`), `RenderTransparentShadow` fails on `background: none` (pre-existing, also in 0.2.1), `snap_tweet`
-  MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
-- Decisions of 2026-10-31 / 11-01 live in memory (design preferences, README policy, screenshots, sandbox account budget); the
-  translation mechanics and the local relay recipe are memory files too. Nothing in the sandbox is running.
+  queryId drift recordings, a poll-with-image post URL to check twitter-snap's poll rendering, whether to delete
+  `screenshot/2026-10-31/` and `screenshot/2026-11-01/` (gitignored review renders).
+- Backlog: `RenderTransparentShadow` fails on `background: none` (pre-existing), `snap_tweet` MCP tool (home undecided), spec
+  candidates from the relay catalog (recording only on instruction).
+- Decisions live in memory (design preferences, README policy, screenshots, sandbox account budget); the translation mechanics and
+  the local relay recipe are memory files too. Nothing in the sandbox is running.
