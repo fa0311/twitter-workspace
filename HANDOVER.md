@@ -63,9 +63,11 @@ This file holds what those cannot: the environment and the state of the work. Up
      body-parser and undici inside their ranges): one PR each, not started.
   twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
   qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2), LGTM-gated.
-- 2026-11-06: the maintainer reported a "type error" on the self-hosted twitter-snap-api. Not reproduced: main e30904e builds and
-  serves a text post and a video post on Node 26 and on Node 22 (the GPU images still run Node 22). Waiting for the error text,
-  the image variant, the post URL and whether `FFMPEG_OPTION` is set.
+- 2026-11-06: the maintainer's private_bot got `TypeError: fetch failed` (HeadersTimeoutError, exactly 300 s) from the self-hosted
+  twitter-snap-api. The post from its log renders in 15 s locally on main e30904e (Node 26 and 22), so the trigger on that
+  instance is unknown; what makes it permanent is known: twitter-snap-api passed `ffmpegTimeout: 30000`, which fluent-ffmpeg
+  counts in seconds, and every route renders under one semaphore. twitter-snap-api #19 (240 seconds) is open, LGTM-gated.
+  Still wanted from the maintainer: the twitter-snap-api container log around the failure, the image variant, `FFMPEG_OPTION`.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
