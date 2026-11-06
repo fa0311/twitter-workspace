@@ -42,7 +42,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-11-05)
+## State (2026-11-06)
 
 - Nightly green since 2026-10-30. Spec `main` 9751966. Published: clients 0.1.6 on generated 0.1.5 (PyPI and npm), relay 0.4.2 /
   dashboard 0.2.3 / mcp 0.4.1 (npm and ghcr), twitter-snap 0.3.0 (npm); every image is on Node 26 with corepack installed from npm.
@@ -61,9 +61,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   3. twitter-snap: one release PR (0.3.1: #103, #104, #106, the new clients) once npm has the clients.
   4. twitter-snap-api (twitter-snap ^0.3.1; none of its alerts has a fix inside the ranges) and private_bot (new clients,
      body-parser and undici inside their ranges): one PR each, not started.
-  twitter_api_safe_relay is independent: branch `chore/catalog-2026-11` exists only locally (catalog of 2026-11-05, the dump
-  `--responses` fix, body-parser / qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2). Push it on a day without a
-  strict run or suite (its CI logs in three times), then PR.
+  twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
+  qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2), LGTM-gated.
+- 2026-11-06: the maintainer reported a "type error" on the self-hosted twitter-snap-api. Not reproduced: main e30904e builds and
+  serves a text post and a video post on Node 26 and on Node 22 (the GPU images still run Node 22). Waiting for the error text,
+  the image variant, the post URL and whether `FFMPEG_OPTION` is set.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
