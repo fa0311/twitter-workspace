@@ -62,8 +62,8 @@ This file holds what those cannot: the environment and the state of the work. Up
   line); downloading the same BtbN `ffmpeg-master-latest` build (`build.sh`) reproduced it here: the final encode stays at
   `frame=0`, ignores SIGTERM; bisected to the aac encoder (`-i <video> -map 0:a -c:a aac` hangs; the default `nmr` coder; `twoloop`,
   `fast`, `-ar 44100` fine; a 2 s float WAV reproduces: `tools/out/nvenc_repro/hang_2s_f32_u.wav`). n8.1 / n9.0 release builds and
-  Ubuntu 6.1.1 finish in 33 s. twitter-snap-api #22 (`fix/ffmpeg-release-build`) pins `build.sh` to the n9.0 line; waiting for an
-  LGTM; after the merge the maintainer rebuilds / pulls the nvenc image. Upstream report (FFmpeg trac) not filed; proposed.
+  Ubuntu 6.1.1 finish in 33 s. twitter-snap-api #22 (`fix/ffmpeg-release-build`) pins `build.sh` to the n9.0 line; merged on an LGTM
+  the same evening (main 1ad73a4, Docker build of all four images green, branch deleted); the maintainer pulls the new nvenc image. Upstream report (FFmpeg trac) not filed; proposed.
   twitter-snap-api #19 (ffmpegTimeout) is still open; with the real cause fixed it is only damage control.
 - GPU repro of the afternoon (before the cause was known): post 2111792834483556435 rendered here with the cookie at `--width 1440 --scale 2 --theme
   RenderOceanBlueColor --limit 1 --ffmpegAdditonalOption "-c:v hevc_nvenc -rc constqp -qp 20 -b_ref_mode middle -preset p5"` in 35 s
