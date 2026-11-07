@@ -64,7 +64,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   too. So the maintainer's hang is not reproducible with Ubuntu's ffmpeg 6.1.1 on driver 615.71.09 / RTX 3080 Ti; their nvenc image
   copies a self-built ffmpeg from `.temp/ffmpeg` (`Dockerfile.nvenc`, CUDA 12.4.1 runtime, Node 22). Next: ask for `ffmpeg -version`
   and the GPU of that host, and the rerun of the logged ffmpeg line inside the container.
-- twitter-snap #108 (`fix/satori-direct`, waiting for review): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
+- twitter-snap #108 merged 2026-11-07 (LGTM; master 6427825, head branch deleted). Release PR #109 (`release/0.4.0`, `update 0.4.0`,
+  0.4.0 because the library API changed) waits for an LGTM; after it merges, publish + docker run on master, then twitter-snap-api
+  follows (its lockfile moves to twitter-snap ^0.4.0, closing its sharp / satori alerts). `engines` is still `>=20.0.0` while sharp
+  0.35 wants >= 20.9 (raised, no decision).
+- twitter-snap #108 (history): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
   the three sharp and the satori alerts of twitter-snap (and, once twitter-snap-api follows, its three) without overrides; the
   font flow was reworked on the maintainer's ask ("コードのきれいさ優先", external libraries allowed): `loadFonts(dir)` in
   `src/utils/font.ts` replaces the per-app callback and `FontUtils`, `FontOptions` became `Font[]` (`getFonts`, run param `fonts`,
