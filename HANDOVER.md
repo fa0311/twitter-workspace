@@ -88,7 +88,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   libx265 at `--width 1440 --scale 2` 134 s (1440x2720), so the filter graph and the input are fine and the hang is inside the nvenc
   session (not reproducible without a GPU). Guest access cannot read that post; the cookie can. Asked the maintainer to rerun the
   logged ffmpeg line inside the container (`.temp/hlHyGbrMjBAMkCbi/` should still hold the inputs) and to try h264_nvenc / without
-  `-b_ref_mode middle`.
+  `-b_ref_mode middle`. The compose of the sandbox now reserves the NVIDIA GPU (2026-11-07, for this repro): after the
+  restart check `nvidia-smi` and `ffmpeg -encoders | grep nvenc`, then render post 2111792834483556435 with the cookie at
+  `--width 1440 --scale 2 --theme RenderOceanBlueColor --limit 1` and the maintainer's option string (above) to see whether
+  hevc_nvenc hangs here too; Intel (`/dev/dri`) was not passed in, the incident is nvenc only.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: private_bot's minimatch alert of 2026-11-07 (9.0.9 via webdav 5.11.0, the newest webdav, which asks for `^9.0.9`;
