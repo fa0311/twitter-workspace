@@ -65,12 +65,19 @@ This file holds what those cannot: the environment and the state of the work. Up
      lockfile moves only twitter-snap and the clients; its sharp / satori / minimatch alerts stay, no fix inside the ranges) merged;
      both image builds on the merge commits (a81e01e, 010e02b) succeeded. The round is complete: every package was released once.
      The maintainer's self-hosted twitter-snap-api picks 0.3.1 up when they pull the new image.
-  twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
-  qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2), LGTM-gated.
+  twitter_api_safe_relay #45 (catalog of 2026-11-05, the dump `--responses` fix, body-parser / qs / fast-uri / glob in the
+  lockfile, relay 0.4.3 / mcp 0.4.2) merged 2026-11-07 after the maintainer asked for a code comment to go ("こういうコメント
+  要らない"; the no-restating-comments rule is in memory). Publish and docker run on the merge commit 461259d.
+- twitter-snap-api #19 (`ffmpegTimeout` 240 s) is open but the maintainer doubts it is the real fix ("本質的な修正じゃなさそう");
+  my assessment in the chat: private_bot's plain `fetch` (undici's 300 s headers timeout) is where the error happened and sets no
+  wait of its own; twitter-snap-api's `createMutex(1)` turns one stuck render into a timeout for every later request (async-mutex
+  `withTimeout` would fail queued requests fast); the hang's trigger is unknown (twitter-snap hands the CDN URL to ffmpeg, a stalled
+  read has no timeout). Proposed: close #19; one PR for private_bot's wait (minutes to be chosen), one for the queue bound.
+  Waiting for the maintainer's choice and the container log.
 - 2026-11-06: the maintainer's private_bot got `TypeError: fetch failed` (HeadersTimeoutError, exactly 300 s) from the self-hosted
   twitter-snap-api. The post from its log renders in 15 s locally on main e30904e (Node 26 and 22), so the trigger on that
   instance is unknown; what makes it permanent is known: twitter-snap-api passed `ffmpegTimeout: 30000`, which fluent-ffmpeg
-  counts in seconds, and every route renders under one semaphore. twitter-snap-api #19 (240 seconds) is open, LGTM-gated.
+  counts in seconds, and every route renders under one semaphore. twitter-snap-api #19 (240 seconds) is open; see the assessment below.
   Still wanted from the maintainer: the twitter-snap-api container log around the failure, the image variant, `FFMPEG_OPTION`.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.

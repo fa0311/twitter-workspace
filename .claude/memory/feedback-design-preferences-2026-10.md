@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 0650167e-5ffa-4364-b61a-870599f5819c
-  modified: 2026-11-01T00:00:00.000Z
+  modified: 2026-11-07T00:00:00.000Z
 ---
 
 - **Declarative over procedural**: registries are typed literal definitions, not registration calls (twitter-snap's render definitions).
@@ -36,3 +36,5 @@ metadata:
 
 **No overrides for security alerts (2026-11-05):** on a twitter-snap PR that cleared sharp / @hono/node-server alerts with pnpm `overrides`, the maintainer said "セキュリティアラート、overridesして直すのは結構厳しい気がする よっぽどのことがない限りオーバーライドはできるだけしたくない". Fix alerts only by moving packages inside the ranges their parents allow (lockfile) or by bumping the parent; when that is impossible, leave the alert open and say why. My reading: this covers `resolutions` / `overrides` in every package manager of these repos.
 Reason given right after: "変なバグに当たる可能性があるし、実害ないから放置されている可能性があるよね、それなのにリスクを犯す必要がない / 重大な脆弱性が保守されてないとかなら別だけどね": forcing a version the parent did not choose can hit odd bugs, and an upstream that leaves a range alone may have judged it harmless. The stated exception is a critical vulnerability that upstream is not maintaining; in that case bring the case to the chat before overriding.
+
+**No comments that restate the code (2026-11-07, relay #45):** a trailing `// lines kept from the previous file carry no response` on `catalog.filter((entry) => entry.response !== undefined)` got "こういうコメント要らない". A comment is only for what the code cannot say (a unit, an external quirk, a recorded fact); when the condition reads on its own, write none. Put the why in the commit or PR body instead.
