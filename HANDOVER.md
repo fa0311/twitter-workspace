@@ -45,7 +45,7 @@ This file holds what those cannot: the environment and the state of the work. Up
 ## State (2026-11-07)
 
 - Nightly: green 2026-10-30 .. 11-06 (11-06 was the first on the placeholder of #139); 11-07 failed on nulls in promoted
-  trends and a sports score, fixed in twitter-openapi #140 (merged 11-07). Spec `main` 10a5fe8. Published: clients 0.1.6 on generated 0.1.5 (PyPI and npm), relay 0.4.2 /
+  trends and a sports score, fixed in twitter-openapi #140 (merged 11-07). Spec `main` 10a5fe8. Published: clients 0.1.7 on generated 0.1.6 (PyPI and npm, 2026-11-07), relay 0.4.2 /
   dashboard 0.2.3 / mcp 0.4.1 (npm and ghcr), twitter-snap 0.3.0 (npm); every image is on Node 26 with corepack installed from npm.
   x-client-transaction-id-pair-dict is not on npm.
 - Unreleased: twitter-snap master 4b3d891 has #103 (even dimensions by `crop`, so a lossless WebP of a still matches the PNG pixel for
@@ -56,10 +56,12 @@ This file holds what those cannot: the environment and the state of the work. Up
      query versions, `SmarttagTag.rest_id`) and `postTimelineFeedback` (#131; `live_pipeline/update_subscriptions` left out, see
      REFERENCE). twitter-openapi-typescript #170 (no `example/`), twitter-snap #104 (transparent themes) and #106 (fflate 0.7.5 in
      the lockfile) are merged too (twitter-snap master a58f303).
-  2. Open, LGTM-gated, regenerated from main 10a5fe8 (#140 included): twitter_openapi_python #81 and twitter-openapi-typescript #171 (generated 0.1.6, wrappers 0.1.7 with
-     `post_timeline_feedback` / `postTimelineFeedback`; the new e2e test of each passed once on the sandbox). Merging publishes;
-     then the TS lockfile follow-up PR.
-  3. twitter-snap: one release PR (0.3.1: #103, #104, #106, the new clients) once npm has the clients.
+  2. Done 2026-11-07: twitter_openapi_python #81 and twitter-openapi-typescript #171 merged (regenerated from main 10a5fe8;
+     generated 0.1.6, wrappers 0.1.7 with `post_timeline_feedback` / `postTimelineFeedback`), both publish workflows green,
+     PyPI and npm carry them. Open, LGTM-gated: twitter-openapi-typescript #172 (lockfile resolves generated 0.1.6, lockfile only).
+  3. Open, LGTM-gated: twitter-snap #107 (`update 0.3.1`: clients ^0.1.7 / ^0.1.6, ships #103, #104, #106, and the
+     `--ffmpegTimeout` help now says seconds). Typecheck, lint, build and the 58 guest-render tests passed locally on Node 26.
+     Merging publishes 0.3.1 to npm.
   4. twitter-snap-api (twitter-snap ^0.3.1; none of its alerts has a fix inside the ranges) and private_bot (new clients,
      body-parser and undici inside their ranges): one PR each, not started.
   twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
