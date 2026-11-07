@@ -66,8 +66,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   and the GPU of that host, and the rerun of the logged ffmpeg line inside the container.
 - twitter-snap #108 and the release PR #109 (`update 0.4.0`, 0.4.0 because the library API changed) merged 2026-11-07 on LGTMs;
   master 6e08141, twitter-snap 0.4.0 is on npm and ghcr (publish + docker green). twitter-snap's open alerts are now minimatch,
-  @hono/node-server and fflate (medium each). twitter-snap-api #21 (`chore/twitter-snap-0.4.0`: lockfile moves only the
-  twitter-snap tree; build + 6 tests green) waits for an LGTM; it closes the API's sharp / satori alerts and leaves fflate + minimatch. `engines` is still `>=20.0.0` while sharp
+  @hono/node-server and fflate (medium each). twitter-snap-api #21 (`chore/twitter-snap-0.4.0`) merged the same day on an LGTM
+  (main c69d698, Docker build green, branch deleted): its open alerts are now fflate + minimatch (medium). The maintainer's
+  self-hosted twitter-snap-api picks 0.4.0 up when they pull the new image. `engines` is still `>=20.0.0` while sharp
   0.35 wants >= 20.9 (raised, no decision).
 - twitter-snap #108 (history): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
   the three sharp and the satori alerts of twitter-snap (and, once twitter-snap-api follows, its three) without overrides; the
