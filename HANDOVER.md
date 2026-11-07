@@ -17,6 +17,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   `.sops/age-key.txt` decrypts `twitter-secrets/secrets.enc.yaml`; GPG key material and `gh` config are mounted read-only.
   If signing fails the gpg-agent is locked and the maintainer unlocks it from a VS Code terminal.
 - The `gh` token has no GraphQL scopes: merging, retargeting and editing PR bodies go through `gh api` REST calls.
+- The clock: the host's NTP is broken (2026-11-07: ~30 s behind the HTTP `Date` of api.github.com) and the maintainer will fix it
+  eventually. The clock is the host's and the container has no CAP_SYS_TIME, so `date -s` and `adjtimex` fail with EPERM from inside;
+  it can only be set on the host (or after `cap_add: [SYS_TIME]` in `docker-compose.yml`, which the maintainer decides).
 
 ## Layout
 
@@ -78,7 +81,14 @@ This file holds what those cannot: the environment and the state of the work. Up
   twitter-snap-api. The post from its log renders in 15 s locally on main e30904e (Node 26 and 22), so the trigger on that
   instance is unknown; what makes it permanent is known: twitter-snap-api passed `ffmpegTimeout: 30000`, which fluent-ffmpeg
   counts in seconds, and every route renders under one semaphore. twitter-snap-api #19 (240 seconds) is open; see the assessment below.
-  Still wanted from the maintainer: the twitter-snap-api container log around the failure, the image variant, `FFMPEG_OPTION`.
+  Container log received 2026-11-07 (nvenc image, `-c:v hevc_nvenc -rc constqp -qp 20 -b_ref_mode middle -preset p5`): the stall is
+  the final ffmpeg of post 2111792834483556435 (a 41 s portrait video; the download, ffprobe and the sound probe had finished), frame
+  1440x2720; a landscape video (140 s, frame ~1440x1200) had rendered in 34 s just before, `/health/encoder` (h264_nvenc, one frame)
+  kept answering, six later renders queued behind it. The same post renders here in software: libx264 at the default size 26 s,
+  libx265 at `--width 1440 --scale 2` 134 s (1440x2720), so the filter graph and the input are fine and the hang is inside the nvenc
+  session (not reproducible without a GPU). Guest access cannot read that post; the cookie can. Asked the maintainer to rerun the
+  logged ffmpeg line inside the container (`.temp/hlHyGbrMjBAMkCbi/` should still hold the inputs) and to try h264_nvenc / without
+  `-b_ref_mode middle`.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: private_bot's minimatch alert of 2026-11-07 (9.0.9 via webdav 5.11.0, the newest webdav, which asks for `^9.0.9`;
