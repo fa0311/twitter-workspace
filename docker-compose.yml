@@ -7,6 +7,13 @@ services:
       - ../.env
     container_name: twitter-workspace
     command: ["/bin/sh", "-c", "sleep infinity"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [compute, utility, video]
     volumes:
       - .:/root/workspace
       - vscode-data:/root/.vscode-server
