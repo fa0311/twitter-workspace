@@ -63,7 +63,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   4. Done 2026-11-07: private_bot #8 (clients 0.1.7 / 0.1.6; undici 6.29.1 / 7.30.2 and body-parser 2.4.0 inside the ranges
      discord.js, cheerio and express ask for, closes its 14 alerts; no overrides) and twitter-snap-api #20 (twitter-snap ^0.3.1,
      lockfile moves only twitter-snap and the clients; its sharp / satori / minimatch alerts stay, no fix inside the ranges) merged;
-     both images rebuild on the merge commits (a81e01e, 010e02b). The round is complete: every package was released once.
+     both image builds on the merge commits (a81e01e, 010e02b) succeeded. The round is complete: every package was released once.
      The maintainer's self-hosted twitter-snap-api picks 0.3.1 up when they pull the new image.
   twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
   qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2), LGTM-gated.
@@ -74,7 +74,8 @@ This file holds what those cannot: the environment and the state of the work. Up
   Still wanted from the maintainer: the twitter-snap-api container log around the failure, the image variant, `FFMPEG_OPTION`.
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
-- Left open on purpose: the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
+- Left open on purpose: private_bot's minimatch alert of 2026-11-07 (9.0.9 via webdav 5.11.0, the newest webdav, which asks for `^9.0.9`;
+  the fix is 11.0.1); the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
   the ranges `@vercel/og` 0.11.1 and `@hono/vite-dev-server` ask for; the maintainer rejected overrides, #105 was closed); 18 placeholder
   operations the browser session did not send (listed in #139); the GET form of `HomeTimeline` still carries `seenTweetIds`, which
   the frontend only sends by POST (raised with the maintainer, no decision).
