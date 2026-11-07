@@ -60,10 +60,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   3. Done 2026-11-07: twitter-snap #107 (`update 0.3.1`: clients ^0.1.7 / ^0.1.6, ships #103, #104, #106, and the
      `--ffmpegTimeout` help now says seconds) merged; CI on ubuntu + windows x three Node versions and the 58 guest renders
      locally were green; 0.3.1 is on npm and ghcr.
-  4. Open, LGTM-gated: private_bot #8 (clients 0.1.7 / 0.1.6; undici 6.29.1 / 7.30.2 and body-parser 2.4.0 inside the ranges
-     discord.js, cheerio and express ask for, closes its 14 alerts; no overrides; no CI on PRs, merging rebuilds the image).
-     twitter-snap-api #20 (twitter-snap ^0.3.1, lockfile moves only twitter-snap and the clients; its sharp / satori / minimatch
-     alerts stay, no fix inside the ranges; independent of #19). Build, lint and tests of both passed locally.
+  4. Done 2026-11-07: private_bot #8 (clients 0.1.7 / 0.1.6; undici 6.29.1 / 7.30.2 and body-parser 2.4.0 inside the ranges
+     discord.js, cheerio and express ask for, closes its 14 alerts; no overrides) and twitter-snap-api #20 (twitter-snap ^0.3.1,
+     lockfile moves only twitter-snap and the clients; its sharp / satori / minimatch alerts stay, no fix inside the ranges) merged;
+     both images rebuild on the merge commits (a81e01e, 010e02b). The round is complete: every package was released once.
+     The maintainer's self-hosted twitter-snap-api picks 0.3.1 up when they pull the new image.
   twitter_api_safe_relay is independent: #45 is open and green (catalog of 2026-11-05, the dump `--responses` fix, body-parser /
   qs / fast-uri / glob in the lockfile, relay 0.4.3 / mcp 0.4.2), LGTM-gated.
 - 2026-11-06: the maintainer's private_bot got `TypeError: fetch failed` (HeadersTimeoutError, exactly 300 s) from the self-hosted
