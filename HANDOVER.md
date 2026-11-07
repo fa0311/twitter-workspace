@@ -45,8 +45,8 @@ This file holds what those cannot: the environment and the state of the work. Up
 ## State (2026-11-07)
 
 - Nightly: green 2026-10-30 .. 11-06 (11-06 was the first on the placeholder of #139); 11-07 failed on nulls in promoted
-  trends and a sports score, fixed in twitter-openapi #140 (merged 11-07). Spec `main` 10a5fe8. Published: clients 0.1.7 on generated 0.1.6 (PyPI and npm, 2026-11-07), relay 0.4.2 /
-  dashboard 0.2.3 / mcp 0.4.1 (npm and ghcr), twitter-snap 0.3.1 (npm and ghcr, 2026-11-07); every image is on Node 26 with corepack installed from npm.
+  trends and a sports score, fixed in twitter-openapi #140 (merged 11-07). Spec `main` 10a5fe8. Published: clients 0.1.7 on generated 0.1.6 (PyPI and npm, 2026-11-07), relay 0.4.3 /
+  dashboard 0.2.3 / mcp 0.4.2 (npm and ghcr, 2026-11-07), twitter-snap 0.3.1 (npm and ghcr, 2026-11-07); every image is on Node 26 with corepack installed from npm.
   x-client-transaction-id-pair-dict is not on npm.
 - Round of 2026-11-05 ("すべてやって", fewest releases): the maintainer asked for the security alerts, the stale queryIds, issue #131,
   the transparent themes and the example directories in one go. Merge and release in this order, each step after an LGTM:
@@ -67,7 +67,7 @@ This file holds what those cannot: the environment and the state of the work. Up
      The maintainer's self-hosted twitter-snap-api picks 0.3.1 up when they pull the new image.
   twitter_api_safe_relay #45 (catalog of 2026-11-05, the dump `--responses` fix, body-parser / qs / fast-uri / glob in the
   lockfile, relay 0.4.3 / mcp 0.4.2) merged 2026-11-07 after the maintainer asked for a code comment to go ("こういうコメント
-  要らない"; the no-restating-comments rule is in memory). Publish and docker run on the merge commit 461259d.
+  要らない"; the no-restating-comments rule is in memory). Publish, docker and test on the merge commit 461259d succeeded: relay 0.4.3 / mcp 0.4.2 on npm and ghcr.
 - twitter-snap-api #19 (`ffmpegTimeout` 240 s) is open but the maintainer doubts it is the real fix ("本質的な修正じゃなさそう");
   my assessment in the chat: private_bot's plain `fetch` (undici's 300 s headers timeout) is where the error happened and sets no
   wait of its own; twitter-snap-api's `createMutex(1)` turns one stuck render into a timeout for every later request (async-mutex
