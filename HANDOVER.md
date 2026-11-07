@@ -66,8 +66,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   and the GPU of that host, and the rerun of the logged ffmpeg line inside the container.
 - twitter-snap #108 (`fix/satori-direct`, waiting for review): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
   the three sharp and the satori alerts of twitter-snap (and, once twitter-snap-api follows, its three) without overrides; the
-  twemoji / Google Fonts fallback loader is now `src/utils/font.ts`, the `emoji` option is gone, and the pixiv app loads the Segoe
-  UI / Meiryo set (it used `@vercel/og`'s bundled Geist before, so its look changes: bold works, no tofu). Trade-off stated in the
+  font flow was reworked on the maintainer's ask ("コードのきれいさ優先", external libraries allowed): `loadFonts(dir)` in
+  `src/utils/font.ts` replaces the per-app callback and `FontUtils`, `FontOptions` became `Font[]` (`getFonts`, run param `fonts`,
+  required), the satori asset fallback (twemoji via `@twemoji/parser`, Noto subsets from Google Fonts) sits in `render.ts`, and
+  the pixiv app renders with the Segoe UI / Meiryo set (it used `@vercel/og`'s bundled Geist before, so its look changes: bold works, no tofu). Trade-off stated in the
   PR: satori >= 0.33.5 pins `fflate` 0.7.3, so the medium fflate alert returns and is not fixable in range. satori 0.6x changes layout
   (poll bars overflow), hence the 0.33 pin. Verified: lint / typecheck / build, 58 tests, 12 guest renders equal to the published
   0.3.1 within 0.34% of pixels (`tools/out/og_compare/`). If merged: release twitter-snap 0.3.2, then twitter-snap-api follows.
