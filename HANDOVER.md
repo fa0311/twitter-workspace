@@ -64,9 +64,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   too. So the maintainer's hang is not reproducible with Ubuntu's ffmpeg 6.1.1 on driver 615.71.09 / RTX 3080 Ti; their nvenc image
   copies a self-built ffmpeg from `.temp/ffmpeg` (`Dockerfile.nvenc`, CUDA 12.4.1 runtime, Node 22). Next: ask for `ffmpeg -version`
   and the GPU of that host, and the rerun of the logged ffmpeg line inside the container.
-- twitter-snap #108 merged 2026-11-07 (LGTM; master 6427825, head branch deleted). Release PR #109 (`release/0.4.0`, `update 0.4.0`,
-  0.4.0 because the library API changed) waits for an LGTM; after it merges, publish + docker run on master, then twitter-snap-api
-  follows (its lockfile moves to twitter-snap ^0.4.0, closing its sharp / satori alerts). `engines` is still `>=20.0.0` while sharp
+- twitter-snap #108 and the release PR #109 (`update 0.4.0`, 0.4.0 because the library API changed) merged 2026-11-07 on LGTMs;
+  master 6e08141, twitter-snap 0.4.0 is on npm and ghcr (publish + docker green). twitter-snap's open alerts are now minimatch,
+  @hono/node-server and fflate (medium each). twitter-snap-api #21 (`chore/twitter-snap-0.4.0`: lockfile moves only the
+  twitter-snap tree; build + 6 tests green) waits for an LGTM; it closes the API's sharp / satori alerts and leaves fflate + minimatch. `engines` is still `>=20.0.0` while sharp
   0.35 wants >= 20.9 (raised, no decision).
 - twitter-snap #108 (history): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
   the three sharp and the satori alerts of twitter-snap (and, once twitter-snap-api follows, its three) without overrides; the
