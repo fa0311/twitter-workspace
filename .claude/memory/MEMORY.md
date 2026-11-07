@@ -13,3 +13,4 @@
 - [Screenshot location and sample choice](feedback-screenshots.md) — ./screenshot/{date}/, samples must be pleasant to look at
 - [X translation mechanics Oct 2026](project-x-translation-2026-10.md) — embedded Grok translation keyed by x-twitter-client-language, no typeable endpoint, twitter-snap sets the header
 - [Local relay run for reviews](project-relay-local-run.md) — tools/relay_local, port 3777, session-cookie and pkill pitfalls
+- [FFmpeg master aac hang (twitter-snap-api stall)](project-ffmpeg-btbn-master-aac-hang.md) — BtbN master's nmr aac coder loops; pin release builds; repro in tools/out/nvenc_repro

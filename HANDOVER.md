@@ -58,7 +58,14 @@ This file holds what those cannot: the environment and the state of the work. Up
   tonight on main 10a5fe8. The full recordings set validates at 1.0 on 10a5fe8 (1,449 entries). No new issues anywhere; the only
   open PRs are twitter-snap-api #19 (see below), TwitterInternalAPIDocument #1143 (the maintainer's own) and the new twitter-snap #108.
   Account: one UserByScreenName check and one cookie render (the nvenc repro) today, no lock.
-- GPU repro done 2026-11-07: post 2111792834483556435 rendered here with the cookie at `--width 1440 --scale 2 --theme
+- SOLVED 2026-11-07 (evening): the stall is not nvenc. The maintainer posted a second occurrence (same post, same final ffmpeg
+  line); downloading the same BtbN `ffmpeg-master-latest` build (`build.sh`) reproduced it here: the final encode stays at
+  `frame=0`, ignores SIGTERM; bisected to the aac encoder (`-i <video> -map 0:a -c:a aac` hangs; the default `nmr` coder; `twoloop`,
+  `fast`, `-ar 44100` fine; a 2 s float WAV reproduces: `tools/out/nvenc_repro/hang_2s_f32_u.wav`). n8.1 / n9.0 release builds and
+  Ubuntu 6.1.1 finish in 33 s. twitter-snap-api #22 (`fix/ffmpeg-release-build`) pins `build.sh` to the n9.0 line; waiting for an
+  LGTM; after the merge the maintainer rebuilds / pulls the nvenc image. Upstream report (FFmpeg trac) not filed; proposed.
+  twitter-snap-api #19 (ffmpegTimeout) is still open; with the real cause fixed it is only damage control.
+- GPU repro of the afternoon (before the cause was known): post 2111792834483556435 rendered here with the cookie at `--width 1440 --scale 2 --theme
   RenderOceanBlueColor --limit 1 --ffmpegAdditonalOption "-c:v hevc_nvenc -rc constqp -qp 20 -b_ref_mode middle -preset p5"` in 35 s
   (hevc 1440x2720, 41 s, 33 MB; `tools/out/nvenc_repro/`), and a synthetic 1440x2720 hevc_nvenc encode with the same options works
   too. So the maintainer's hang is not reproducible with Ubuntu's ffmpeg 6.1.1 on driver 615.71.09 / RTX 3080 Ti; their nvenc image
