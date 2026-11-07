@@ -25,5 +25,7 @@ twitter-snap (fa0311/twitter-snap) facts learned 2026-10-30:
 
 - A status URL with a cookie session renders the conversation (TweetDetail) up to `--limit` (default 20), not just the tweet of the URL; a fixed `-o name.png` is overwritten by each entry and ends with a related post. For one tweet use `--limit 1` or keep `{id}` in the output name (2026-10-31).
 
+- satori versions (2026-11-07): twitter-snap's layouts were tuned on satori 0.25.0 (bundled by `@vercel/og` 0.11.1). satori 0.33.5 renders the sample set pixel-equal within 0.3% (subpixel text only); satori 0.63.x changes text measurement and flex sizing (poll bars overflow, labels disappear, different line wraps), so a satori bump needs a visual pass. `@vercel/og` 1.x does not load on Node ("Dynamic require of fs"), and every satori >= 0.33.5 pins `fflate` 0.7.3 (a medium advisory, unzipSync only). Compare sets: `tools/out/og_compare/` (`render.sh`, `compare.cjs`, `montage.cjs`).
+
 **Why:** the dev entry point fooled a first verification; guest rendering keeps the account-lock budget untouched.
 **How to apply:** build, then render with bin/run.js; compare before/after PNGs with `cmp`. See [[project-twitter-ecosystem-standing-tasks]].

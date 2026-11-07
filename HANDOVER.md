@@ -1,7 +1,7 @@
 # Handover: fa0311's X / Twitter OSS maintenance sandbox
 
 Rules are in `CLAUDE.md`, non-derivable facts in `REFERENCE.md`, judgement calls in memory.
-This file holds what those cannot: the environment and the state of the work. Updated 2026-10-19.
+This file holds what those cannot: the environment and the state of the work. Updated 2026-11-07.
 
 ## Environment
 
@@ -17,6 +17,13 @@ This file holds what those cannot: the environment and the state of the work. Up
   `.sops/age-key.txt` decrypts `twitter-secrets/secrets.enc.yaml`; GPG key material and `gh` config are mounted read-only.
   If signing fails the gpg-agent is locked and the maintainer unlocks it from a VS Code terminal.
 - The `gh` token has no GraphQL scopes: merging, retargeting and editing PR bodies go through `gh api` REST calls.
+- After the 2026-11-07 recreate the named volume `/root/.local` had lost uv's Python 3.13, so every `.venv` (main checkout and both
+  worktrees) pointed at a missing interpreter. `uv python install 3.13` repairs the worktree venvs in place; the main checkout's venv
+  was recreated (`uv venv -p 3.13 && uv sync && uv pip install ./python_generated`). `tools/graphql_get.py` and friends need the
+  generated client installed in the venv they run from.
+- The GPU: since 2026-11-07 the compose reserves the host's NVIDIA GPU (RTX 3080 Ti, driver 615.71.09) and the Ubuntu ffmpeg 6.1.1
+  here has `h264_nvenc` / `hevc_nvenc` / `av1_nvenc`. The maintainer renamed the container to `0000-twitter-workspace` on the host
+  (`docker-compose.yml`).
 - The clock: the host's NTP is broken (2026-11-07: ~30 s behind the HTTP `Date` of api.github.com) and the maintainer will fix it
   eventually. The clock is the host's and the container has no CAP_SYS_TIME, so `date -s` and `adjtimex` fail with EPERM from inside;
   it can only be set on the host (or after `cap_add: [SYS_TIME]` in `docker-compose.yml`, which the maintainer decides).
@@ -45,7 +52,26 @@ This file holds what those cannot: the environment and the state of the work. Up
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
 
-## State (2026-11-07)
+## State (2026-11-07, evening)
+
+- Session of 2026-11-07 (maintenance pass): nightly of 11-07 was the only red run (fixed by #140, see below); the next one runs
+  tonight on main 10a5fe8. The full recordings set validates at 1.0 on 10a5fe8 (1,449 entries). No new issues anywhere; the only
+  open PRs are twitter-snap-api #19 (see below), TwitterInternalAPIDocument #1143 (the maintainer's own) and the new twitter-snap #108.
+  Account: one UserByScreenName check and one cookie render (the nvenc repro) today, no lock.
+- GPU repro done 2026-11-07: post 2111792834483556435 rendered here with the cookie at `--width 1440 --scale 2 --theme
+  RenderOceanBlueColor --limit 1 --ffmpegAdditonalOption "-c:v hevc_nvenc -rc constqp -qp 20 -b_ref_mode middle -preset p5"` in 35 s
+  (hevc 1440x2720, 41 s, 33 MB; `tools/out/nvenc_repro/`), and a synthetic 1440x2720 hevc_nvenc encode with the same options works
+  too. So the maintainer's hang is not reproducible with Ubuntu's ffmpeg 6.1.1 on driver 615.71.09 / RTX 3080 Ti; their nvenc image
+  copies a self-built ffmpeg from `.temp/ffmpeg` (`Dockerfile.nvenc`, CUDA 12.4.1 runtime, Node 22). Next: ask for `ffmpeg -version`
+  and the GPU of that host, and the rerun of the logged ffmpeg line inside the container.
+- twitter-snap #108 (`fix/satori-direct`, waiting for review): `@vercel/og` replaced by `satori` ^0.33.5 + `sharp` ^0.35.5, which closes
+  the three sharp and the satori alerts of twitter-snap (and, once twitter-snap-api follows, its three) without overrides; the
+  twemoji / Google Fonts fallback loader is now `src/utils/font.ts`, the `emoji` option is gone, and the pixiv app loads the Segoe
+  UI / Meiryo set (it used `@vercel/og`'s bundled Geist before, so its look changes: bold works, no tofu). Trade-off stated in the
+  PR: satori >= 0.33.5 pins `fflate` 0.7.3, so the medium fflate alert returns and is not fixable in range. satori 0.6x changes layout
+  (poll bars overflow), hence the 0.33 pin. Verified: lint / typecheck / build, 58 tests, 12 guest renders equal to the published
+  0.3.1 within 0.34% of pixels (`tools/out/og_compare/`). If merged: release twitter-snap 0.3.2, then twitter-snap-api follows.
+  The branch `deps/vercel-og-1` (WIP commit 4b06817, `@vercel/og` 1.0.1) is a dead experiment, local only; delete it when convenient.
 
 - Nightly: green 2026-10-30 .. 11-06 (11-06 was the first on the placeholder of #139); 11-07 failed on nulls in promoted
   trends and a sports score, fixed in twitter-openapi #140 (merged 11-07). Spec `main` 10a5fe8. Published: clients 0.1.7 on generated 0.1.6 (PyPI and npm, 2026-11-07), relay 0.4.3 /
@@ -95,8 +121,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Raised with the maintainer, no decision: the REST wrappers (follow / unfollow, the new feedback call) send no
   `x-client-transaction-id` although the frontend does; whether to answer and close #131.
 - Left open on purpose: private_bot's minimatch alert of 2026-11-07 (9.0.9 via webdav 5.11.0, the newest webdav, which asks for `^9.0.9`;
-  the fix is 11.0.1); the satori, sharp, @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
-  the ranges `@vercel/og` 0.11.1 and `@hono/vite-dev-server` ask for; the maintainer rejected overrides, #105 was closed); 18 placeholder
+  the fix is 11.0.1); the @hono/node-server and minimatch (`@oclif/core` asks for `^10`) alerts in twitter-snap / twitter-snap-api (their fixes are outside
+  the ranges `@hono/vite-dev-server` and `@oclif/core` ask for; the maintainer rejected overrides, #105 was closed; the satori and sharp
+  alerts are addressed by twitter-snap #108); 18 placeholder
   operations the browser session did not send (listed in #139); the GET form of `HomeTimeline` still carries `seenTweetIds`, which
   the frontend only sends by POST (raised with the maintainer, no decision).
 - Account use on 2026-11-05: nightly, one catalog recording session, one feedback click (undone), one strict run.
