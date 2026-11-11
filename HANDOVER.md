@@ -58,10 +58,13 @@ This file holds what those cannot: the environment and the state of the work. Up
   cover on `HomeLatestTimeline` (`TimelineShowCover`), whose `TimelineHalfCover` has no `dismissible`, a new `secondaryCoverCta`,
   and a `TimelineCoverBehaviorNavigate` url object that revealed the spec's `url_type` should be `urlType`. Fixed in
   twitter-openapi #141 (`fix/nightly-2026-11-11`; recording `recordings/night_2026-11-11/HomeLatestTimeline.json`, full set 1,453 at
-  1.0, strict run of 2026-11-11 green on the branch); merged on an LGTM (spec main 6c4914f). Regeneration PRs open, waiting for
-  LGTMs: twitter_openapi_python #84 (generated 0.1.7 / wrapper 0.1.8) and twitter-openapi-typescript #176 (generated 0.1.7 /
-  wrapper 0.1.8); neither repo has PR CI (publish runs on push to master). After #176 merges: the lockfile follow-up PR once npm
-  has generated 0.1.7, then twitter-snap bumps the clients (0.4.1). The cover stays until someone confirms the email on the
+  1.0, strict run of 2026-11-11 green on the branch); merged on an LGTM (spec main 6c4914f). twitter_openapi_python #84 merged
+  and published (PyPI: generated 0.1.7, wrapper 0.1.8, wheel sizes normal). twitter-openapi-typescript #176 merged, but its
+  regeneration had run `tools/win/replace.py`, which drops the generator's `prepare` script: **npm's generated 0.1.7 is broken
+  (4 files, no dist)** and the wrapper 0.1.8 publish failed on it. Fix PR #177 (`fix/generated-0.1.8`: generator's package.json
+  back, generated 0.1.8, wrapper depends on ^0.1.8) waits for an LGTM; the maintainer should `npm deprecate
+  twitter-openapi-typescript-generated@0.1.7`. After #177: the wrapper lockfile follow-up PR once npm has 0.1.8, then twitter-snap
+  bumps the clients (0.4.1). Lesson in memory: never run replace.py (or compare the generated package.json with the last release). The cover stays until someone confirms the email on the
   account (x.com/settings/email); tonight's nightly on 6c4914f is the live check.
 - Account use 2026-11-11: one UserByScreenName check, one HomeLatestTimeline dump, one strict run (the day's allowance is used).
 - Dependabot PRs open (merge delegated, need a go in the chat): twitter-openapi-typescript #173 (biome 2.6.5), #174 (tsc-alias 1.9.10),
