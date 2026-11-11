@@ -58,8 +58,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   cover on `HomeLatestTimeline` (`TimelineShowCover`), whose `TimelineHalfCover` has no `dismissible`, a new `secondaryCoverCta`,
   and a `TimelineCoverBehaviorNavigate` url object that revealed the spec's `url_type` should be `urlType`. Fixed in
   twitter-openapi #141 (`fix/nightly-2026-11-11`; recording `recordings/night_2026-11-11/HomeLatestTimeline.json`, full set 1,453 at
-  1.0, strict run of 2026-11-11 green on the branch) - waiting for an LGTM, then regenerate both clients (the usual chain).
-  The cover stays until someone confirms the email on the account (x.com/settings/email), so the nightly on main fails until #141 merges.
+  1.0, strict run of 2026-11-11 green on the branch); merged on an LGTM (spec main 6c4914f). Regeneration PRs open, waiting for
+  LGTMs: twitter_openapi_python #84 (generated 0.1.7 / wrapper 0.1.8) and twitter-openapi-typescript #176 (generated 0.1.7 /
+  wrapper 0.1.8); neither repo has PR CI (publish runs on push to master). After #176 merges: the lockfile follow-up PR once npm
+  has generated 0.1.7, then twitter-snap bumps the clients (0.4.1). The cover stays until someone confirms the email on the
+  account (x.com/settings/email); tonight's nightly on 6c4914f is the live check.
 - Account use 2026-11-11: one UserByScreenName check, one HomeLatestTimeline dump, one strict run (the day's allowance is used).
 - Dependabot PRs open (merge delegated, need a go in the chat): twitter-openapi-typescript #173 (biome 2.6.5), #174 (tsc-alias 1.9.10),
   #175 (vitest 5.1.0); twitter_openapi_python #82 (pydantic 2.14.3), #83 (ruff 0.17.4). twitter-snap-api #19 still open (close recommended).
