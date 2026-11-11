@@ -64,8 +64,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   (4 files, no dist)** and the wrapper 0.1.8 publish failed on it. Fix PR #177 (`fix/generated-0.1.8`: generator's package.json
   back, generated 0.1.8, wrapper depends on ^0.1.8) merged on an LGTM (master 35e1a14): npm now has generated 0.1.8 (5,452 files)
   and wrapper 0.1.8 (the packument lagged ~10 min behind the publish log). The maintainer should still `npm deprecate
-  twitter-openapi-typescript-generated@0.1.7`. Open: twitter-openapi-typescript #178 (wrapper lockfile resolves generated 0.1.8)
-  and the twitter-snap release PR 0.4.1 (`release/0.4.1`, clients ^0.1.8 / ^0.1.8), both waiting for LGTMs. Lesson in memory: never run replace.py (or compare the generated package.json with the last release). The cover stays until someone confirms the email on the
+  twitter-openapi-typescript-generated@0.1.7`. twitter-openapi-typescript #178 (wrapper lockfile resolves generated 0.1.8) and twitter-snap #110
+  (`update 0.4.1`, clients ^0.1.8 / ^0.1.8) merged on LGTMs the same day (masters 4083f7c / 7c7caf5); twitter-snap 0.4.1 publish +
+  docker ran on the merge. twitter-snap-api still asks for twitter-snap ^0.4.0 (0.4.1 is in range; no lockfile bump made). Lesson in memory: never run replace.py (or compare the generated package.json with the last release). The cover stays until someone confirms the email on the
   account (x.com/settings/email); tonight's nightly on 6c4914f is the live check.
 - Account use 2026-11-11: one UserByScreenName check, one HomeLatestTimeline dump, one strict run (the day's allowance is used).
 - Dependabot PRs open (merge delegated, need a go in the chat): twitter-openapi-typescript #173 (biome 2.6.5), #174 (tsc-alias 1.9.10),
