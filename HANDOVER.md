@@ -67,10 +67,10 @@ This file holds what those cannot: the environment and the state of the work. Up
   twitter-openapi-typescript-generated@0.1.7`. twitter-openapi-typescript #178 (wrapper lockfile resolves generated 0.1.8) and twitter-snap #110
   (`update 0.4.1`, clients ^0.1.8 / ^0.1.8) merged on LGTMs the same day (masters 4083f7c / 7c7caf5); twitter-snap 0.4.1 publish +
   docker ran on the merge. twitter-snap-api still asks for twitter-snap ^0.4.0 (0.4.1 is in range; no lockfile bump made). Lesson in memory: never run replace.py (or compare the generated package.json with the last release). The cover stays until someone confirms the email on the
-  account (x.com/settings/email); tonight's nightly on 6c4914f is the live check.
+  account (x.com/settings/email); the nightly of 2026-11-12 on 6c4914f is green again.
 - Account use 2026-11-11: one UserByScreenName check, one HomeLatestTimeline dump, one strict run (the day's allowance is used).
 - Dependabot PRs open (merge delegated, need a go in the chat): twitter-openapi-typescript #173 (biome 2.6.5), #174 (tsc-alias 1.9.10),
-  #175 (vitest 5.1.0); twitter_openapi_python #82 (pydantic 2.14.3), #83 (ruff 0.17.4). twitter-snap-api #19 still open (close recommended).
+  #175 (vitest 5.1.0); twitter_openapi_python #82 (pydantic 2.14.3), #83 (ruff 0.17.4); private_bot #9 (fast-xml-parser 5.12.0, closes a low alert of 2026-11-12). twitter-snap-api #19 still open (close recommended).
 
 ## State (2026-11-07, evening)
 
