@@ -69,8 +69,11 @@ This file holds what those cannot: the environment and the state of the work. Up
   docker ran on the merge. twitter-snap-api still asks for twitter-snap ^0.4.0 (0.4.1 is in range; no lockfile bump made). Lesson in memory: never run replace.py (or compare the generated package.json with the last release). The cover stays until someone confirms the email on the
   account (x.com/settings/email); the nightly of 2026-11-12 on 6c4914f is green again.
 - Account use 2026-11-11: one UserByScreenName check, one HomeLatestTimeline dump, one strict run (the day's allowance is used).
-- Dependabot PRs open (merge delegated, need a go in the chat): twitter-openapi-typescript #173 (biome 2.6.5), #174 (tsc-alias 1.9.10),
-  #175 (vitest 5.1.0); twitter_openapi_python #82 (pydantic 2.14.3), #83 (ruff 0.17.4); private_bot #9 (fast-xml-parser 5.12.0, closes a low alert of 2026-11-12). twitter-snap-api #19 still open (close recommended).
+- 2026-11-12: the maintainer said Dependabot is delegated ("Dependabotは任せる") and asked to close twitter-snap-api #19
+  (`ffmpegTimeout`; closed, its branch `fix/ffmpeg-timeout-seconds` is still there: the sandbox classifier refuses to delete an
+  unmerged branch). Merged with merge commits: twitter-openapi-typescript #173 / #174 / #175, twitter_openapi_python #82 / #83,
+  private_bot #9 (fast-xml-parser 5.12.0, closes its low alert). Two Dependabot branches were still listed right after the merges
+  (GitHub removes them itself). The classifier allows these merges only with a go in the current chat; this one is standing. twitter-snap-api #19 still open (close recommended).
 
 ## State (2026-11-07, evening)
 
