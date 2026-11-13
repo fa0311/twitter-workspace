@@ -99,7 +99,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   #116 and #117 closed themselves once the versions were on master. The twitter-snap Docker image follows every master push, but npm/
   twitter-snap-api do not: release PR twitter-snap #120 (`update 0.4.3`) merged on an LGTM (master eb07e73; npm 0.4.3 and the twitter-snap Docker build green),
   then twitter-snap-api #27 (`^0.4.3`, lockfile satori 0.63.2; built/tested locally, merged under the release instruction, main
-  ddc85cd, Docker run 43438380968). private_bot does not depend on twitter-snap, nothing to do there. private_bot's Dependabot security
+  ddc85cd, Docker run 43438380968). private_bot does not depend on twitter-snap, nothing to do there.
+- Dependabot (delegated), end of day: the first grouped dev-only PRs twitter-openapi #144 (ruff 0.17.4) and twitter-openapi-typescript
+  #180 (biome 2.6.6) merged; no open PRs anywhere. Next: nightly of 2026-11-14 on spec main (6c4914f + lock/CI-only commits). private_bot's Dependabot security
   job for `minimatch` fails with `security_update_not_possible` (nested dep, resolvable 9.0.9 < needed 11.0.1): needs a pnpm
   override or an upstream bump, maintainer's call. Compare dirs: `tools/out/og_compare/master042`, `satori063`, `satori063fix`.
 
