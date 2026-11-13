@@ -71,10 +71,13 @@ This file holds what those cannot: the environment and the state of the work. Up
 - twitter_api_safe_relay #48 (`.github/dependabot.yml`: npm security updates grouped into one PR, version updates off) is
   open, asked for by the maintainer after the lock; its `test` run was cancelled so it does not sign in while locked. The
   other repos could get the same `groups` treatment on request.
-- https://x.com/daru_daru_d/status/2121160905715269756 (reported "エラーかも"): as a guest TweetResultByRestId returns a
-  `TweetTombstone` / `BlurredMediaTombstone` ("Age-restricted adult content ... log in to X"), the wrapper drops it and
-  twitter-snap says `No data`; the logged-in path was not tested (account locked). Possible follow-up: surface the tombstone
-  text instead of `No data`.
+- The account was unlocked by the maintainer at ~08:50 UTC (UserByScreenName clean again).
+- https://x.com/daru_daru_d/status/2121160905715269756 (twitter-snap-api error): 19 photos, age-restricted. Guests get a
+  `TweetTombstone` (`No data`); logged in, the stacked media column is 650×15960 at scale 1 and the API's scale 2 hits sharp's
+  `Input SVG image exceeds 32767x32767 pixel limit`. twitter-snap #111 (`fix/resvg`) rasterizes with `@resvg/resvg-js`
+  (no limit, verified 1300×41745) and drops sharp, plus a logger fix so a failed step prints its error (the CLI used to end
+  with `✔ Rendering` and no file). Compare set: layout identical, 0.4–3.9 % glyph-edge pixel diffs. The post was deleted
+  during the investigation. After the LGTM: release 0.4.2, then bump the twitter-snap-api lockfile.
 - Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
   branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19.
 

@@ -29,3 +29,8 @@ twitter-snap (fa0311/twitter-snap) facts learned 2026-10-30:
 
 **Why:** the dev entry point fooled a first verification; guest rendering keeps the account-lock budget untouched.
 **How to apply:** build, then render with bin/run.js; compare before/after PNGs with `cmp`. See [[project-twitter-ecosystem-standing-tasks]].
+
+- 2026-11-13: sharp refuses SVGs taller than 32767px (`pipeline.cc`, no density/resize workaround); a 19-photo post at scale 2 hits it because media stacks at full width. twitter-snap #111 switched `renderPng` to `@resvg/resvg-js` (renders 100000px tall; same renderer family as the old @vercel/og), pixel diffs vs sharp are glyph-edge AA only (0.4–3.9 %). Posts can carry up to ~20 photos now.
+- The CLI's Logger dropped errors from the render stream and under `--simpleLog` (fixed in #111); when a render "succeeds" with no file, run through the library API to see the exception.
+- Compare tooling: `tools/out/og_compare/` (`render.sh <outdir> node bin/run.js`, `compare.cjs <a> <b>`; sharp installed locally there). `branch033full` = satori 0.33.5 + sharp (0.4.0/0.4.1 output), `baseline` = @vercel/og, `resvg` = #111.
+
