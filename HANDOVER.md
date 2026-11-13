@@ -77,7 +77,7 @@ This file holds what those cannot: the environment and the state of the work. Up
   `Input SVG image exceeds 32767x32767 pixel limit`. twitter-snap #111 (`fix/resvg`) rasterizes with `@resvg/resvg-js`
   (no limit, verified 1300×41745) and drops sharp, plus a logger fix so a failed step prints its error (the CLI used to end
   with `✔ Rendering` and no file). Compare set: layout identical, 0.4–3.9 % glyph-edge pixel diffs. The post was deleted
-  during the investigation. After the LGTM: release 0.4.2, then bump the twitter-snap-api lockfile.
+  during the investigation. The maintainer decided on resvg-js alone (no sharp / resvg-wasm switch, no Edge target). After the LGTM: release 0.4.2, then bump the twitter-snap-api lockfile. Also open: twitter-snap #112 (@hono/node-server 1.19.19, dev only, CI green).
 - Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
   branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19.
 
