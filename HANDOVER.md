@@ -68,6 +68,13 @@ This file holds what those cannot: the environment and the state of the work. Up
   regeneration needed; the clients still pin 6c4914f). Caveat in both: soupsieve 4.x needs
   Python >= 3.11.5, so the locks keep 2.10 for `python_full_version < 3.11.5` (both projects allow >= 3.10); GitHub may keep the
   alert open unless `requires-python` is raised (the maintainer's call).
+- twitter_api_safe_relay #48 (`.github/dependabot.yml`: npm security updates grouped into one PR, version updates off) is
+  open, asked for by the maintainer after the lock; its `test` run was cancelled so it does not sign in while locked. The
+  other repos could get the same `groups` treatment on request.
+- https://x.com/daru_daru_d/status/2121160905715269756 (reported "エラーかも"): as a guest TweetResultByRestId returns a
+  `TweetTombstone` / `BlurredMediaTombstone` ("Age-restricted adult content ... log in to X"), the wrapper drops it and
+  twitter-snap says `No data`; the logged-in path was not tested (account locked). Possible follow-up: surface the tombstone
+  text instead of `No data`.
 - Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
   branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19.
 
