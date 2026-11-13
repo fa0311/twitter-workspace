@@ -12,3 +12,6 @@ Environment: repos under `/root/workspace/<repo>`, each its own git repo; two sp
 **Why:** saves the rediscovery cost each session.
 
 **How to apply:** start with `/root/workspace/HANDOVER.md` and `sh tools/bootstrap.sh`; non-derivable facts are in `/root/workspace/REFERENCE.md`. Related: [[feedback-twitter-ecosystem-working-rules]], [[project-x-drift-2026-10]].
+
+- 2026-11-13: Dependabot `groups` configured in all seven repos (one grouped PR per ecosystem per batch; security-only repos keep version updates off). A relay merge still costs 3 live logins (main `test`): keep it to one per day. Release chain after a twitter-snap release: twitter-snap-api lockfile (`pnpm update`/package.json range), private_bot clients when the TS wrapper moved; discord/bookmarklet need nothing (HTTP to the API). Their Docker images build on push to the default branch, there are no PR checks: build + `pnpm test` locally before merging.
+

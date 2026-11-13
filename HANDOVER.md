@@ -80,11 +80,16 @@ This file holds what those cannot: the environment and the state of the work. Up
   during the investigation. The maintainer decided on resvg-js alone (no sharp / resvg-wasm switch, no Edge target). #111 and #112
   (@hono/node-server 1.19.19, dev only) merged on LGTMs (master 1d11b8e); release PR twitter-snap #113 (`update 0.4.2`) is
   open, then the twitter-snap-api lockfile bump follows the publish.
-- Dependabot grouping: relay #48 merged on the LGTM (its main `test` = the day's one relay run); the same `groups` config is
-  proposed in twitter-snap #115, twitter-snap-api #25, private_bot #10, twitter-openapi #143, twitter-openapi-typescript #179,
-  twitter_openapi_python #86 (config only, need LGTMs).
+- Dependabot grouping is in place everywhere: relay #48, twitter-snap #115, twitter-snap-api #25, private_bot #10,
+  twitter-openapi #143, twitter-openapi-typescript #179, twitter_openapi_python #86 all merged on LGTMs (repos with weekly
+  version updates: one grouped PR per ecosystem + one security group; the others: security group only, version updates off).
+- Releases of 2026-11-13 (afternoon): twitter-snap 0.4.2 (#113, npm + docker green, master 020fc39), twitter-snap #114
+  (Dependabot hono, delegated). On "docker系とかもリリースして": twitter-snap-api #26 (twitter-snap ^0.4.2, main e733590) and
+  private_bot #11 (clients 0.1.8, master 0ebbb0a) were built/tested locally, merged, and their Docker builds started
+  (runs 43409679005 / 43409683758). twitter-snap-discord and twitter-snap-bookmarklet do not depend on twitter-snap (they call
+  the API over HTTP), so nothing to release there.
 - Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
-  branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19.
+  branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19, `requires-python >= 3.11.5` for the soupsieve alerts.
 
 ## State (2026-11-11)
 
