@@ -93,10 +93,12 @@ This file holds what those cannot: the environment and the state of the work. Up
 - Evening 2026-11-13, first grouped Dependabot PRs on twitter-snap: #117 (dev-deps) fails lint because Biome 2.6 formats YAML
   (double quotes) and Markdown; #116 (deps, satori 0.33.5 → 0.63.2) is green in CI but breaks the output: satori is content-box now
   (`width: 100%` + padding overflow: wider wraps, clipped icons/percentages) and paints absolute elements above in-flow siblings
-  (poll bar hides "No"). Own PRs instead, both awaiting LGTM: twitter-snap #118 (same dev-dep bumps + `yaml.formatter.quoteStyle:
+  (poll bar hides "No"). Own PRs instead, both merged on an LGTM (master 8e4dae7): twitter-snap #118 (same dev-dep bumps + `yaml.formatter.quoteStyle:
   single`, README blank line) and #119 (same dep bumps + `<style>* { box-sizing: border-box }</style>` wrapper in `renderPng` +
   `position: relative` on the poll texts; verified on the 10-post set: same sizes, 0.1–1.5 % pixel diff, videos identical).
-  Close #116/#117 once they are merged (Dependabot closes them itself when the versions land). private_bot's Dependabot security
+  #117 closed itself; #116 was closed by hand (same versions on master). The twitter-snap Docker image follows every master push, but npm/
+  twitter-snap-api do not: release PR twitter-snap #120 (`update 0.4.3`) is open for an LGTM, then the API lockfile bump + Docker follow
+  (the maintainer asked whether the API gets the latest; answered: only through this chain). private_bot's Dependabot security
   job for `minimatch` fails with `security_update_not_possible` (nested dep, resolvable 9.0.9 < needed 11.0.1): needs a pnpm
   override or an upstream bump, maintainer's call. Compare dirs: `tools/out/og_compare/master042`, `satori063`, `satori063fix`.
 
