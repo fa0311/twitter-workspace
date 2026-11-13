@@ -1,7 +1,7 @@
 # Handover: fa0311's X / Twitter OSS maintenance sandbox
 
 Rules are in `CLAUDE.md`, non-derivable facts in `REFERENCE.md`, judgement calls in memory.
-This file holds what those cannot: the environment and the state of the work. Updated 2026-11-11.
+This file holds what those cannot: the environment and the state of the work. Updated 2026-11-13.
 
 ## Environment
 
@@ -51,6 +51,19 @@ This file holds what those cannot: the environment and the state of the work. Up
 - After a spec batch merges: regenerate both clients, then the TS lockfile follow-up, then bump twitter-snap.
 - The sandbox account's rate limits differ a lot per operation (search is scarce); `tools/sweep_tweets.py` paces itself from the headers.
 - Merge only on an explicit LGTM, with merge commits; retarget stacked children before deleting a merged branch.
+
+## State (2026-11-13)
+
+- Nightly green 2026-11-12 and 11-13 on 6c4914f.
+- Dependabot (delegated): twitter-snap-api #23 and twitter_api_safe_relay #46 (@hono/node-server 2.1.6, their new medium
+  alerts) merged 2026-11-13; the relay merge ran its live `test` workflow on main (three logins of the sandbox account).
+- New high alert GHSA-mmhr-3c5m-f64f (soupsieve < 4.0.0, via beautifulsoup4) in twitter_openapi_python (wrapper uv.lock, through
+  xclienttransaction) and twitter-openapi (test group). Dependabot's own updates failed; PRs open, waiting for LGTMs:
+  twitter_openapi_python #85 and twitter-openapi #142 (`uv lock --upgrade-package soupsieve`). Caveat in both: soupsieve 4.x needs
+  Python >= 3.11.5, so the locks keep 2.10 for `python_full_version < 3.11.5` (both projects allow >= 3.10); GitHub may keep the
+  alert open unless `requires-python` is raised (the maintainer's call).
+- Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
+  branch `fix/ffmpeg-timeout-seconds` of the closed twitter-snap-api #19.
 
 ## State (2026-11-11)
 
