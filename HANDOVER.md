@@ -56,7 +56,9 @@ This file holds what those cannot: the environment and the state of the work. Up
 
 - Nightly green 2026-11-12 and 11-13 on 6c4914f.
 - Dependabot (delegated): twitter-snap-api #23 and twitter_api_safe_relay #46 (@hono/node-server 2.1.6, their new medium
-  alerts) merged 2026-11-13; the relay merge ran its live `test` workflow on main (three logins of the sandbox account).
+  alerts) merged 2026-11-13, then the follow-up bumps hono 4.13.16 (twitter-snap-api #24, relay #47; relay CI green before the
+  merge). Each relay merge runs the live `test` workflow on main (three logins), so the account did ~12 relay logins today on top
+  of the nightly: no more relay pushes today.
 - New high alert GHSA-mmhr-3c5m-f64f (soupsieve < 4.0.0, via beautifulsoup4) in twitter_openapi_python (wrapper uv.lock, through
   xclienttransaction) and twitter-openapi (test group). Dependabot's own updates failed; PRs open, waiting for LGTMs:
   twitter_openapi_python #85 and twitter-openapi #142 (`uv lock --upgrade-package soupsieve`). Caveat in both: soupsieve 4.x needs
