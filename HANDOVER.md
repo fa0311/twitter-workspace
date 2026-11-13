@@ -63,8 +63,9 @@ This file holds what those cannot: the environment and the state of the work. Up
   unlocks it at x.com/account/access; until then no account use (the nightly of 11-14 will fail if it stays locked). Rule from
   this: at most one relay merge per day, and never on a day with another suite.
 - New high alert GHSA-mmhr-3c5m-f64f (soupsieve < 4.0.0, via beautifulsoup4) in twitter_openapi_python (wrapper uv.lock, through
-  xclienttransaction) and twitter-openapi (test group). Dependabot's own updates failed; PRs open, waiting for LGTMs:
-  twitter_openapi_python #85 and twitter-openapi #142 (`uv lock --upgrade-package soupsieve`). Caveat in both: soupsieve 4.x needs
+  xclienttransaction) and twitter-openapi (test group). Dependabot's own updates failed; twitter_openapi_python #85 and
+  twitter-openapi #142 (`uv lock --upgrade-package soupsieve`) merged on LGTMs (spec main 1a90ad9, lockfile only, no
+  regeneration needed; the clients still pin 6c4914f). Caveat in both: soupsieve 4.x needs
   Python >= 3.11.5, so the locks keep 2.10 for `python_full_version < 3.11.5` (both projects allow >= 3.10); GitHub may keep the
   alert open unless `requires-python` is raised (the maintainer's call).
 - Left for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`, twitter-snap `engines` >= 20.9, the leftover
