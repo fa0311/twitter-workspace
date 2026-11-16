@@ -17,6 +17,7 @@ Run them from a twitter-openapi checkout (`cd /root/workspace/twitter-openapi &&
 | `json_to_schema.py <response.json> <Op>` | drafts twitter-openapi style schemas from one recording (required = present in every sample); check its shared-type guesses |
 | `sweep_leftovers.py` | lists (`CLEAN=1` removes) leftovers of the recording scripts on the account: "placeholder check" lists, drafts, tweets |
 | `x_dom_styles.py <outdir> <name>=<url> ...` | opens tweet pages with the account, screenshots the main `<article>` and dumps the computed styles of its DOM (light + dark JSON) as the layout reference for twitter-snap: sizes, colors, spacing, icon paths |
+| `render_saved_tweet.mjs <saved TweetResultByRestId.json> <out.png> [scale] [width]` | renders a post from a saved raw response through twitter-snap's guest pipeline (run from `/root/workspace/twitter-snap` after `pnpm build`); the way to re-render a deleted post while pbs.twimg.com still serves its media |
 | `bootstrap.sh` | after a container recreate: restores Claude's memory from `.claude/memory/`, creates `/root/.gnupg-rw`, reports missing tools and the gpg / gh / cookie state |
 
 `out/` holds older recordings (`actions_recorded.json`, `pages_recorded*.json`, `responses/*.json`, part of the validation set) and screenshots.
@@ -47,3 +48,5 @@ cd /root/workspace/twitter_api_safe_relay && pnpm install && pnpm build
 cd packages/server && NODE_PATH=$PWD/node_modules node /root/workspace/tools/relay_local/seed.cjs /tmp/relay-profile/sandbox /root/workspace/cookie.json
 node dist/server.js /root/workspace/tools/relay_local/settings.json   # dashboard http://localhost:3777/, JSON /health
 ```
+
+Pitfalls: the first request launches the browser (a few seconds); `pkill -f 'dist/server.js'` matches the shell about to start the relay; a profile seeded without cookie `expires` is logged out after the seeding context closes and every `/i/api/*` request then hangs while `/health` answers; dashboard entries exist only while a page is connected to `/api/events`; the dashboard is served from `packages/dashboard/dist`, so a rebuild shows up on reload.

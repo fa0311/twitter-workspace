@@ -1,16 +1,5 @@
-- [fa0311, Twitter-ecosystem OSS maintainer](user-fa0311-twitter-oss-maintainer.md) — who the user is, repos they own, GPG key
-- [Working rules for Twitter-ecosystem sessions](feedback-twitter-ecosystem-working-rules.md) — PRs yes, GitHub comments no, GPG required, minimal error handling, full autonomy
-- [Standing tasks + environment facts](project-twitter-ecosystem-standing-tasks.md) — recurring tasks; what is not in CLAUDE.md / HANDOVER.md
-- [fa0311 preferences](user-fa0311-preferences.md) — libraries over hand-written code, favorite repos, protected branches, secrets repo, zero tolerance in twitter-openapi
-- [X drift Oct 2026 and current state](project-x-drift-2026-10.md) — durable X facts, versions shipped, pending decisions
-- [Stacked PR merging rules](feedback-stacked-pr-merging.md) — retarget children before deleting merged head branches; merge commits; LGTM gating
-- [CI pitfalls: pnpm 12, static ffmpeg, CRLF](project-ci-pitfalls-pnpm12-ffmpeg.md) — ignored-builds, lockfile packageManagerDependencies, ffmpeg segfault, biome CRLF
-- [X frontend bundle facts](project-x-frontend-bundle-facts.md) — static logged-out HTML, two operation styles, TIAD is only a detector
-- [Design preferences](feedback-design-preferences-2026-10.md) — declarative typing, no dead compat, no schema sharing, enum policy, relay/clients ignorant of each other, recordings on instruction
-- [Sandbox account only](feedback-sandbox-account-only.md) — cookie.json is @ptcpz3, the only account to drive; verify before use, never print values
-- [X tid frontends Oct 2026](project-x-tid-frontends-2026-10.md) — x-web vs responsive-web shells, tid not enforced on UserByScreenName, extract-browser initIdConverter broken, Lqm1 verified
-- [twitter-snap dev facts](project-twitter-snap-dev-facts.md) — master is default; bin/dev.js runs stale dist (build first); guest renders need no cookie; text = flex-wrap of UAX#14 units
-- [Screenshot location and sample choice](feedback-screenshots.md) — ./screenshot/{date}/, samples must be pleasant to look at
-- [X translation mechanics Oct 2026](project-x-translation-2026-10.md) — embedded Grok translation keyed by x-twitter-client-language, no typeable endpoint, twitter-snap sets the header
-- [Local relay run for reviews](project-relay-local-run.md) — tools/relay_local, port 3777, session-cookie and pkill pitfalls
-- [FFmpeg master aac hang (twitter-snap-api stall)](project-ffmpeg-btbn-master-aac-hang.md) — BtbN master's nmr aac coder loops; pin release builds; repro in tools/out/nvenc_repro
+- [fa0311](user-fa0311.md) — who the user is, favourites, how they approve and delegate
+- [Working rules](feedback-working-rules.md) — stacked PR recovery, Dependabot delegated, no overrides, fewer releases, issue reply voice
+- [Account budget](feedback-account-budget.md) — @ptcpz3 only, what locked it, what may be clicked on it
+- [Design preferences](feedback-design-preferences.md) — typing / schema / enum policy, what a snapshot is, README policy, ffmpeg is the user's
+- [Screenshots](feedback-screenshots.md) — screenshot/{date}/<theme>/, approved public samples, pleasant images
