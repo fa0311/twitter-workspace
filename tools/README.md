@@ -1,6 +1,6 @@
 # Tools of the workspace (tracked here, not in any project repository)
 
-Run them from a twitter-openapi checkout (`cd twitter-openapi && uv run python ../tools/<script>`): they import the checkout's `test/python/test_serialize.py` or `tools/update_placeholder.py` and read `cookie.json` there, a link to the workspace's that bootstrap creates. The venv needs the strict generated client (REFERENCE, "twitter-openapi") and, for the scripts that open a browser, `uv pip install playwright && uv run --no-sync playwright install chromium`. Never run two account-mutating scripts at once.
+Run them from a twitter-openapi checkout (`cd twitter-openapi && uv run python ../tools/<script>`): they import the checkout's `test/python/test_serialize.py` or `tools/update_placeholder.py` and read `cookie.json` there, a link to the workspace's that bootstrap creates. The venv needs the strict generated client and, for the scripts that open a browser, Playwright with its Chromium; bootstrap prints the line for whichever is missing. Never run two account-mutating scripts at once.
 
 | script | purpose |
 |---|---|
@@ -19,7 +19,7 @@ Run them from a twitter-openapi checkout (`cd twitter-openapi && uv run python .
 | `x_dom_styles.py <outdir> <name>=<url> ...` | opens tweet pages with the account, screenshots the main `<article>` and dumps the computed styles of its DOM (light + dark JSON) as the layout reference for twitter-snap: sizes, colors, spacing, icon paths |
 | `render_saved_tweet.mjs <post url> <saved TweetResultByRestId.json> <out.png> [scale] [width]` | renders a post from a saved raw response through twitter-snap's guest pipeline (run after `pnpm build` in `twitter-snap/`, which it imports by relative path); the way to re-render a deleted post while pbs.twimg.com still serves its media |
 | `og_compare/` | render-compare kit for twitter-snap changes: `sh og_compare/render.sh <outdir> node bin/run.js` renders the sample posts of `og_compare/urls.txt` (official accounts only; add private posts locally, never commit them) in both themes, `node og_compare/compare.cjs <a> <b>` diffs the PNGs pixel-wise (needs `sharp` installed next to it: `npm i sharp`), `montage.cjs` puts them side by side |
-| `bootstrap.sh` | at the start of a session: initialises missing submodules, restores Claude's memory from `.claude/memory/` and `cookie.json` from twitter-secrets (linked into `twitter-openapi/`, checked to be @ptcpz3), reports missing tools with their install lines and the signing / gh state |
+| `bootstrap.sh` | at the start of a session: initialises missing submodules, restores Claude's memory from `.claude/memory/` and `cookie.json` from twitter-secrets (linked into `twitter-openapi/`, checked to be @ptcpz3), reports missing tools, the strict client and Playwright with their install lines (in the order to run them) and the signing / gh state |
 
 `out/` (ignored) receives what the recording scripts write: `actions_recorded.json`, `pages_recorded*.json`, `responses/*.json`, screenshots.
 
@@ -36,17 +36,17 @@ To add a strict run's cache (`cache/*.json` holds `{raw, type}` of every respons
 ```sh
 python3 - <<'EOF'
 import json, glob, os
-ws = os.getcwd(); src, dst = f"{ws}/twitter-openapi/cache", f"{ws}/recordings/cache_rawN"   # pick the next N
-os.makedirs(dst, exist_ok=True); listing = f"{ws}/recordings/validate_args.json"
+src, dst = "twitter-openapi/cache", "recordings/cache_rawN"   # pick the next N
+os.makedirs(dst, exist_ok=True); listing = "recordings/validate_args.json"
 args = json.load(open(listing)) if os.path.exists(listing) else []
 for f in glob.glob(src + "/*.json"):
     d = json.load(open(f)); out = f"{dst}/{os.path.basename(f)}"
-    open(out, "w").write(d["raw"]); open(out + ".type", "w").write(d["type"]); args.append(f"{out}={d['type']}")
+    open(out, "w").write(d["raw"]); open(out + ".type", "w").write(d["type"]); args.append(f"../{out}={d['type']}")
 json.dump(args, open(listing, "w"), indent=0)
 EOF
 ```
 
-The paths in the list are absolute. The old sandbox's recipe wrote them as `/root/workspace/recordings/...`: after copying that set here, `sed -i "s#/root/workspace/#$PWD/#" recordings/validate_args.json`.
+The paths in the list are relative to a twitter-openapi checkout (`../recordings/...`), so the set works from the main checkout and from a worktree next to it, wherever the workspace lives.
 
 ## relay_local/ — run twitter_api_safe_relay with the sandbox session
 

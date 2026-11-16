@@ -1,8 +1,8 @@
 #!/bin/sh
-# Session bootstrap. The home directory is a docker volume and survives the container being recreated; everything outside it
-# (apt packages, /tmp) does not, so tools are installed under ~/.local. A fresh clone on another machine has neither.
+# Session bootstrap. The image ships the system tools; the JRE, the generator jar, the spec venv and Playwright's browsers live in
+# the home volume and are gone whenever that volume is replaced. A fresh clone on another machine has neither.
 # Idempotent: initialises missing submodules, restores Claude's memory from the workspace mirror and the sandbox cookie from
-# twitter-secrets, and prints an install line for every missing tool.
+# twitter-secrets, and prints an install line for everything missing (run them top to bottom).
 set -u
 WS=$(cd "$(dirname "$0")/.." && pwd)
 KEY=EAB5AF5AA7ED7A16C4027B5283A8A5E74872A8AA
@@ -17,21 +17,25 @@ if [ ! -f "$MEM/MEMORY.md" ] && [ -f "$WS/.claude/memory/MEMORY.md" ]; then
   mkdir -p "$MEM" && cp "$WS"/.claude/memory/*.md "$MEM"/ && echo "memory restored from .claude/memory"
 fi
 
-# ~/.npm turned up owned by root in this volume, which makes every npm install fail with EACCES
+# ~/.npm has turned up owned by root, which makes every npm install fail with EACCES
 [ ! -e "$HOME/.npm" ] || [ -O "$HOME/.npm" ] || sudo chown -R "$(id -un):" "$HOME/.npm"
 
 need() { command -v "$1" >/dev/null 2>&1 && printf '%-6s ok  %s\n' "$1" "$(command -v "$1")" || printf '%-6s MISSING -> %s\n' "$1" "$2"; }
-need java   "mkdir -p ~/.local/share/java ~/.local/bin && curl -fsSL https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse | tar -xz -C ~/.local/share/java && ln -sfn ~/.local/share/java/jdk-17*-jre/bin/java ~/.local/bin/java"
-need uv     "curl -LsSf https://astral.sh/uv/install.sh | sh"
+# image tools: the install line is the fallback for an image without them (apt installs last until the next image)
 need node   "image tool (v26); other versions: unpack the nodejs.org tarball under ~/.local/node-versions/"
 need pnpm   "npm i -g --prefix ~/.local pnpm@12"
+need uv     "curl -LsSf https://astral.sh/uv/install.sh | sh"
 need gh     "image tool; GITHUB_TOKEN is in the environment"
-need sops   "gh release download -R getsops/sops -p 'sops-*.linux.amd64' -O ~/.local/bin/sops && chmod +x ~/.local/bin/sops"
-need age    "sudo apt-get update && sudo apt-get install -y age   (gone again with the next image)"
-need jq     "sudo apt-get update && sudo apt-get install -y jq   (gone again with the next image)"
-need ffmpeg "sudo apt-get update && sudo apt-get install -y ffmpeg   (gone again with the next image)"
+need sops   "mkdir -p ~/.local/bin && gh release download -R getsops/sops -p 'sops-*.linux.amd64' -O ~/.local/bin/sops && chmod +x ~/.local/bin/sops"
+need age    "sudo apt-get update && sudo apt-get install -y age"
+need jq     "sudo apt-get update && sudo apt-get install -y jq"
+need ffmpeg "sudo apt-get update && sudo apt-get install -y ffmpeg"
+# home volume: the strict client needs java and the jar, Playwright needs the venv the strict client line creates
+need java   "mkdir -p ~/.local/share/java ~/.local/bin && curl -fsSL https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse | tar -xz -C ~/.local/share/java && ln -sfn ~/.local/share/java/jdk-17*-jre/bin/java ~/.local/bin/java"
+VENV=$WS/twitter-openapi/.venv
 [ -f "$WS/twitter-openapi/openapi-generator-cli.jar" ] && echo "generator jar ok" || echo "generator jar MISSING -> curl -fsSL -o $WS/twitter-openapi/openapi-generator-cli.jar https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.26.0/openapi-generator-cli-7.26.0.jar"
-[ -d "$HOME/.cache/ms-playwright" ] && echo "playwright browsers ok" || echo "playwright browsers MISSING -> (cd $WS/twitter-openapi && uv pip install playwright && uv run --no-sync playwright install chromium)"
+ls "$VENV"/lib/python*/site-packages/openapi_client >/dev/null 2>&1 && echo "strict client ok" || echo "strict client MISSING -> (cd $WS/twitter-openapi && uv run python tools/build.py && java -jar openapi-generator-cli.jar generate -c test/python/openapi-generator-config.yaml -g python && uv pip install ./python_generated)"
+[ -x "$VENV/bin/playwright" ] && [ -d "$HOME/.cache/ms-playwright" ] && echo "playwright ok" || echo "playwright MISSING -> (cd $WS/twitter-openapi && uv pip install playwright && uv run --no-sync playwright install chromium)"
 
 echo t | timeout 20 "$GPG" --batch -bsau $KEY >/dev/null 2>&1 && echo "gpg signing ok ($GPG)" || echo "gpg signing FAILED -> tell the maintainer (GPG_PASSPHRASE or the key mount is missing from the container)"
 gh auth status >/dev/null 2>&1 && echo "gh auth ok" || echo "gh auth MISSING"
