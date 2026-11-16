@@ -65,6 +65,5 @@ This file holds the environment, the routine and the current state. Past states:
 - Waiting on the maintainer: a poll-with-image post URL to check twitter-snap's poll rendering.
 - Backlog: `snap_tweet` MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
 - Not in a fresh clone (ignored, lived only in the old container): `screenshot/2026-11-13/` (renders of the deleted 19-photo post),
-  `tools/out/` (render compare sets, ffmpeg builds, the nvenc repro). Regenerate compare sets with `tools/out/og_compare/render.sh` (the
-  script and `compare.cjs` are gone with the directory; both were ~20 lines: render the sample URLs with `bin/run.js --sessionType guest`
-  into two directories, diff PNGs pixel-wise with sharp).
+  `tools/out/` (render compare sets, ffmpeg builds, the nvenc repro). The compare kit itself is tracked in `tools/og_compare/`
+  (`render.sh`, `compare.cjs`, `montage.cjs`, public sample URLs); render master and the branch into two directories and diff.

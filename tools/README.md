@@ -18,6 +18,7 @@ Run them from a twitter-openapi checkout (`cd /root/workspace/twitter-openapi &&
 | `sweep_leftovers.py` | lists (`CLEAN=1` removes) leftovers of the recording scripts on the account: "placeholder check" lists, drafts, tweets |
 | `x_dom_styles.py <outdir> <name>=<url> ...` | opens tweet pages with the account, screenshots the main `<article>` and dumps the computed styles of its DOM (light + dark JSON) as the layout reference for twitter-snap: sizes, colors, spacing, icon paths |
 | `render_saved_tweet.mjs <saved TweetResultByRestId.json> <out.png> [scale] [width]` | renders a post from a saved raw response through twitter-snap's guest pipeline (run from `/root/workspace/twitter-snap` after `pnpm build`); the way to re-render a deleted post while pbs.twimg.com still serves its media |
+| `og_compare/` | render-compare kit for twitter-snap changes: `sh og_compare/render.sh <outdir> node bin/run.js` renders the sample posts of `og_compare/urls.txt` (official accounts only; add private posts locally, never commit them) in both themes, `node og_compare/compare.cjs <a> <b>` diffs the PNGs pixel-wise (needs `sharp` installed next to it: `npm i sharp`), `montage.cjs` puts them side by side |
 | `bootstrap.sh` | after a container recreate: restores Claude's memory from `.claude/memory/`, creates `/root/.gnupg-rw`, reports missing tools and the gpg / gh / cookie state |
 
 `out/` holds older recordings (`actions_recorded.json`, `pages_recorded*.json`, `responses/*.json`, part of the validation set) and screenshots.
