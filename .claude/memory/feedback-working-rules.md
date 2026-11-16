@@ -12,7 +12,8 @@ metadata:
   cannot be changed; recovery is `git push origin <sha>:refs/heads/<name>`, `gh pr reopen`, PATCH the base. Retarget children first
   (`gh api -X PATCH repos/<r>/pulls/<n> -f base=<new>`), merge bottom-up into main, never LGTM'd children into a parent still under
   review ("今回はいいけど次から気をつけて").
-- **Dependabot is delegated** (2026-10-31 "dependabotのマージは任せる", 2026-11-12 restated): merge after CI, merge commits, no per-PR LGTM;
+- **Dependabot is delegated** (2026-10-31 "dependabotのマージは任せる", 2026-11-12 restated; 2026-11-16 for TwitterInternalAPIDocument as
+  well: "TwitterInternalAPIDocumentのDependabotは委任"): merge after CI, merge commits, no per-PR LGTM;
   a grouped PR that fails gets an own PR with the fix (same bumps, superseding it). Relay merges cost 3 live logins each.
 - **No overrides for security alerts** (2026-11-05: "よっぽどのことがない限りオーバーライドはできるだけしたくない / 変なバグに当たる可能性があるし、
   実害ないから放置されている可能性がある"): fix inside the parents' ranges or by bumping the parent, otherwise leave the alert open and say

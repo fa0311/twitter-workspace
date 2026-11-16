@@ -5,22 +5,22 @@ The maintenance workspace for [fa0311](https://github.com/fa0311)'s X / Twitter 
 and its apps, [twitter_api_safe_relay](https://github.com/fa0311/twitter_api_safe_relay), and the supporting repositories, checked out as
 submodules at the commits currently in use.
 
-It is operated mostly by an AI agent working inside the `docker-compose.yml` sandbox. The documents are written for the next operator:
+It is operated mostly by an AI agent working inside a sandbox container. The documents are written for the next operator:
 
 - [`CLAUDE.md`](CLAUDE.md): standing rules (how work is delivered, what must never happen).
 - [`HANDOVER.md`](HANDOVER.md): the environment, the routine and the current state of the work.
 - [`REFERENCE.md`](REFERENCE.md): facts about the sandbox, X and the repositories that cannot be derived from the code.
-- [`tools/`](tools/README.md): local scripts for recording, sweeping and validating X responses; `tools/bootstrap.sh` prepares a fresh container.
-- `.claude/memory/`: the agent's memory, mirrored so it survives the container.
+- [`tools/`](tools/README.md): local scripts for recording, sweeping and validating X responses; `tools/bootstrap.sh` prepares a session.
+- `.claude/memory/`: the agent's memory, mirrored so it survives a move to another machine.
 
 ```sh
 git clone --recursive https://github.com/fa0311/twitter-workspace.git
-cd twitter-workspace && docker compose up -d
+cd twitter-workspace && sh tools/bootstrap.sh
 ```
 
-`docker-compose.yml` expects the sandbox `Dockerfile` and an `.env` (with `GITHUB_TOKEN`) in the parent directory, and mounts the
-host's gh, ssh and GPG configuration read-only. Secrets (`cookie.json`, `.sops/`) and the recorded X responses (`recordings/`) are not
-part of the repository. Named volumes keep the agent's memory and the tool caches across container recreations.
+The sandbox provides the maintainer's GPG key (it signs the commits and decrypts
+[twitter-secrets](https://github.com/fa0311/twitter-secrets), from which the bootstrap restores the test account's `cookie.json`) and
+a GitHub token. The cookie and the recorded X responses (`recordings/`) are not part of the repository.
 
 ## License
 

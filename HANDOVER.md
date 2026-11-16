@@ -5,29 +5,41 @@ This file holds the environment, the routine and the current state. Past states:
 
 ## Environment
 
-- This directory is a git repository: docs, `tools/`, `.claude/memory/` and `docker-compose.yml` are tracked, the project repositories
-  are submodules pinned at the commits in use. Rebuild elsewhere with `git clone --recursive <workspace remote> /root/workspace` plus
-  `cookie.json` and `.sops/` from the maintainer. Ignored: `recordings/` (212 MB, regenerable with `tools/sweep_tweets.py` and strict
-  runs), `tools/out/` (1.8 GB of compare sets and ffmpeg builds), the two spec worktrees, `.pnpm-store/`, `screenshot/`.
-- `/root/workspace` is a bind mount; `/root/.claude`, `/root/.cache` and `/root/.local` are named volumes that survive a recreate as
-  long as they are kept. `/tmp` (chat scratch) is wiped. `sh tools/bootstrap.sh` restores memory, writes the gpg-agent config,
-  recreates the writable GPG home sops needs and reports missing tools. If a recreate loses uv's Python, `uv python install 3.13`
-  repairs the venvs (`tools/graphql_get.py` and friends need the generated client installed in the venv they run from).
-- Credentials: `cookie.json` (sandbox account @ptcpz3), `.sops/age-key.txt` (decrypts `twitter-secrets/secrets.enc.yaml`); GPG key
-  material and `gh` config are mounted read-only. `gh pr create/checks/merge/close` and `gh run` work; if a GraphQL-backed command
-  fails on token scopes, use `gh api` REST.
-- Hardware: the compose reserves the host's NVIDIA RTX 3080 Ti (Ubuntu ffmpeg 6.1.1 with `h264_nvenc` / `hevc_nvenc`). The container
-  is `0000-twitter-workspace` on the host. The host clock runs a few seconds behind GitHub's; it cannot be set from inside.
+- Since 2026-11-16 the work runs in a Kasm desktop container (Ubuntu 26.04, user `kasm-user`, passwordless `sudo`) operated through
+  T3 Code. Until then it ran as root in a container with the workspace bind-mounted at `/root/workspace`; its `docker-compose.yml`
+  left the repository with the move.
+- The workspace is `/home/kasm-user/twitter-workspace`, a clone of fa0311/twitter-workspace: docs, `tools/` and `.claude/memory/` are
+  tracked, the project repositories are submodules pinned at the commits in use (detached after a clone: switch to the default
+  branch and pull before branching). Ignored and therefore only on this machine: `cookie.json`, `recordings/`, `tools/out/`,
+  `screenshot/`, spec worktrees, `.pnpm-store/`.
+- `/home/kasm-user` is one docker volume (workspace, `~/.claude`, `~/.cache`, `~/.local`); the image around it was rebuilt several
+  times on the first day while the volume carried over. Whatever is installed with apt is gone after a recreate, so tools go into
+  `~/.local` (`~/.local/bin` is first on `PATH`). Chat scratch is under `/tmp/claude-1000/` and is wiped.
+- `sh tools/bootstrap.sh` initialises missing submodules, restores memory into
+  `~/.claude/projects/-home-kasm-user-twitter-workspace/memory/`, restores `cookie.json` from twitter-secrets, links it into
+  `twitter-openapi/`, checks that it is @ptcpz3 and that signing works, and prints the install line for every missing tool.
+- Credentials: the maintainer's GPG key is mounted read-only behind `~/.gnupg`; `/usr/local/bin/git-gpg` (set as `gpg.program` in
+  `/etc/gitconfig`) passes the passphrase from the environment, so git signs and sops decrypts twitter-secrets without anyone
+  unlocking anything (REFERENCE, "Sandbox"). The CI age key is not on disk. `gh` runs on `GITHUB_TOKEN` with the scopes
+  `public_repo` and read-only ones (no `workflow`); every repository of the family is public. If a GraphQL-backed command fails on
+  token scopes, use `gh api` REST.
+- Installed and tried on 2026-11-16: Node 26 with pnpm 12 (pnpm fetches the version a repo pins), uv with Python 3.14, a Temurin 17
+  JRE in `~/.local/share/java`, the generator jar in `twitter-openapi/`, Playwright with its Chromium in the `twitter-openapi` venv
+  (`uv pip install playwright`; not a dependency of the repo), sops, age, jq, Ubuntu's ffmpeg 8.0.1 with `h264_nvenc` / `hevc_nvenc`
+  on the host's NVIDIA RTX 3080 Ti. Not here: docker (images are checked by CI only), corepack, a second Node version.
+- The container has a desktop (KasmVNC, `DISPLAY=:1`) with Google Chrome, and the session offers browser tools (chrome-devtools,
+  cua-driver, the T3 preview). None of them has been used against X; the recording scripts drive Playwright's own Chromium.
 
 ## Layout
 
-- `twitter-openapi/` spec repo on `main`; `twitter-openapi-browser-only/` and `twitter-openapi-sweep3/` are worktrees of it with their own
-  venv, generator jar and cookie (two branches can be validated at once; leave them detached at `origin/main`).
+- `twitter-openapi/` spec repo. Its venv holds the strict generated client (`uv pip install ./python_generated`) and Playwright.
+  A second checkout for validating two branches at once is a worktree next to it (`twitter-openapi-browser-only/` and
+  `twitter-openapi-sweep3/` are the ignored names) with its own venv, generator jar and cookie link; none exists at the moment.
 - `twitter_openapi_python/`, `twitter-openapi-typescript/`: clients; the generated package is a subdirectory with the spec as a submodule.
 - `twitter-snap*/`: the renderer (reference consumer of the TS client) and its apps; `twitter_api_safe_relay*/`: relay and its skill;
   `TwitterInternalAPIDocument/` (drift detector only); `twitter-secrets/`, `x-client-transaction-id-pair-dict/`, `private_bot/`.
-- `tools/` local scripts (`tools/README.md`); `recordings/` 1,450+ raw X responses with `validate_args.json`, the offline set every spec
-  change must pass at exactly 1.0 before a PR (`recordings/README.md`); `screenshot/{date}/` renders for the maintainer.
+- `tools/` local scripts (`tools/README.md`); `recordings/` raw X responses with `validate_args.json`, the offline set every spec
+  change must pass at exactly 1.0 before a PR (absent here, see State); `screenshot/{date}/` renders for the maintainer.
 
 ## Routine
 
@@ -39,12 +51,21 @@ This file holds the environment, the routine and the current state. Past states:
   lockfile follow-up once npm has the generated package → twitter-snap release PR `update x.y.z` (version only; publish + Docker run on
   the merge) → twitter-snap-api lockfile bump (its Docker builds on push to main, no PR checks: `pnpm build` + `pnpm test` locally) →
   private_bot when the TS wrapper moved. twitter-snap-discord / -bookmarklet call the API over HTTP, nothing to bump.
-- Dependabot: grouped in all seven repos (weekly version groups where they exist, one security group everywhere); merges are delegated
-  (CI green, merge commit, relay at most once a day). Alerts GitHub cannot fix itself are handled by hand (REFERENCE, "GitHub and CI").
+- Dependabot: grouped in all seven repos (weekly version groups where they exist, one security group everywhere), ungrouped in
+  TwitterInternalAPIDocument; merges are delegated everywhere (CI green or a local check, merge commit, relay at most once a day). Alerts GitHub cannot fix itself are handled by hand (REFERENCE, "GitHub and CI").
 - Account use per day is in `CLAUDE.md`; a lock (`code 326`) is cleared only by the maintainer.
 
 ## State (2026-11-16)
 
+- Moved to the new environment today. Tried here: spec build, strict client generation and install, `tools/graphql_get.py
+  UserByScreenName` (200, no errors: the account is not locked and X is reached directly), `tools/validate_dumps.py` on that response
+  (1.0), a Playwright Chromium launch on a blank page, twitter-snap `pnpm install` + `pnpm build` and one guest render, nvenc
+  encoding, decrypting both secrets, pushing this repository and merging PRs with this token. Not tried here yet: a strict run, any
+  Playwright script against X, the relay (`tools/relay_local`), the wrappers' e2e suites, opening a PR, a commit touching a workflow
+  file (the token has no `workflow` scope).
+- `recordings/` was not brought along, on purpose (maintainer, 2026-11-16), and neither were `tools/out/`, `screenshot/` and the two
+  spec worktrees. There is no offline validation set here: a spec change is checked by the strict run alone unless a set is
+  collected again (`tools/README.md`, "Offline validation set").
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the clients pin 6c4914f).
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
   the account (x.com/settings/email).
@@ -53,7 +74,9 @@ This file holds the environment, the routine and the current state. Past states:
   ddc85cd on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
-- No open PRs in any repo. Account use since 11-13: the nightlies only.
+- No open PRs in the maintained repos; TwitterInternalAPIDocument's #1144 (Update Document) is the maintainer's own. Its Dependabot
+  #1145 / #1146 (pandas 3.1.1, ruff 0.17.4) were merged on 11-16 after the local check in REFERENCE, "Other repos". Account use
+  since 11-13: the nightlies, plus eleven single GETs on 11-16 (`UserByScreenName`, `TweetResultByRestId`).
 - Open for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`; `requires-python >= 3.11.5` in twitter-openapi and
   twitter_openapi_python (the soupsieve alert may stay open while the locks keep 2.10 for older Pythons); the leftover branch
   `fix/ffmpeg-timeout-seconds` in twitter-snap-api (closed #19, the sandbox cannot delete unmerged branches); private_bot's `minimatch`
@@ -64,6 +87,5 @@ This file holds the environment, the routine and the current state. Past states:
   operations the browser session did not send (listed in #139); an upstream FFmpeg report of the aac `nmr` hang.
 - Waiting on the maintainer: a poll-with-image post URL to check twitter-snap's poll rendering.
 - Backlog: `snap_tweet` MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
-- Not in a fresh clone (ignored, lived only in the old container): `screenshot/2026-11-13/` (renders of the deleted 19-photo post),
-  `tools/out/` (render compare sets, ffmpeg builds, the nvenc repro). The compare kit itself is tracked in `tools/og_compare/`
-  (`render.sh`, `compare.cjs`, `montage.cjs`, public sample URLs); render master and the branch into two directories and diff.
+- The render compare kit is tracked in `tools/og_compare/` (`render.sh`, `compare.cjs`, `montage.cjs`, public sample URLs): render
+  master and the branch into two directories and diff.

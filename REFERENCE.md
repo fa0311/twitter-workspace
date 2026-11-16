@@ -3,16 +3,23 @@
 Facts that are not derivable from the repos or the web. History and PR numbers are in git; the current state is in `HANDOVER.md`.
 
 ## Sandbox
-- `/root/workspace` is a bind mount owned by the host user; as root, git needs `safe.directory` for it (bootstrap sets it).
-- Parallel Bash calls share one shell cwd: use absolute paths and `git -C`. `pkill -f` matches the calling shell; kill by pid.
+- Everything runs as `kasm-user`, who owns the workspace; `sudo` needs no password. What survives a container recreate is in
+  `HANDOVER.md`.
+- A `cd` in one Bash call moves the working directory of the following ones: use absolute paths and `git -C`. `pkill -f` matches
+  the calling shell; kill by pid.
 - The shell is zsh: an unquoted `$var` is not word-split, an unmatched glob such as `--include=*.ts` aborts the command, `=word` is
   expanded; quote globs, use arrays or `${=var}`.
-- GPG key is passphrase-protected; the sandbox agent is unlocked by the maintainer from a VS Code terminal (long cache TTL). sops uses the
-  writable copy `GNUPGHOME=/root/.gnupg-rw`. Secrets: `source .sops/env.sh && SOPS_AGE_KEY_FILE=.sops/age-key.txt sops decrypt --extract
-  '["proxy_list"]' twitter-secrets/secrets.enc.yaml` (same for `cookie_json`).
+- The GPG key is passphrase-protected and the agent never has it cached: plain `gpg` hangs waiting for the passphrase, with
+  `--batch` too. `/usr/local/bin/git-gpg` is `gpg --batch --pinentry-mode loopback` with the passphrase from
+  `GPG_PASSPHRASE`; git calls it by itself, and it takes any other gpg arguments (`git-gpg -bsau <key>`, `git-gpg -d <file>`).
+- twitter-secrets is encrypted to that PGP key and to the CI age key, so no age key is needed here: `SOPS_GPG_EXEC=/usr/local/bin/git-gpg
+  sops decrypt --extract '["proxy_list"]' twitter-secrets/secrets.enc.yaml` (same for `cookie_json`). The CI age key, for a repository
+  that needs `SOPS_AGE_KEY`, is `git-gpg -d twitter-secrets/keys-ci-age.txt.gpg`.
 - The sandbox reaches X directly. GitHub-hosted runners get a Cloudflare challenge, so CI goes through the maintainer's HTTP CONNECT
   proxies (`proxy_list`, fastest first; exits fluctuate, so reruns are legitimate). Chromium only authenticates against HTTP proxies.
-- Node 24.22.1 and 26.13.0 for local reproduction are in `/root/.local/node-versions/`; downloaded ffmpeg builds in `tools/out/ffmpeg-*`.
+- Only the image's Node 26 is installed; another version for local reproduction is the nodejs.org tarball unpacked under
+  `~/.local/node-versions/`. Playwright's Chromium download works on Ubuntu 26.04 without `--with-deps`. `EACCES` from npm means
+  `~/.npm` is owned by root again (bootstrap hands it back). apt needs `sudo apt-get update` first: the image ships no package lists.
 
 ## GitHub and CI
 - Delete a head branch only after the merge response says `"merged":true` and `gh pr list --base <branch>` is empty: during a GitHub
@@ -40,7 +47,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   formats YAML (double quotes by default: `yaml.formatter.quoteStyle: single`) and Markdown too.
 - ffmpeg in CI: johnvansickle static builds (`FedericoCarboni/setup-ffmpeg@v3`) segfault on https input; BtbN builds
   (`AnimMouse/setup-ffmpeg@v1`) and apt ffmpeg work. BtbN `ffmpeg-master-latest` is not for production images: its aac `nmr` coder looped
-  forever on some 48 kHz audio in Nov 2026 (stuck at `frame=0`, ignores SIGTERM); pin release lines (n9.0). Repro: `tools/out/nvenc_repro/`.
+  forever on some 48 kHz audio in Nov 2026 (stuck at `frame=0`, ignores SIGTERM); pin release lines (n9.0).
 - pngjs on Node 25+: `PNG.sync.read` throws (`Inflate` without `new`); use `new PNG().parse(buffer, cb)`.
 
 ## X behaviour
@@ -68,14 +75,15 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Rate limits per 15 minutes vary by an order of magnitude between operations (search is the scarce one); read `x-rate-limit-*`.
 - Lock: GraphQL answers 200 with data plus `errors[].code 326` and `bounce_location: …/account/access`; web pages redirect to
   `/account/access` behind a Cloudflare challenge; the relay's CI login times out after 120 s. Triggers so far: sweeps, several suites
-  in a day, relay CI logins (3 per push / merge). After the maintainer clears it, export a fresh cookie if the session changed and update
-  `cookie.json`, the worktree copies and the sops secret.
+  in a day, relay CI logins (3 per push / merge). After the maintainer clears it and the session changed, the fresh export goes into
+  the sops secret (`cookie_json`, recipe in twitter-secrets' README); delete the workspace's `cookie.json` and rerun bootstrap.
 - Media: pbs.twimg.com serves every photo at `?name=orig` (`format=jpg&name=4096x4096` is 404 for some) and keeps serving media of
   deleted posts for a while. Posts can carry ~20 photos. Age-restricted posts give guests a `TweetTombstone`.
 
 ## twitter-openapi (spec)
 - Build: `uv run python tools/build.py`; generate the strict Python client with `openapi-generator-cli.jar` 7.26.0
-  (`test/python/openapi-generator-config.yaml`); strict harness `STRICT_MODE=True ERROR_UNCATCHED=False CUESOR_TEST_COUNT=2 uv run python
+  (`java -jar openapi-generator-cli.jar generate -c test/python/openapi-generator-config.yaml -g python`, then `uv pip install
+  ./python_generated`; the jar and the output are ignored, `uv run` keeps the installed client); strict harness `STRICT_MODE=True ERROR_UNCATCHED=False CUESOR_TEST_COUNT=2 uv run python
   test/python/test_serialize.py` calls every GET operation of every API class with the placeholder values and raises `Not defined:
   Model.field` / enum errors. PostApi is never executed: mutations are validated from recorded dumps (`tools/validate_dumps.py`).
 - Placeholder keys resolve case-insensitively; `cache/*.json` holds `{raw, type}` of every response of a run.
@@ -91,7 +99,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   `tools/update_placeholder.py <file|url>`, the relay's `twitter-api-safe-dump --cookies`, a HAR). Sample values are elonmusk /
   44196397 / 1349129669258448897; viewer-bound entries are recorded on the sandbox. TIAD's GraphQL.json is only a detector of changed queryIds.
 - `tools/sweep_tweets.py` (broad strict sweep) and `tools/json_to_schema.py` (schema drafts; check its shared-type guesses, reduced
-  users are not `User`) live in `/root/workspace/tools`.
+  users are not `User`) live in the workspace's `tools/`.
 
 ## Generated clients
 - Regeneration: in the generated directory, move the `twitter-openapi` submodule to the spec commit, bump the version in
@@ -126,8 +134,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Pipeline: satori → SVG → `@resvg/resvg-js` (sharp was dropped: it refuses SVGs above 32767 px, which a many-photo post reaches at
   scale 2). satori ≥ 0.34 lays out like a browser: content-box by default and absolutely positioned elements painted above in-flow
   siblings; `renderPng` therefore wraps the element with `<style>* { box-sizing: border-box }</style>` and the poll texts are
-  `position: relative`. A satori bump still needs a visual pass: `tools/out/og_compare/` (`render.sh <outdir> node bin/run.js`,
-  `compare.cjs <a> <b>`, `montage.cjs`; sharp installed there). satori ≥ 0.33.5 pins `fflate` 0.7.3 (medium advisory, not fixable in range).
+  `position: relative`. A satori bump still needs a visual pass: `tools/og_compare/` (`render.sh <outdir> node bin/run.js`,
+  `compare.cjs <a> <b>`, `montage.cjs`; they need `sharp` installed next to them). satori ≥ 0.33.5 pins `fflate` 0.7.3 (medium advisory, not fixable in range).
 - Text is a flex-wrap of UAX #14 units (`linebreak`, `src/utils/text.ts`); satori has no inline flow. satori clips an `<img>` only by its
   own `borderRadius` (put border + radius on the image). Fonts: `loadFonts(dir)` (Segoe UI / Meiryo set), twemoji images and Noto
   subsets from Google Fonts as satori asset fallback (`src/utils/render.ts`).
@@ -146,7 +154,9 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 
 ## Other repos
 - TwitterInternalAPIDocument: generator needs a cookie; docs on `develop`, merged to `master` by the scheduled workflow; its "Update
-  Document" PRs are the maintainer's own. Avoid changes unless asked.
+  Document" PRs are the maintainer's own. Avoid changes unless asked; Dependabot is delegated there too. No PR checks, and code runs
+  from `master`: the local check is `uv sync --frozen` on the merged lock, `lib.md.gen_md_graphql` over `docs/json/GraphQL.json`
+  compared with the committed `docs/markdown/GraphQL.md` (pandas only feeds `to_markdown`), and `ruff check` against master's findings.
 - x-client-transaction-id-pair-dict: `pnpm start` yields 30 pairs in a few minutes without a proxy (`PAIR_MAX=2` for a quick check);
   pairs stay valid for weeks; not on npm. Lqm1/x-client-transaction-id 0.3.2 was verified identical to the frontend (2026-10-19).
 - private_bot: LINE bot calling twitter-snap-api over HTTP; depends on the TS clients directly.

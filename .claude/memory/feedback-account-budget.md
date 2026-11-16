@@ -9,7 +9,8 @@ metadata:
 ---
 
 `cookie.json` is **@ptcpz3**; confirm the session is that account before recording or testing (`UserByScreenName` for the viewer or the
-`twid` cookie), keep every copy (worktrees, wrapper test dirs, the sops secret) in step, never print values.
+`twid` cookie, `u%3D1787148517779406848`), never print values. Since 2026-11-16 the file is restored from the sops secret by
+`tools/bootstrap.sh` and linked, not copied, into the checkouts that need it.
 
 Locks (code 326) so far: 2026-10-20 (sweeps), 10-26, 11-04 (nightly + four cookie renders + a python e2e suite + two relay PR pushes
 = 6 CI logins in an hour), 11-13 (two relay Dependabot merges in one morning = ~12 CI logins). Hence the budget in CLAUDE.md: nightly
