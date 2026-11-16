@@ -3,8 +3,8 @@
 Facts that are not derivable from the repos or the web. History and PR numbers are in git; the current state is in `HANDOVER.md`.
 
 ## Sandbox
-- Everything runs as `kasm-user`, who owns the workspace; `sudo` needs no password. What survives a container recreate is in
-  `HANDOVER.md`.
+- Everything runs as `kasm-user`, who owns the workspace; `sudo` needs no password. What the image ships and what lives in the
+  home volume is in `HANDOVER.md`.
 - A `cd` in one Bash call moves the working directory of the following ones: use absolute paths and `git -C`. `pkill -f` matches
   the calling shell; kill by pid.
 - The shell is zsh: an unquoted `$var` is not word-split, an unmatched glob such as `--include=*.ts` aborts the command, `=word` is
@@ -18,8 +18,9 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - The sandbox reaches X directly. GitHub-hosted runners get a Cloudflare challenge, so CI goes through the maintainer's HTTP CONNECT
   proxies (`proxy_list`, fastest first; exits fluctuate, so reruns are legitimate). Chromium only authenticates against HTTP proxies.
 - Only the image's Node 26 is installed; another version for local reproduction is the nodejs.org tarball unpacked under
-  `~/.local/node-versions/`. Playwright's Chromium download works on Ubuntu 26.04 without `--with-deps`. `EACCES` from npm means
-  `~/.npm` is owned by root again (bootstrap hands it back). apt needs `sudo apt-get update` first: the image ships no package lists.
+  `~/.local/node-versions/`. Playwright's Chromium download works on Ubuntu 26.04 without `--with-deps`; `uv pip install` needs
+  the venv that the first `uv run` creates. `EACCES` from npm means `~/.npm` is owned by root (bootstrap hands it back). apt needs
+  `sudo apt-get update` first: the image ships no package lists.
 
 ## GitHub and CI
 - Delete a head branch only after the merge response says `"merged":true` and `gh pr list --base <branch>` is empty: during a GitHub
