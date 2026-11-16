@@ -64,5 +64,7 @@ This file holds the environment, the routine and the current state. Past states:
   operations the browser session did not send (listed in #139); an upstream FFmpeg report of the aac `nmr` hang.
 - Waiting on the maintainer: a poll-with-image post URL to check twitter-snap's poll rendering.
 - Backlog: `snap_tweet` MCP tool (home undecided), spec candidates from the relay catalog (recording only on instruction).
-- Scratch kept on purpose: `screenshot/2026-11-13/` (the deleted 19-photo post rendered at scale 1 and at the API's width 1440 / scale 2
-  from its saved response), `tools/out/og_compare/` (render compare sets: `master042`, `satori063`, `satori063fix`, `resvg`, `baseline`).
+- Not in a fresh clone (ignored, lived only in the old container): `screenshot/2026-11-13/` (renders of the deleted 19-photo post),
+  `tools/out/` (render compare sets, ffmpeg builds, the nvenc repro). Regenerate compare sets with `tools/out/og_compare/render.sh` (the
+  script and `compare.cjs` are gone with the directory; both were ~20 lines: render the sample URLs with `bin/run.js --sessionType guest`
+  into two directories, diff PNGs pixel-wise with sharp).
