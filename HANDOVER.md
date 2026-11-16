@@ -46,7 +46,7 @@ This file holds the environment, the routine and the current state. Past states:
 
 ## Routine
 
-- twitter-openapi's nightly strict live test (`live-test.yaml`, 23:00 UTC, often delayed) is the main drift signal. On a failure:
+- twitter-openapi's nightly strict live test (`live-test.yaml`, cron 23:00 UTC; GitHub starts it between 11:00 and 13:30 JST) is the main drift signal. On a failure:
   reproduce in a worktree, type the new field from the raw response, validate the recordings set, run strict once, PR.
   A failure before the first `Try:` line with a proxy error is a proxy outage: `gh run rerun <id> --failed`.
 - Recordings of X requests happen on the maintainer's instruction; placeholder values come only from them.
@@ -57,6 +57,31 @@ This file holds the environment, the routine and the current state. Past states:
 - Dependabot: grouped in all seven repos (weekly version groups where they exist, one security group everywhere), ungrouped in
   TwitterInternalAPIDocument; merges are delegated everywhere (CI green or a local check, merge commit, relay at most once a day). Alerts GitHub cannot fix itself are handled by hand (REFERENCE, "GitHub and CI").
 - Account use per day is in `CLAUDE.md`; a lock (`code 326`) is cleared only by the maintainer.
+
+## Daily run
+
+The maintainer asked for daily maintenance at 10:00 JST (2026-11-16). A T3 scheduled task, "Daily maintenance", starts a fresh
+session in its own thread every day and works through this list with nobody present:
+
+1. `sh tools/bootstrap.sh`, then the lines it prints.
+2. The newest nightly; at 10:00 JST that is the run of the day before. Failed: as in Routine, and the fix is a PR.
+3. Dependabot PRs in every repository: merged as delegated (Routine); a failing one is replaced by an own PR.
+4. New Dependabot alerts: a PR when the fix is inside the parents' ranges, otherwise the reason goes into State.
+5. New issues and PRs from others: read and reported, nothing is written on GitHub.
+6. What an earlier merge made due in a release chain: the next PR is opened.
+7. State in this file, commit, push.
+8. A short report in Japanese: what changed, and a direct link to every PR that waits for review.
+
+Unattended, only Dependabot PRs are merged. Every other PR, the run's own included, waits for the maintainer's review and is merged
+in the session where the LGTM arrives. The account is spent only on what a failed nightly needs (single GETs, one strict run) and
+on the local check of a Dependabot PR; recordings, sweeps and suites are never started by this run.
+
+The task lives in T3's state inside the home volume. When `list_scheduled_tasks` no longer shows it, create it again with
+`schedule_task`: `fixed_time` 10:00, `bindToCurrentThread: false`, `freshSession: true`, and this prompt:
+
+> Daily maintenance of fa0311's X / Twitter repositories: follow HANDOVER.md, section "Daily run", in
+> /home/kasm-user/twitter-workspace (CLAUDE.md rules apply). Nobody is present: merge only Dependabot PRs; every other PR, your
+> own included, waits for the maintainer's review. Finish with a short report in Japanese that links every PR waiting for review.
 
 ## State (2026-11-16)
 
