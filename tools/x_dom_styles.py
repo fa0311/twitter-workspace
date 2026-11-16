@@ -1,7 +1,7 @@
-"""Open tweet pages with the account in /root/workspace/cookie.json, screenshot the main <article> and dump the computed styles of
+"""Open tweet pages with the account in the workspace's cookie.json, screenshot the main <article> and dump the computed styles of
 every element in it (light and dark), as the reference for twitter-snap layout work.
 
-    uv run --project /root/workspace/twitter-openapi python -I tools/x_dom_styles.py <outdir> <name>=<url> ...
+    uv run --project twitter-openapi python -I tools/x_dom_styles.py <outdir> <name>=<url> ...
 
 ARTICLES=all takes the whole conversation column instead (every <article> of the thread view, screenshot and styles).
 """
@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 
 out = sys.argv[1]
 same_site = {"no_restriction": "None", "lax": "Lax", "strict": "Strict", "unspecified": "None", None: "None"}
-cookies = json.load(open("/root/workspace/cookie.json", encoding="utf-8"))
+cookies = json.load(open(os.path.dirname(os.path.abspath(__file__)) + "/../cookie.json", encoding="utf-8"))
 cookies = [{"name": c["name"], "value": c["value"], "domain": c.get("domain", ".x.com"), "path": c.get("path", "/"), "secure": c.get("secure", True), "httpOnly": c.get("httpOnly", False), "sameSite": same_site.get(c.get("sameSite"), "None")} for c in cookies if c.get("domain", ".x.com").endswith("x.com")]
 ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
 urls = dict(arg.split("=", 1) for arg in sys.argv[2:])

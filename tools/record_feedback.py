@@ -1,8 +1,8 @@
-"""Open the home timeline with the account in /root/workspace/cookie.json, pick the first organic post of another account, click
+"""Open the home timeline with the account in the workspace's cookie.json, pick the first organic post of another account, click
 "Not interested in this post" in its menu and then "Undo", and record every API request each step causes (method, URL, headers with
 cookie / csrf masked, body, response). The live pipeline requests of the page load (events stream, update_subscriptions) are kept too.
 
-    uv run python /root/workspace/tools/record_feedback.py <outdir>   # from a twitter-openapi checkout
+    uv run python ../tools/record_feedback.py <outdir>   # from a twitter-openapi checkout
 
 Writes <outdir>/pageload_requests.json, <outdir>/pageload_HomeTimeline.json, <outdir>/live_pipeline.json, <outdir>/dontlike_requests.json,
 <outdir>/undo_requests.json and screenshots. The feedback is always undone before the browser closes; the run fails loudly when it cannot.
@@ -79,7 +79,7 @@ def step(name, since):
 
 
 same_site = {"no_restriction": "None", "lax": "Lax", "strict": "Strict", "unspecified": "None", None: "None"}
-cookies = json.load(open("/root/workspace/cookie.json", encoding="utf-8"))
+cookies = json.load(open(os.path.dirname(os.path.abspath(__file__)) + "/../cookie.json", encoding="utf-8"))
 cookies = [{"name": c["name"], "value": c["value"], "domain": c.get("domain", ".x.com"), "path": c.get("path", "/"), "secure": c.get("secure", True),
             "httpOnly": c.get("httpOnly", False), "sameSite": same_site.get(c.get("sameSite"), "None"),
             **({"expires": c["expirationDate"]} if c.get("expirationDate") else {})} for c in cookies]

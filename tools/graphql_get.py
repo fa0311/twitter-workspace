@@ -1,7 +1,7 @@
 """Call one GET GraphQL operation exactly as the strict harness does (placeholder entry + cookie + transaction id) and print the raw response.
 
-    uv run python /root/workspace/tools/graphql_get.py ListByRestId            # from a twitter-openapi checkout with cookie.json
-    uv run python /root/workspace/tools/graphql_get.py ListByRestId '{"listId": "123"}'   # override variables
+    uv run python ../tools/graphql_get.py ListByRestId            # from a twitter-openapi checkout with cookie.json
+    uv run python ../tools/graphql_get.py ListByRestId '{"listId": "123"}'   # override variables
     CLIENT_LANGUAGE=ja ...                                                             # x-twitter-client-language (default en)
 """
 import json, sys, os

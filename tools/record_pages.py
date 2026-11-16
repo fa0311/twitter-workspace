@@ -1,6 +1,6 @@
 """Visit pages / click things with the account in cookie.json, record every GraphQL request, and dump the responses of selected operations.
 
-    uv run python /root/workspace/tools/record_pages.py            # -> /root/workspace/tools/out/pages_recorded.json, out/responses/<Op>.json
+    uv run python ../tools/record_pages.py            # -> tools/out/pages_recorded.json, out/responses/<Op>.json
 Edit PAGES / ACTIONS below; run from a twitter-openapi checkout.
 """
 import json, os, re, sys
@@ -22,7 +22,7 @@ def parse_request(method, url, post_data):
     data = json.loads(post_data or "{}")
     return {k: data[k] for k in ["variables", "features", "fieldToggles"] if k in data}
 
-OUT = "/root/workspace/tools/out/"; os.makedirs(OUT + "responses", exist_ok=True)
+OUT = os.path.dirname(os.path.abspath(__file__)) + "/out/"; os.makedirs(OUT + "responses", exist_ok=True)
 DUMP = set(os.environ.get("DUMP", "").split(",")) - {""}  # operation names whose first 200 response is saved
 USER, COMMUNITY = USER, "1493446837214187523"
 recorded, dumped, status = {}, {}, {}

@@ -6,7 +6,8 @@ from playwright.sync_api import sync_playwright
 cookies = json.load(open("cookie.json", encoding="utf-8"))
 same_site = {"no_restriction": "None", "lax": "Lax", "strict": "Strict"}
 cookies = [{"name": c["name"], "value": c["value"], "domain": c.get("domain", ".x.com"), "path": c.get("path", "/"), "secure": c.get("secure", True), "httpOnly": c.get("httpOnly", False), "sameSite": same_site.get(c.get("sameSite"), "None")} for c in cookies if c.get("domain", ".x.com").endswith("x.com")]
-ua = up.requests.get(up.HEADER_JSON, timeout=60).json()["chrome"]["user-agent"]
+HEADER_JSON = "https://raw.githubusercontent.com/fa0311/latest-user-agent/refs/heads/main/header.json"
+ua = up.requests.get(HEADER_JSON, timeout=60).json()["chrome"]["user-agent"]
 with sync_playwright() as p:
     browser = p.chromium.launch(); context = browser.new_context(user_agent=ua, viewport={"width": 1280, "height": 900}); context.add_cookies(cookies)
     page = context.new_page(); page.set_default_navigation_timeout(120000); page.set_default_timeout(20000)

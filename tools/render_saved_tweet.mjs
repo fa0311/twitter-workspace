@@ -1,8 +1,8 @@
-// Render the saved TweetResultByRestId response of a deleted post through twitter-snap's guest pipeline
+// Render a post from its saved TweetResultByRestId response through twitter-snap's guest pipeline
 import fs from 'node:fs'
-import {getSnapAppRenderWithCache} from '/root/workspace/twitter-snap/dist/main.js'
-import {TwitterOpenApi} from '/root/workspace/twitter-snap/node_modules/twitter-openapi-typescript/dist/src/index.js'
-const [saved, out, scale = '2', width = '1440'] = process.argv.slice(2)
+import {getSnapAppRenderWithCache} from '../twitter-snap/dist/main.js'
+import {TwitterOpenApi} from '../twitter-snap/node_modules/twitter-openapi-typescript/dist/src/index.js'
+const [url, saved, out, scale = '2', width = '1440'] = process.argv.slice(2)
 const body = fs.readFileSync(saved, 'utf8')
 const realFetch = globalThis.fetch
 // the client captured fetch at import time; the library path never installs twitter-snap's own fetchApi
@@ -15,7 +15,7 @@ TwitterOpenApi.fetchApi = async (input, init) => {
 const api = getSnapAppRenderWithCache({})
 const t0 = Date.now()
 const data = await api({
-  url: 'https://x.com/daru_daru_d/status/2121160905715269756',
+  url,
   limit: 1,
   sessionType: 'guest',
   callback: async (run) => {

@@ -1,8 +1,8 @@
-"""Open one post with the account in /root/workspace/cookie.json, click the given buttons of the post one after another ("Show translation",
+"""Open one post with the account in the workspace's cookie.json, click the given buttons of the post one after another ("Show translation",
 "Show original", ...) and record every API request each click causes (REST and GraphQL alike, streamed bodies included: method, URL,
 request headers, body, response status / headers / body).
 
-    CLICKS='^Show translation$' POST_TEXT='フォトフレーム' uv run python /root/workspace/tools/record_translate.py <tweet_url> <outdir>   # from a twitter-openapi checkout
+    CLICKS='^Show translation$' POST_TEXT='フォトフレーム' uv run python ../tools/record_translate.py <tweet_url> <outdir>   # from a twitter-openapi checkout
 
 CLICKS is a list of button-text regexes separated by |; UI_LANG overrides the lang cookie in the browser only (it does not change the UI language, which follows the account setting); POST_TEXT restricts the clicks to the post containing that text (the focal post of a
 thread). Requests are captured twice: by Playwright's network events and by a fetch() tee injected into the page (the Grok translation is a
@@ -118,7 +118,7 @@ def fetch_log():
 
 
 same_site = {"no_restriction": "None", "lax": "Lax", "strict": "Strict", "unspecified": "None", None: "None"}
-cookies = json.load(open("/root/workspace/cookie.json", encoding="utf-8"))
+cookies = json.load(open(os.path.dirname(os.path.abspath(__file__)) + "/../cookie.json", encoding="utf-8"))
 cookies = [{"name": c["name"], "value": c["value"], "domain": c.get("domain", ".x.com"), "path": c.get("path", "/"), "secure": c.get("secure", True), "httpOnly": c.get("httpOnly", False), "sameSite": same_site.get(c.get("sameSite"), "None")} for c in cookies if c.get("domain", ".x.com").endswith("x.com")]
 if os.environ.get("UI_LANG"):  # the web client's UI language (x-twitter-client-language) follows the lang cookie; browser-side only, the account is not changed
     cookies = [c for c in cookies if c["name"] != "lang"] + [{"name": "lang", "value": os.environ["UI_LANG"], "domain": ".x.com", "path": "/", "secure": True, "httpOnly": False, "sameSite": "None"}]

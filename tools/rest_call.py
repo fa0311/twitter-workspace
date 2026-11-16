@@ -1,8 +1,8 @@
 """Call one REST endpoint under https://x.com/i/api exactly as the strict harness would (cookie + transaction id + the web client's
 headers) and print status, content-type and body (streamed line by line).
 
-    uv run python /root/workspace/tools/rest_call.py '/1.1/strato/column/None/tweetId=1,.../translation/service/translateTweet'      # GET, from a twitter-openapi checkout
-    uv run python /root/workspace/tools/rest_call.py /2/grok/translation.json '{"content_type":"POST","id":"1","dst_lang":"en"}'  # POST with a JSON body
+    uv run python ../tools/rest_call.py '/1.1/strato/column/None/tweetId=1,.../translation/service/translateTweet'      # GET, from a twitter-openapi checkout
+    uv run python ../tools/rest_call.py /2/grok/translation.json '{"content_type":"POST","id":"1","dst_lang":"en"}'  # POST with a JSON body
     CLIENT_LANGUAGE=ja DUMP_TO=file ...                                                                                           # x-twitter-client-language (default en), save the raw body
 """
 import json, os, sys

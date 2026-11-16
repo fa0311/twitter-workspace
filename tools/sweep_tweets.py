@@ -1,7 +1,7 @@
 """Broad strict sweep: call many timelines / searches / tweet details with the sandbox account, deserialize every
 response with the strict generated client and collect every unknown enum value, unknown key and type mismatch.
 
-    cd twitter-openapi-checkout && STRICT_MODE=True uv run python /root/workspace/tools/sweep_tweets.py <out_dir>
+    cd twitter-openapi && STRICT_MODE=True uv run python ../tools/sweep_tweets.py <out_dir>   # after tools/build.py (reads dist/)
 """
 import json, os, re, sys, time, collections, random
 sys.path.insert(0, "test/python")
@@ -10,6 +10,7 @@ os.environ["STRICT_MODE"] = "True"
 import requests
 import test_serialize as ts  # noqa: E402
 import openapi_client as pt  # noqa: E402
+import yaml  # noqa: E402
 from pydantic import ValidationError  # noqa: E402
 
 OUT = sys.argv[1]; os.makedirs(OUT, exist_ok=True)
@@ -80,7 +81,8 @@ def unknown_keys(raw, out, path, acc):
             unknown_keys(a, b, path + "[]", acc)
 
 
-MODELS = json.load(open(os.environ.get("OP_MODELS", "/tmp/claude-0/-root-workspace/a32787d9-001f-49d1-ab30-d8c817e246f9/scratchpad/op_models.json")))
+MODELS = {p.rsplit("/", 1)[-1]: m["responses"]["200"]["content"]["application/json"]["schema"]["$ref"].rsplit("/", 1)[-1]
+          for p, ms in yaml.safe_load(open("dist/docs/openapi-3.0.yaml"))["paths"].items() if "/graphql/" in p for m in ms.values()}
 
 
 def model_for(name):
@@ -159,7 +161,7 @@ for term in TERMS:
 for term in ("news", "lang:ja"):
     run("SearchTimeline", {"rawQuery": term, "product": "People"}, f"search_People_{term}", pages=1, sleep=6)
 # 2. user timelines
-NAMES = os.environ["SWEEP_NAMES"].split(",") if os.environ.get("SWEEP_NAMES") else ["elonmusk", "X", "NASA", "nytimes", "BBCBreaking", "Support", "PlayStation", "NBA", "Pontifex", "Cristiano", "YouTube", "netflix", "OpenAI", "CommunityNotes", "nikkei", "livedoornews", "MLB", "XDevelopers", "github", "Google"]
+NAMES = os.environ["SWEEP_NAMES"].split(",") if os.environ.get("SWEEP_NAMES") else ["elonmusk", "X", "Support", "CommunityNotes", "XDevelopers", "SpaceX", "Tesla", "xai", "Starlink", "grok", "boringcompany", "neuralink"]
 ids = {}
 for n in NAMES:
     raw = call("UserByScreenName", {"screen_name": n}, f"user_{n}"); time.sleep(2)

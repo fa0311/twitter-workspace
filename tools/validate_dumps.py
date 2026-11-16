@@ -1,7 +1,7 @@
 """Strict-validate dumped GraphQL responses against the generated Python models (same comparison as the live harness).
 
-    uv run python /root/workspace/tools/validate_dumps.py CreateList=ListResponse DeleteList=DeleteListResponse ...   # from a twitter-openapi checkout
-Each argument is <dump name>=<response model>; dumps are read from /root/workspace/tools/out/responses/<name>.json or a path given as name.
+    uv run python ../tools/validate_dumps.py CreateList=ListResponse DeleteList=DeleteListResponse ...   # from a twitter-openapi checkout
+Each argument is <dump name>=<response model>; dumps are read from tools/out/responses/<name>.json or a path given as name.
 """
 import json, os, sys
 os.environ["STRICT_MODE"] = "True"
@@ -11,7 +11,7 @@ import openapi_client as pt
 ok = True
 for arg in sys.argv[1:]:
     name, model = arg.rsplit("=", 1)
-    path = name if os.path.exists(name) else f"/root/workspace/tools/out/responses/{name}.json"
+    path = name if os.path.exists(name) else f"{os.path.dirname(os.path.abspath(__file__))}/out/responses/{name}.json"
     raw = open(path, encoding="utf-8").read()
     try:
         data = pt.__dict__[model].from_json(raw)

@@ -1,32 +1,44 @@
 #!/bin/sh
-# Session bootstrap for a fresh container (only /root/workspace survives `docker compose up` recreating it).
-# Idempotent: restores Claude's memory from the workspace backup, prepares GNUPGHOME for sops, and reports
-# which tools are missing with the install line that worked before.
+# Session bootstrap. The home directory is a docker volume and survives the container being recreated; everything outside it
+# (apt packages, /tmp) does not, so tools are installed under ~/.local. A fresh clone on another machine has neither.
+# Idempotent: initialises missing submodules, restores Claude's memory from the workspace mirror and the sandbox cookie from
+# twitter-secrets, and prints an install line for every missing tool.
 set -u
-# the bind mount is owned by the host user; git refuses to touch it as root without this
-git config --global --get-all safe.directory 2>/dev/null | grep -qx /root/workspace || git config --global --add safe.directory /root/workspace
-MEM=/root/.claude/projects/-root-workspace/memory
-if [ ! -f "$MEM/MEMORY.md" ] && [ -f /root/workspace/.claude/memory/MEMORY.md ]; then
-  mkdir -p "$MEM" && cp /root/workspace/.claude/memory/*.md "$MEM"/ && echo "memory restored from /root/workspace/.claude/memory"
+WS=$(cd "$(dirname "$0")/.." && pwd)
+KEY=EAB5AF5AA7ED7A16C4027B5283A8A5E74872A8AA
+SANDBOX_TWID=u%3D1787148517779406848   # @ptcpz3
+# git signs through the wrapper in gpg.program (passphrase from the container's environment); plain gpg would wait on a pinentry
+GPG=$(git config --get gpg.program || echo gpg)
+
+for m in $(git -C "$WS" submodule status | awk '/^-/{print $2}'); do git -C "$WS" submodule update --init --recursive -- "$m"; done
+
+MEM=$HOME/.claude/projects/$(printf %s "$WS" | tr -c 'A-Za-z0-9' '-')/memory
+if [ ! -f "$MEM/MEMORY.md" ] && [ -f "$WS/.claude/memory/MEMORY.md" ]; then
+  mkdir -p "$MEM" && cp "$WS"/.claude/memory/*.md "$MEM"/ && echo "memory restored from .claude/memory"
 fi
-# long passphrase cache so one unlock by the maintainer lasts; the mounted key files are read-only but the agent config is ours
-if [ ! -f /root/.gnupg/gpg-agent.conf ]; then
-  printf 'default-cache-ttl 34560000\nmax-cache-ttl 34560000\nallow-preset-passphrase\nallow-loopback-pinentry\n' > /root/.gnupg/gpg-agent.conf && gpgconf --kill gpg-agent 2>/dev/null; echo "gpg-agent.conf written"
-fi
-# sops needs a writable GNUPGHOME; the mounted /root/.gnupg files are read-only (see .sops/env.sh)
-if [ ! -d /root/.gnupg-rw ]; then
-  mkdir -m700 /root/.gnupg-rw && cp -r /root/.gnupg/private-keys-v1.d /root/.gnupg/pubring.kbx /root/.gnupg/trustdb.gpg /root/.gnupg-rw/ && echo "/root/.gnupg-rw created"
-fi
+
+# ~/.npm turned up owned by root in this volume, which makes every npm install fail with EACCES
+[ ! -e "$HOME/.npm" ] || [ -O "$HOME/.npm" ] || sudo chown -R "$(id -un):" "$HOME/.npm"
+
 need() { command -v "$1" >/dev/null 2>&1 && printf '%-6s ok  %s\n' "$1" "$(command -v "$1")" || printf '%-6s MISSING -> %s\n' "$1" "$2"; }
-need java  "apt-get install -y openjdk-17-jre-headless   (openapi-generator-cli.jar 7.26.0 sits in each twitter-openapi worktree)"
-need uv    "curl -LsSf https://astral.sh/uv/install.sh | sh"
-need node  "apt-get install -y nodejs (v24) ; npm i -g pnpm@12"
-need pnpm  "npm i -g pnpm@12"
-need gh    "download the linux_amd64 tarball from https://github.com/cli/cli/releases/latest and install gh to /usr/local/bin (GITHUB_TOKEN is in the env; ~/.config/gh is mounted)"
-need sops  "curl -LO https://github.com/getsops/sops/releases/latest/download/sops-v3.x.linux.amd64 ; install -m755 ... /usr/local/bin/sops"
-need age   "apt-get install -y age  (or the GitHub release)"
-need jq    "apt-get install -y jq"
-[ -d /root/.cache/ms-playwright ] && echo "playwright browsers ok" || echo "playwright browsers MISSING -> (cd /root/workspace/twitter_api_safe_relay && pnpm exec playwright install chromium)"
-echo t | gpg --batch -bsau EAB5AF5AA7ED7A16C4027B5283A8A5E74872A8AA >/dev/null 2>&1 && echo "gpg signing ok" || echo "gpg LOCKED -> ask the user to unlock it from a VS Code terminal (echo t | gpg --clearsign -u EAB5AF5AA7ED7A16C4027B5283A8A5E74872A8AA)"
+need java   "mkdir -p ~/.local/share/java ~/.local/bin && curl -fsSL https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jre/hotspot/normal/eclipse | tar -xz -C ~/.local/share/java && ln -sfn ~/.local/share/java/jdk-17*-jre/bin/java ~/.local/bin/java"
+need uv     "curl -LsSf https://astral.sh/uv/install.sh | sh"
+need node   "image tool (v26); other versions: unpack the nodejs.org tarball under ~/.local/node-versions/"
+need pnpm   "npm i -g --prefix ~/.local pnpm@12"
+need gh     "image tool; GITHUB_TOKEN is in the environment"
+need sops   "gh release download -R getsops/sops -p 'sops-*.linux.amd64' -O ~/.local/bin/sops && chmod +x ~/.local/bin/sops"
+need age    "sudo apt-get update && sudo apt-get install -y age   (gone again with the next image)"
+need jq     "sudo apt-get update && sudo apt-get install -y jq   (gone again with the next image)"
+need ffmpeg "sudo apt-get update && sudo apt-get install -y ffmpeg   (gone again with the next image)"
+[ -f "$WS/twitter-openapi/openapi-generator-cli.jar" ] && echo "generator jar ok" || echo "generator jar MISSING -> curl -fsSL -o $WS/twitter-openapi/openapi-generator-cli.jar https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.26.0/openapi-generator-cli-7.26.0.jar"
+[ -d "$HOME/.cache/ms-playwright" ] && echo "playwright browsers ok" || echo "playwright browsers MISSING -> (cd $WS/twitter-openapi && uv pip install playwright && uv run --no-sync playwright install chromium)"
+
+echo t | timeout 20 "$GPG" --batch -bsau $KEY >/dev/null 2>&1 && echo "gpg signing ok ($GPG)" || echo "gpg signing FAILED -> tell the maintainer (GPG_PASSPHRASE or the key mount is missing from the container)"
 gh auth status >/dev/null 2>&1 && echo "gh auth ok" || echo "gh auth MISSING"
-[ -f /root/workspace/cookie.json ] && echo "cookie.json present (must be the sandbox account @ptcpz3)" || echo "cookie.json MISSING"
+
+# twitter-secrets is encrypted to the maintainer's PGP key as well as the CI age key, so the same wrapper decrypts it
+if [ ! -s "$WS/cookie.json" ]; then
+  (umask 077; SOPS_GPG_EXEC=$GPG sops decrypt --extract '["cookie_json"]' "$WS/twitter-secrets/secrets.enc.yaml" > "$WS/cookie.json") && echo "cookie.json restored from twitter-secrets"
+fi
+[ -e "$WS/twitter-openapi/cookie.json" ] || ln -s ../cookie.json "$WS/twitter-openapi/cookie.json"
+[ "$(jq -r '.[] | select(.name == "twid") | .value' "$WS/cookie.json" 2>/dev/null)" = "$SANDBOX_TWID" ] && echo "cookie.json is the sandbox account @ptcpz3" || echo "cookie.json is MISSING or NOT @ptcpz3 -> do not use it"

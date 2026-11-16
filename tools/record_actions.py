@@ -1,7 +1,7 @@
 """Drive the account in cookie.json through the mutations that page visits cannot reach and record the GraphQL requests.
 
-    cd /root/workspace/twitter-openapi && uv run python /root/workspace/tools/record_actions.py            # -> /root/workspace/tools/out/actions_recorded.json
-    uv run tools/update_placeholder.py --relay <(python3 /root/workspace/tools/to_ndjson.py /root/workspace/tools/out/actions_recorded.json)
+    cd twitter-openapi && uv run python ../tools/record_actions.py            # -> tools/out/actions_recorded.json
+    uv run tools/update_placeholder.py <(python3 ../tools/to_ndjson.py ../tools/out/actions_recorded.json)
 
 Every tweet action is verified to target the test tweet posted by this run (URL + text), and every side effect is
 reverted before the end: the tweet, the draft and the list are deleted, the like / bookmark / retweet are undone.
@@ -26,7 +26,7 @@ def parse_request(method, url, post_data):
     return {k: data[k] for k in ["variables", "features", "fieldToggles"] if k in data}
 from playwright.sync_api import sync_playwright
 
-OUT = "/root/workspace/tools/out/"
+OUT = os.path.dirname(os.path.abspath(__file__)) + "/out/"
 TEXT = f"twitter-openapi placeholder check {int(time.time())}"
 COMMUNITY = "1493446837214187523"
 recorded, status, tweet = {}, {}, {}
