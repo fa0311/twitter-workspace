@@ -1,25 +1,17 @@
 ---
 name: feedback-screenshots
-description: "Where renders for the maintainer go (screenshot/{date}/<theme>/<sample>.png), which posts may appear in public material, and that samples must be pleasant to look at"
+description: "What the maintainer is shown and what goes public: results easy to take in, pleasant samples, never private people, Elon Musk's world as the default subject"
 metadata:
-  node_type: memory
   type: feedback
-  originSessionId: d250dea8-b7d2-47de-8276-a31f9ac33735
-  modified: 2026-11-16T04:46:30.777Z
 ---
 
-- Renders the maintainer should look at go to the workspace's `screenshot/{YYYY-MM-DD}/`, grouped as `<theme>/<sample>.png`
-  (`x-reference/`, `default/`, `x.com/` for the real page; `-before` / `-after`, `-dark`; mp4 next to its `-frame.png`). Point to the
-  folder in the chat. ("screenshotは./screenshot/{date}/ とかに置いて欲しい"; a flat folder of 38 files was "わかりにくい").
-  Since the move to T3 Code (2026-11-16) the reply can show an image inline (Markdown image, absolute path): embed the ones
-  that matter and link the folder for the rest (my reading of how to apply the rule there, not something the maintainer said).
-- Samples must be pleasant ("食事中でも見れる画像にして", after a cockroach in a Community Note sample): space, animals, tech, sports; check a
-  candidate's media first.
-- Public material (README images, PR descriptions, issue replies, test URLs) uses only Elon Musk and the accounts of his companies
-  ("とにかく、一般人は巻き込まない"; narrowed on 2026-11-16 from "official / brand accounts": "elonmuskやelonmusk関連会社のみ許可される",
-  said when a private account's post URL was found hardcoded in a script of the public workspace repo, which had to go). I applied it
-  to sample lists in tracked files as well (the sweep's default names); that extension is my reading, reported to the maintainer. README set: 🍊 post 1770222178279252062, poll 1604617643973124097, photo 1349129669258448897, SpaceX quote
-  2112637394654822514, rendered with `TZ=Asia/Tokyo`; no Community Note sample. Private posts only for local checks, never named in public text.
+- **What the maintainer is shown must be easy to take in.** Results go where they can be found again, grouped by what is being
+  compared rather than in one flat pile, and the reply shows the ones that matter.
+- **Samples are pleasant.** They get opened anywhere and at any time, so look at the content before choosing one (space, animals,
+  technology, sport are safe ground).
+- **Public material never involves private people.** Large companies and well-known people are acceptable; without a reason to
+  choose otherwise the subject is Elon Musk and his companies. A sample that needs breadth is such a reason (my reading).
 
-**Why:** the maintainer opens images at any time, including over meals, and private people must not end up in the project's material.
-Related: [[feedback-design-preferences]].
+**Why:** the maintainer looks at results in passing, and people who did not choose to be public must not end up in the project's
+material.
+**How to apply:** folder layout and the approved sample set are in `REFERENCE.md` ("twitter-snap"). Related: [[feedback-design-preferences]].

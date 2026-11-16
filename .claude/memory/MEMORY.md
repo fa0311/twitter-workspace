@@ -1,5 +1,6 @@
-- [fa0311](user-fa0311.md) — who the user is, favourites, how they approve and delegate
-- [Working rules](feedback-working-rules.md) — stacked PR recovery, Dependabot delegated, no overrides, fewer releases, issue reply voice
-- [Account budget](feedback-account-budget.md) — @ptcpz3 only, what locked it, what may be clicked on it
-- [Design preferences](feedback-design-preferences.md) — typing / schema / enum policy, what a snapshot is, README policy, ffmpeg is the user's
-- [Screenshots](feedback-screenshots.md) — screenshot/{date}/<theme>/, approved public samples, pleasant images
+- [fa0311](user-fa0311.md) — who the user is, what they care about, how they approve and delegate
+- [Working rules](feedback-working-rules.md) — approval vs delegation, ordering work, when not to build, the public voice
+- [Account budget](feedback-account-budget.md) — the sandbox account as one shared allowance
+- [Design preferences](feedback-design-preferences.md) — model what exists, share only the same thing, an archive is not the live page
+- [Screenshots](feedback-screenshots.md) — what the maintainer is shown, pleasant samples, who may appear in public material
+- [Memory style](feedback-memory-style.md) — memory is abstract principles; facts and recipes go to REFERENCE.md

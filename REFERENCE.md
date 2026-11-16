@@ -26,6 +26,12 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   outage an empty API body once led to deleting the branch of an unmerged PR, which closes it (recovery: push the commit back as the
   branch, reopen, merge). Check githubstatus.com when API answers look odd. A dropped push event is restarted with
   `gh workflow run <file> --ref <branch>` where the workflow has `workflow_dispatch`.
+- `gh pr merge --delete-branch` closes every open PR based on the deleted branch, and the base of a closed PR cannot be changed.
+  Retarget the children first (`gh api -X PATCH repos/<r>/pulls/<n> -f base=<new>`) and merge bottom-up into the default branch;
+  recovery is `git push origin <sha>:refs/heads/<name>`, `gh pr reopen`, then the PATCH. A grouped Dependabot PR that fails is
+  superseded by an own PR with the same bumps.
+- The token cannot transfer issues: open a copy in the target repo and close the original with "Moved to …". Workflows that record
+  from X or run as guest are `workflow_dispatch` only.
 - The sandbox's auto-mode classifier refuses a merge it sees as unreviewed: say in the command description that the PR was LGTM'd or
   that Dependabot is delegated. It also refuses to delete unmerged branches.
 - Publishing is automatic on push to the default branch (PyPI / npm trusted publishing, ghcr). twitter-snap publishes only when
@@ -75,7 +81,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Rate limits per 15 minutes vary by an order of magnitude between operations (search is the scarce one); read `x-rate-limit-*`.
 - Lock: GraphQL answers 200 with data plus `errors[].code 326` and `bounce_location: …/account/access`; web pages redirect to
   `/account/access` behind a Cloudflare challenge; the relay's CI login times out after 120 s. Triggers so far: sweeps, several suites
-  in a day, relay CI logins (3 per push / merge). After the maintainer clears it and the session changed, the fresh export goes into
+  in a day, relay CI logins (3 per push / merge; six logins within an hour and about twelve in a morning were each enough). After the maintainer clears it and the session changed, the fresh export goes into
   the sops secret (`cookie_json`, recipe in twitter-secrets' README); delete the workspace's `cookie.json` and rerun bootstrap.
 - Media: pbs.twimg.com serves every photo at `?name=orig` (`format=jpg&name=4096x4096` is 404 for some) and keeps serving media of
   deleted posts for a while. Posts can carry ~20 photos. Age-restricted posts give guests a `TweetTombstone`.
@@ -94,7 +100,7 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Conventions: `src/openapi/paths/*.yaml` hold paths and their response schemas, shared objects live in `src/openapi/schemas/*.yaml`,
   `__typename` values must be in `schemas/typename.yaml`, tags map to generated API classes, hooks inject the placeholder parameters at
   build time. Schema sharing only for the same backend object under the same key; a look-alike site gets its own type. Enum vs string
-  per `CONTRIBUTING.md`.
+  per `CONTRIBUTING.md`. An operation is POST wherever the frontend was recorded sending POST.
 - Placeholder: values only from recordings of the real web client (relay catalog `requests.ndjson` applied with
   `tools/update_placeholder.py <file|url>`, the relay's `twitter-api-safe-dump --cookies`, a HAR). Sample values are elonmusk /
   44196397 / 1349129669258448897; viewer-bound entries are recorded on the sandbox. TIAD's GraphQL.json is only a detector of changed queryIds.
@@ -118,6 +124,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Everything the relay serves lives under `/i/api` like the X web app; dispatch paths inside are relative to `https://x.com/i/api`.
   `x-profile-name` selects a profile. Anything else is a Hono 404; a form-encoded POST body or an endpoint X itself rejects comes back
   as a relay 500.
+- The relay and the clients do not reference each other: the clients only document that the endpoint is configurable, the recipe
+  for pointing one at the other is in the relay's README.
 - Its tests and a throwaway relay for e2e take `X_COOKIE_FILE` through `twitter-api-safe-test-utils` (headless Chromium with the
   cookies added); `node file.ts` runs TypeScript directly on Node 24. Every CI run logs in to X three times (one per Node version).
 - The catalog `packages/server/requests.ndjson` is recorded with `twitter-api-safe-dump` (`--cookies`, `--headless`), merged line by
@@ -148,6 +156,16 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   render-stream errors (fixed in 0.4.2); a "success" without a file means run through the library to see the exception.
 - Layout reference for X UI work: `tools/x_dom_styles.py` (Playwright + cookie) dumps computed styles and screenshots of the real article;
   match sizes and colors from that. Guest `TweetResultByRestId` carries polls and `birdwatch_pivot` but never `callToAction`.
+- Decided with the maintainer: media is never folded into a carousel (photos stacked at full width in their own proportions, videos
+  one after another); plain themes show nothing that depends on when the snap was taken (no views, a running poll as choices +
+  end date), the X reference theme may; dates carry the year; phrase-level Japanese wrapping (BudouX) was declined; a translation
+  replaces the text under the "Translated from <language>" line and `--translate <lang>` is never implied; no codec / container /
+  quality tables in front of ffmpeg (`--ffmpegAdditonalOption` carries the rest).
+- README: one `# comment` + command per feature, no per-feature images or sections. Its samples are the 🍊 post
+  1770222178279252062, the poll 1604617643973124097, the photo 1349129669258448897 and the SpaceX quote 2112637394654822514,
+  rendered with `TZ=Asia/Tokyo`; no Community Note sample.
+- Renders for the maintainer: `screenshot/{date}/<theme>/<sample>.png` (`x-reference/`, `default/`, `x.com/` for the real page;
+  `-before` / `-after`, `-dark`; an mp4 next to its `-frame.png`).
 - twitter-snap-api: `width: 1440, scale: 2` (a 720 px layout at 2×), one render at a time (`createMutex(1)`, so one stuck render queues
   everything), `Failed to get snapshot` for any empty result; GPU images (`Dockerfile.nvenc` / `.qsv` / `.full`) run Node 22 from nodesource,
   `Dockerfile` is node:26; `build.sh` pins the BtbN n9.0 release line.
