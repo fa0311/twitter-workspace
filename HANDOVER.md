@@ -70,7 +70,7 @@ session in its own thread every day and works through this list with nobody pres
 4. New Dependabot alerts: a PR when the fix is inside the parents' ranges, otherwise the reason goes into State.
 5. New issues and PRs from others: read and reported, nothing is written on GitHub.
 6. What an earlier merge made due in a release chain: the next PR is opened.
-7. State in this file, commit, push.
+7. State in this file, with the date of this run on its first line ("new" above means since that date), commit, push.
 8. A short report in Japanese: what changed, and a direct link to every PR that waits for review.
 
 Unattended, only Dependabot PRs are merged. Every other PR, the run's own included, waits for the maintainer's review and is merged
@@ -86,6 +86,9 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 
 ## State (2026-11-16)
 
+- Last daily run: 2026-11-16, by hand in the takeover session. Nothing to merge or fix: no Dependabot PR is open, the alerts
+  are the ones listed below, no issue or outside PR has moved since 11-02, every workflow run since 11-14 succeeded, and no
+  release chain step is due.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
   in the new home: every line bootstrap prints, the spec build, strict client generation and install, `tools/graphql_get.py
   UserByScreenName` (200, no errors: the account is not locked and X is reached directly), `tools/validate_dumps.py` on that response
