@@ -161,7 +161,7 @@ for term in TERMS:
 for term in ("news", "lang:ja"):
     run("SearchTimeline", {"rawQuery": term, "product": "People"}, f"search_People_{term}", pages=1, sleep=6)
 # 2. user timelines
-NAMES = os.environ["SWEEP_NAMES"].split(",") if os.environ.get("SWEEP_NAMES") else ["elonmusk", "X", "Support", "CommunityNotes", "XDevelopers", "SpaceX", "Tesla", "xai", "Starlink", "grok", "boringcompany", "neuralink"]
+NAMES = os.environ["SWEEP_NAMES"].split(",") if os.environ.get("SWEEP_NAMES") else ["elonmusk", "X", "NASA", "nytimes", "BBCBreaking", "Support", "PlayStation", "NBA", "Pontifex", "Cristiano", "YouTube", "netflix", "OpenAI", "CommunityNotes", "nikkei", "livedoornews", "MLB", "XDevelopers", "github", "Google"]
 ids = {}
 for n in NAMES:
     raw = call("UserByScreenName", {"screen_name": n}, f"user_{n}"); time.sleep(2)
