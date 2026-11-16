@@ -86,7 +86,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 
 ## State (2026-11-16)
 
-- Last daily run: 2026-11-16, by hand in the takeover session. Nothing to merge or fix: no Dependabot PR is open, the alerts
+- Last daily run: 2026-11-16, by hand in the takeover session. Nothing to merge or fix: no Dependabot PR was open, the alerts
   are the ones listed below, no issue or outside PR has moved since 11-02, every workflow run since 11-14 succeeded, and no
   release chain step is due.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
@@ -94,7 +94,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   UserByScreenName` (200, no errors: the account is not locked and X is reached directly), `tools/validate_dumps.py` on that response
   (1.0), a Playwright Chromium launch on a blank page, twitter-snap `pnpm install` + `pnpm build` and one guest render,
   twitter-snap-api `pnpm build` + `pnpm test` (it renders with the cookie session), nvenc encoding, decrypting both secrets,
-  pushing this repository, opening a PR. Merging PRs worked with this token earlier in the day. Not tried here yet: a strict run,
+  pushing this repository, opening and merging a PR. Not tried here yet: a strict run,
   any Playwright script against X, the relay (`tools/relay_local`), the wrappers' e2e suites, a commit touching a workflow file
   (the token has no `workflow` scope).
 - There is no `recordings/`, `tools/out/` or `screenshot/` and no spec worktree: the maintainer left them behind on purpose
@@ -105,12 +105,11 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   the account (x.com/settings/email).
 - Published: PyPI generated 0.1.7 / wrapper 0.1.8; npm generated 0.1.8 / wrapper 0.1.8 (0.1.7 on npm is a dud without `dist/`);
   twitter-snap 0.4.3 (npm + ghcr: resvg-js rasterizer, satori 0.63 with the border-box wrapper, Biome 2.6); twitter-snap-api main
-  ddc85cd on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
+  8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
-- Open PR, waiting for an LGTM: twitter-snap-api #28 (`pnpm dedupe`, lockfile only: one `@oclif/core`, which drops minimatch 10.2.6
-  and with it alert #123; build and tests pass locally). TwitterInternalAPIDocument's #1144 (Update Document) is the maintainer's
-  own. Its Dependabot #1145 / #1146 (pandas 3.1.1, ruff 0.17.4) were merged on 11-16 after the local check in REFERENCE, "Other
+- No open PRs in the maintained repos (twitter-snap-api #28, a `pnpm dedupe` that closed its minimatch alert, was merged on
+  11-16 after the LGTM); TwitterInternalAPIDocument's #1144 (Update Document) is the maintainer's own. Its Dependabot #1145 / #1146 (pandas 3.1.1, ruff 0.17.4) were merged on 11-16 after the local check in REFERENCE, "Other
   repos". Account use since 11-13: the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and
   one twitter-snap-api test run (three renders with the cookie session).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
