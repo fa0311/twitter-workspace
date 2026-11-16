@@ -60,11 +60,12 @@ This file holds the environment, the routine and the current state. Past states:
 
 ## Daily run
 
-The maintainer asked for daily maintenance at 10:00 JST (2026-11-16). A T3 scheduled task, "Daily maintenance", starts a fresh
+The maintainer asked for daily maintenance at 14:00 JST (2026-11-16), after the nightly. A T3 scheduled task, "Daily maintenance", starts a fresh
 session in its own thread every day and works through this list with nobody present:
 
 1. `sh tools/bootstrap.sh`, then the lines it prints.
-2. The newest nightly; at 10:00 JST that is the run of the day before. Failed: as in Routine, and the fix is a PR.
+2. The day's nightly; when GitHub has not started it by 14:00 JST, say so and go by the previous one. Failed: as in Routine, and
+   the fix is a PR.
 3. Dependabot PRs in every repository: merged as delegated (Routine); a failing one is replaced by an own PR.
 4. New Dependabot alerts: a PR when the fix is inside the parents' ranges, otherwise the reason goes into State.
 5. New issues and PRs from others: read and reported, nothing is written on GitHub.
@@ -77,7 +78,7 @@ in the session where the LGTM arrives. The account is spent only on what a faile
 on the local check of a Dependabot PR; recordings, sweeps and suites are never started by this run.
 
 The task lives in T3's state inside the home volume. When `list_scheduled_tasks` no longer shows it, create it again with
-`schedule_task`: `fixed_time` 10:00, `bindToCurrentThread: false`, `freshSession: true`, and this prompt:
+`schedule_task`: `fixed_time` 14:00, `bindToCurrentThread: false`, `freshSession: true`, and this prompt:
 
 > Daily maintenance of fa0311's X / Twitter repositories: follow HANDOVER.md, section "Daily run", in
 > /home/kasm-user/twitter-workspace (CLAUDE.md rules apply). Nobody is present: merge only Dependabot PRs; every other PR, your
