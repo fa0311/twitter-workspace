@@ -60,33 +60,39 @@ This file holds the environment, the routine and the current state. Past states:
 
 ## Daily run
 
-The maintainer asked for daily maintenance at 14:00 JST (2026-11-16), after the nightly. A T3 scheduled task, "Daily maintenance", starts a fresh
-session in its own thread every day and works through this list with nobody present:
+The maintainer asked for daily maintenance at 14:00 JST (2026-11-16), after the nightly. A T3 scheduled task, "Daily
+maintenance", starts a fresh session in its own thread every day and works through this list with nobody present:
 
 1. `sh tools/bootstrap.sh`, then the lines it prints.
 2. The day's nightly; when GitHub has not started it by 14:00 JST, say so and go by the previous one. Failed: as in Routine, and
    the fix is a PR.
 3. Dependabot PRs in every repository: merged as delegated (Routine); a failing one is replaced by an own PR.
-4. New Dependabot alerts: a PR when the fix is inside the parents' ranges, otherwise the reason goes into State.
-5. New issues and PRs from others: read and reported, nothing is written on GitHub.
-6. What an earlier merge made due in a release chain: the next PR is opened.
-7. State in this file, with the date of this run on its first line ("new" above means since that date), commit, push.
-8. A short report in Japanese: what changed, and a direct link to every PR that waits for review.
+4. TwitterInternalAPIDocument's "Update Document" PR: `python3 ../tools/tiad_check.py` in its checkout. No anomaly: merged with
+   a merge commit, `develop` stays. An anomaly: left open and reported.
+5. New Dependabot alerts: a PR when the fix is inside the parents' ranges, otherwise the reason goes into State.
+6. New issues and PRs from others: read and reported, nothing is written on GitHub.
+7. What an earlier merge made due in a release chain: the next PR is opened.
+8. State in this file, with the date of this run on its first line ("new" above means since that date), commit, push.
+9. A short report in Japanese: what changed, a direct link to every PR that waits for review, and the new X features that
+   the day's translation strings, operations and feature switches reveal (only the interesting ones).
 
-Unattended, only Dependabot PRs are merged. Every other PR, the run's own included, waits for the maintainer's review and is merged
-in the session where the LGTM arrives. The account is spent only on what a failed nightly needs (single GETs, one strict run) and
-on the local check of a Dependabot PR; recordings, sweeps and suites are never started by this run.
+Unattended, only Dependabot PRs and TwitterInternalAPIDocument's Update Document are merged. Every other PR, the run's own
+included, waits for the maintainer's review and is merged in the session where the LGTM arrives. The account is spent only on
+what a failed nightly needs (single GETs, one strict run) and on the local check of a Dependabot PR; recordings, sweeps and
+suites are never started by this run.
 
 The task lives in T3's state inside the home volume. When `list_scheduled_tasks` no longer shows it, create it again with
 `schedule_task`: `fixed_time` 14:00, `bindToCurrentThread: false`, `freshSession: true`, and this prompt:
 
 > Daily maintenance of fa0311's X / Twitter repositories: follow HANDOVER.md, section "Daily run", in
-> /home/kasm-user/twitter-workspace (CLAUDE.md rules apply). Nobody is present: merge only Dependabot PRs; every other PR, your
-> own included, waits for the maintainer's review. Finish with a short report in Japanese that links every PR waiting for review.
+> /home/kasm-user/twitter-workspace (CLAUDE.md rules apply). Nobody is present: merge only what CLAUDE.md delegates (Dependabot
+> PRs, TwitterInternalAPIDocument's Update Document); every other PR, your own included, waits for the maintainer's review.
+> Finish with a short report in Japanese that links every PR waiting for review and tells which new X features the day's
+> documents reveal.
 
 ## State (2026-11-16)
 
-- Last daily run: 2026-11-16, by hand in the takeover session. Nothing to merge or fix: no Dependabot PR was open, the alerts
+- Last daily run: 2026-11-16, by hand in the takeover session. Nothing to fix: no Dependabot PR was open, the alerts
   are the ones listed below, no issue or outside PR has moved since 11-02, every workflow run since 11-14 succeeded, and no
   release chain step is due.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
@@ -109,7 +115,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
 - No open PRs in the maintained repos (twitter-snap-api #28, a `pnpm dedupe` that closed its minimatch alert, was merged on
-  11-16 after the LGTM); TwitterInternalAPIDocument's #1144 (Update Document) is the maintainer's own. Its Dependabot #1145 / #1146 (pandas 3.1.1, ruff 0.17.4) were merged on 11-16 after the local check in REFERENCE, "Other
+  11-16 after the LGTM). TwitterInternalAPIDocument's #1144 (Update Document) was merged on 11-16, the first one under the
+  delegation. Its Dependabot #1145 / #1146 (pandas 3.1.1, ruff 0.17.4) were merged on 11-16 after the local check in REFERENCE, "Other
   repos". Account use since 11-13: the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and
   one twitter-snap-api test run (three renders with the cookie session).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,

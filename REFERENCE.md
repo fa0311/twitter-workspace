@@ -172,8 +172,12 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   `Dockerfile` is node:26; `build.sh` pins the BtbN n9.0 release line.
 
 ## Other repos
-- TwitterInternalAPIDocument: generator needs a cookie; docs on `develop`, merged to `master` by the scheduled workflow; its "Update
-  Document" PRs are the maintainer's own. Avoid changes unless asked; Dependabot is delegated there too. No PR checks, and code runs
+- TwitterInternalAPIDocument: the generator (cron 21:00 UTC, started between 09:00 and 12:30 JST, with the sandbox cookie) commits
+  the documents to `develop` and keeps one bot PR "Update Document" open against `master`. Merging it is delegated
+  (`tools/tiad_check.py` first, merge commit, `develop` stays); the merge call once answered 502 after the merge had gone
+  through, so read the PR back before retrying. New X features show up in `docs/json/i18n/<lang>.json` (the web client's strings
+  by hash; a new string is English in every language until it is translated), in `GraphQL.json` and in the feature switches of
+  `InitialState.json`. Avoid changes to its code unless asked; Dependabot is delegated there too. No PR checks, and code runs
   from `master`: the local check is `uv sync --frozen` on the merged lock, `lib.md.gen_md_graphql` over `docs/json/GraphQL.json`
   compared with the committed `docs/markdown/GraphQL.md` (pandas only feeds `to_markdown`), and `ruff check` against master's findings.
 - x-client-transaction-id-pair-dict: `pnpm start` yields 30 pairs in a few minutes without a proxy (`PAIR_MAX=2` for a quick check);
