@@ -170,7 +170,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
-  present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock).
+  present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock),
+  on 11-18 with the maintainer present two page views of space pages (both answered).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.

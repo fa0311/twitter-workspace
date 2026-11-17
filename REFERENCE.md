@@ -67,7 +67,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - New GraphQL query versions have no `User.legacy`; old queryIds keep returning it and keep working for a while (stale ids are a quiet
   drift, not an outage). X often returns complete data next to partial `errors`; the harness logs these as warnings.
 - Logged-out x.com is static HTML with no scripts; guest-token GraphQL still works. `UserByRestId` / `UsersByRestIds` are 403 for
-  non-browser clients. Other users' likes are empty. Every list answers `ListByRestId` with a partial `BadRequestError` (harness skips it).
+  non-browser clients, and the two `UsersByRestIds` requests of a space page were 403 in the real Chrome driven by Playwright
+  as well (2026-11-18, console). Other users' likes are empty. Every list answers `ListByRestId` with a partial `BadRequestError` (harness skips it).
 - Two frontends: logged-out `x.com/home` lands on the new x-web app (`abs.twimg.com/x-web/...`, Rolldown build); `x.com/i/jf/` and the
   logged-in `/home` are the responsive-web shell (inline webpack runtime, `loading-x-anim` frames). Both hash
   `METHOD!path!time` + `obfiowerehiring` + animationKey for `x-client-transaction-id`, with the URL pathname as is. X does not reject a
@@ -93,7 +94,9 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - `AudioSpaceById` answers 200 without `errors` and with only `is_subscribed` (47 bytes; `"audioSpace": {}` with a guest token)
   for an id that resolves to no space: a made-up id, an id cut short, a space that stopped resolving. The web client then shows
   "Something went wrong. Please try again later."; for a space that resolves it shows the card without joining (ended: "Play
-  recording"). On 2026-11-17, of 34 ids from posts, 24 answered with `metadata` and `participants` (running and ended, with and
+  recording"). That message is a branch of its own in `bundle.AudioSpacePeek` (`if (is.error) return` a sheet with a
+  headline and a close button, before the card is built), and the real Chrome logged no uncaught exception and no console
+  error that a resolving space did not log as well (2026-11-18); how the answer turns into `is.error` was not read. On 2026-11-17, of 34 ids from posts, 24 answered with `metadata` and `participants` (running and ended, with and
   without replay, two of them also with a guest token: `api.x.com/graphql/<queryId>/AudioSpaceById`, `x-guest-token`, no
   cookie) and 10 did not resolve: all 22 of the last 31 days answered, of the 12 others two (2026-10-10, a Binance space of
   2025-10-09); the four that X's own accounts link (2025) are among the gone, as is the sample recorded on 10-17, which still
