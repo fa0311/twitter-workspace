@@ -84,6 +84,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   `/account/access` behind a Cloudflare challenge; the relay's CI login times out after 120 s. Triggers so far: sweeps, several suites
   in a day, relay CI logins (3 per push / merge; six logins within an hour and about twelve in a morning were each enough). After the maintainer clears it and the session changed, the fresh export goes into
   the sops secret (`cookie_json`, recipe in twitter-secrets' README); delete the workspace's `cookie.json` and rerun bootstrap.
+- A Space does not stay: the one recorded on 2026-10-17 was gone on 11-17, and `AudioSpaceById` then answers 200 with only
+  `is_subscribed`. A space id in the placeholder or in a wrapper test goes stale the same way.
 - Media: pbs.twimg.com serves every photo at `?name=orig` (`format=jpg&name=4096x4096` is 404 for some) and keeps serving media of
   deleted posts for a while. Posts can carry ~20 photos. Age-restricted posts give guests a `TweetTombstone`.
 
@@ -97,7 +99,9 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Offline check before any PR: every file in `recordings/validate_args.json` at match rate exactly 1.0 via `tools/validate_dumps.py`;
   add every new recording there.
 - Generated `from_dict` reads every key with `obj.get`, so `required` + `nullable` silently accepts absence; model an absent field as
-  optional non-nullable.
+  optional non-nullable. The nightly's log cannot tell the two apart (`input_value=None` for a missing key and for a `null`): fetch
+  the raw with `tools/graphql_get.py` (`DUMP_TO`) before typing. A match rate above 1.0 is such an absent key typed nullable; the
+  harness fails only below 1.
 - Conventions: `src/openapi/paths/*.yaml` hold paths and their response schemas, shared objects live in `src/openapi/schemas/*.yaml`,
   `__typename` values must be in `schemas/typename.yaml`, tags map to generated API classes, hooks inject the placeholder parameters at
   build time. Schema sharing only for the same backend object under the same key; a look-alike site gets its own type. Enum vs string
