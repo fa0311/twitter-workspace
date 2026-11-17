@@ -116,13 +116,20 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Regeneration: in the generated directory, move the `twitter-openapi` submodule to the spec commit, bump the version in
   `tools/openapi-generator-config.yaml`, remove what `tools/win/clean.ps1` lists (Python: `rm -rf test` too, or `.openapi-generator/FILES`
   loses the tests), run the generate command from `tools/win/gen.ps1`. TS: do **not** run `tools/win/replace.py` (it drops the `prepare`
-  script and the ESM build fields, and npm then gets a package without `dist/`); after the jar run `npm install --package-lock-only`
-  and compare `package.json` with the previous release (`npm pack --dry-run` lists 5,400+ files). Wrapper: bump version and generated
+  script and the ESM build fields, and npm then gets a package without `dist/`), but restore the committed `tsconfig.json`
+  afterwards (its `declarationMap` / `sourceMap` are replace.py's and the generator drops them); after the jar run `npm install
+  --package-lock-only` (it writes the lock and then fails in `prepare` while there is no `node_modules`; `npm ci` builds) and
+  compare `package.json` with the previous release (`npm pack --dry-run` lists 5,400+ files). Wrapper: bump version and generated
   dependency, pin the spec hash (`client.py` / `src/api.ts`), add typed helpers with e2e tests for new operations. Conventional
   commits: `generated: regenerate X from twitter-openapi <sha>`, `wrapper: X on generated X`.
 - The TS lockfile can only resolve the new generated version after npm has it (the packument lags ~10 min): a follow-up PR.
   twitter-snap then takes `^x.y.z` (its own packages are exempt from pnpm's minimumReleaseAge).
-- The TS wrapper's `cookie.json` is not gitignored; the Python wrapper's is. The wrappers expose cursors and rate-limit headers and
+- Single e2e tests, with the cookie linked into the wrapper directory: Python `uv run python -m pytest test/api -k <name>`
+  (`cookie.json`; the README's `uv run pytest test/api` dies at collection with `No module named 'test.api'` here), TS `npx vitest
+  run test/api/<file> -t '^<name>$'` (`cookies.json`) after `npm ci` and `npm install --no-save
+  ../twitter-openapi-typescript-generated`, which links the local generated package. The tests log timeline posts: keep their
+  output out of anything shown.
+- The TS wrapper's `cookie.json` is not gitignored (its `cookies.json` is); the Python wrapper's is. The wrappers expose cursors and rate-limit headers and
   deliberately have no pagination helper.
 
 ## twitter_api_safe_relay

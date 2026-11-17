@@ -101,32 +101,36 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 
 ## State (2026-11-17)
 
-- Last daily run: 2026-11-17, the first one by the scheduled task. The nightly failed and is fixed in twitter-openapi #145
-  (open, next point). Merged as delegated: twitter_openapi_python #87 (ruff 0.17.5, dev only; local check: `uv sync --frozen`,
+- Last daily run: 2026-11-17, the first one by the scheduled task. The nightly failed and is fixed by twitter-openapi #145
+  (merged the same day after the LGTM, next point). Merged as delegated: twitter_openapi_python #87 (ruff 0.17.5, dev only; local check: `uv sync --frozen`,
   ruff findings identical to master, import) and TwitterInternalAPIDocument #1147 (Update Document, no anomaly). The alerts
   are the ones listed below, no issue or outside PR has moved since 11-02, every other workflow run since 11-16 succeeded, and
   no release chain step is due.
-- Waiting for review: twitter-openapi #145 (`fix/nightly-2026-11-17`). `AudioSpace.metadata` / `participants` optional (the
-  placeholder space recorded 10-17 is gone and `AudioSpaceById` answers only `is_subscribed`), `TimelineRichTextCashtag` in
-  `BirdwatchEntityRef.type` (a Community Note subtitle in `BirdwatchFetchGlobalTimeline`), `TweetSportsCompetitor.score`
-  optional instead of nullable (absent before the game; #140 had typed it from the log alone). Checked with the two raw
-  responses at 1.0 and one strict run (130 calls at 1.0). Until it is merged the nightly fails on `AudioSpaceById` every day.
-  After the LGTM the release chain starts (Routine).
-- Needs an instruction: a recording of a living space for the `AudioSpaceById` placeholder. The wrappers' e2e tests
-  (`getAudioSpaceById`, `test_get_audio_space_by_id`) read `metadata.title` of the gone space and fail until they get a new id.
+- Spec main is 37b4afd (#145): `AudioSpace.metadata` / `participants` optional (the placeholder space recorded 10-17 is
+  gone and `AudioSpaceById` answers only `is_subscribed`), `TimelineRichTextCashtag` in `BirdwatchEntityRef.type` (a Community
+  Note subtitle in `BirdwatchFetchGlobalTimeline`), `TweetSportsCompetitor.score` optional instead of nullable (absent before
+  the game; #140 had typed it from the log alone). Checked with the two raw responses at 1.0 and one strict run (130 calls at
+  1.0); the nightly of 11-18 is the first one on it.
+- Waiting for review, the second step of that release chain: twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9) and
+  twitter-openapi-typescript #181 (generated 0.1.9 / wrapper 0.1.9), both regenerated from 37b4afd with nothing but the three
+  models changed. In each wrapper the e2e test of the space no longer assumes `metadata`, and the two affected e2e tests pass
+  against X; the suites were not run. After their merge: the TS lockfile follow-up once npm has generated 0.1.9, then the
+  rest of the chain (Routine).
+- Needs an instruction: a recording of a living space for the `AudioSpaceById` placeholder, which only exercises the empty
+  answer now; the wrappers' tests use the same id.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
   in the new home: every line bootstrap prints, the spec build, strict client generation and install, `tools/graphql_get.py
   UserByScreenName` (200, no errors: the account is not locked and X is reached directly), `tools/validate_dumps.py` on that response
   (1.0), a Playwright Chromium launch on a blank page, twitter-snap `pnpm install` + `pnpm build` and one guest render,
   twitter-snap-api `pnpm build` + `pnpm test` (it renders with the cookie session), nvenc encoding, decrypting both secrets,
-  pushing this repository, opening and merging a PR, and on 11-17 a strict run from a fresh checkout. Not tried here yet:
-  any Playwright script against X, the relay (`tools/relay_local`), the wrappers' e2e suites, a commit touching a workflow file
-  (the token has no `workflow` scope).
+  pushing this repository, opening and merging a PR, and on 11-17 a strict run from a fresh checkout, both client
+  regenerations and single e2e tests of both wrappers. Not tried here yet: any Playwright script against X, the relay
+  (`tools/relay_local`), a whole e2e suite of a wrapper, a commit touching a workflow file (the token has no `workflow` scope).
 - There is no `recordings/`, `tools/out/` or `screenshot/` and no spec worktree: the maintainer left them behind on purpose
   (2026-11-16). Without an offline validation set a spec change is checked by the strict run alone unless a set is collected
   again (`tools/README.md`, "Offline validation set").
-- Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the clients pin 6c4914f),
-  failed 11-17 on two calls (#145).
+- Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
+  6c4914f), failed 11-17 on two calls (fixed by #145).
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
   the account (x.com/settings/email).
 - Published: PyPI generated 0.1.7 / wrapper 0.1.8; npm generated 0.1.8 / wrapper 0.1.8 (0.1.7 on npm is a dud without `dist/`);
@@ -134,9 +138,10 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: twitter-openapi #145 only. Account use since 11-13: the nightlies, plus on 11-16 twelve
-  single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run (three renders with the cookie
-  session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`) and one strict run.
+- Open PRs in the maintained repos: twitter_openapi_python #88 and twitter-openapi-typescript #181. Account use since 11-13:
+  the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
+  (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
+  strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.
