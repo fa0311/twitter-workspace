@@ -84,8 +84,18 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   `/account/access` behind a Cloudflare challenge; the relay's CI login times out after 120 s. Triggers so far: sweeps, several suites
   in a day, relay CI logins (3 per push / merge; six logins within an hour and about twelve in a morning were each enough). After the maintainer clears it and the session changed, the fresh export goes into
   the sops secret (`cookie_json`, recipe in twitter-secrets' README); delete the workspace's `cookie.json` and rerun bootstrap.
-- A Space does not stay: the one recorded on 2026-10-17 was gone on 11-17, and `AudioSpaceById` then answers 200 with only
-  `is_subscribed`. A space id in the placeholder or in a wrapper test goes stale the same way.
+- `AudioSpaceById` answers 200 without `errors` and with only `is_subscribed` (47 bytes; `"audioSpace": {}` with a guest token)
+  for an id that resolves to no space: a made-up id, an id cut short, and on 2026-11-17 two real ones out of 16 (the
+  placeholder's of 10-17, which still answered in the nightly of 11-16, and one of 10-11; why they stopped is unknown). The web
+  client then shows "Something went wrong. Please try again later." The other 14, from 10-10 to 11-17, answered with `metadata`
+  and `participants`: running and ended, with and without replay, one that ended 38 days before, two of them also with a guest
+  token (`api.x.com/graphql/<queryId>/AudioSpaceById`, `x-guest-token`, no cookie). `metadata.title` was absent in 2 of the 14.
+  Every space id in posts of 10-09 .. 10-19 has 13 characters and every one in posts of 11-15 .. 11-17 has 14; a pattern for 13
+  cuts a new id into one that does not exist, which looks exactly like a space that no longer resolves.
+- Control samples for an operation come from a search: `tools/graphql_get.py SearchTimeline '{"rawQuery": "filter:spaces",
+  "product": "Latest"}'` with `DUMP_TO` (the newest posts linked running spaces; `min_faves:` and `since:` / `until:` reach older
+  ones), the ids from `i/spaces/<id>` in the dump, then `graphql_get.py AudioSpaceById '{"id": "<id>"}'` with `DUMP_TO` and
+  `validate_dumps.py`. Print shapes and counts only: the dumps carry other people's posts and names.
 - Media: pbs.twimg.com serves every photo at `?name=orig` (`format=jpg&name=4096x4096` is 404 for some) and keeps serving media of
   deleted posts for a while. Posts can carry ~20 photos. Age-restricted posts give guests a `TweetTombstone`.
 

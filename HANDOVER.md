@@ -47,7 +47,10 @@ This file holds the environment, the routine and the current state. Past states:
 ## Routine
 
 - twitter-openapi's nightly strict live test (`live-test.yaml`, cron 23:00 UTC; GitHub starts it between 11:00 and 13:30 JST) is the main drift signal. On a failure:
-  reproduce in a worktree, type the new field from the raw response, validate the recordings set, run strict once, PR.
+  reproduce it with a single GET, then diagnose as `CLAUDE.md` demands ("twitter-openapi is zero-tolerance": other samples of
+  the operation with a positive control, the real web client when they cannot tell) and name the cause. Only a change of X is
+  typed, from the raw responses: validate the recordings set, run strict once, PR. A sample that went bad or a cause that stays
+  unknown is reported with what was checked, and the nightly stays red until the maintainer decides.
   A failure before the first `Try:` line with a proxy error is a proxy outage: `gh run rerun <id> --failed`.
 - Recordings of X requests happen on the maintainer's instruction; placeholder values come only from them.
 - Release chains, each step after an LGTM unless delegated: spec merge → regenerate both clients (wrappers pin the spec hash) → the TS
@@ -64,8 +67,8 @@ The maintainer asked for daily maintenance at 14:00 JST (2026-11-16), after the 
 maintenance", starts a fresh session in its own thread every day and works through this list with nobody present:
 
 1. `sh tools/bootstrap.sh`, then the lines it prints.
-2. The day's nightly; when GitHub has not started it by 14:00 JST, say so and go by the previous one. Failed: as in Routine, and
-   the fix is a PR.
+2. The day's nightly; when GitHub has not started it by 14:00 JST, say so and go by the previous one. Failed: as in Routine;
+   the fix is a PR only when the cause is established, otherwise the report carries the question.
 3. Dependabot PRs in every repository: merged as delegated (Routine); a failing one is replaced by an own PR.
 4. TwitterInternalAPIDocument's "Update Document" PR: `python3 ../tools/tiad_check.py` in its checkout. No anomaly: merged with
    a merge commit, `develop` stays. An anomaly: left open and reported.
@@ -73,13 +76,15 @@ maintenance", starts a fresh session in its own thread every day and works throu
 6. New issues and PRs from others: read and reported, nothing is written on GitHub.
 7. What an earlier merge made due in a release chain: the next PR is opened.
 8. State in this file, with the date of this run on its first line ("new" above means since that date), commit, push.
-9. A short report in Japanese: what changed, a direct link to every PR that waits for review, and the new X features that
+9. A short report in Japanese: what changed, a direct link to every PR that waits for review, each with what it rests on
+   (observed on which samples), what was not verified and what the maintainer has to decide, and the new X features that
    the day's translation strings, operations and feature switches reveal (only the interesting ones).
 
 Unattended, only Dependabot PRs and TwitterInternalAPIDocument's Update Document are merged. Every other PR, the run's own
 included, waits for the maintainer's review and is merged in the session where the LGTM arrives. The account is spent only on
-what a failed nightly needs (single GETs, one strict run) and on the local check of a Dependabot PR; recordings, sweeps and
-suites are never started by this run.
+what a failed nightly needs (single GETs, the control samples of the diagnosis among them; one page view without clicks when
+the samples cannot tell a changed X from a wrong request; one strict run) and on the local check of a Dependabot PR;
+recordings, sweeps and suites are never started by this run.
 
 T3 starts the run in a worktree of this repository (`~/.t3/worktrees/twitter-workspace/<id>`, a branch of its own at
 `main`, submodules checked out at their pins) and tells the session to stay there. That checkout has no `cookie.json`, venv
@@ -101,36 +106,51 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 
 ## State (2026-11-17)
 
-- Last daily run: 2026-11-17, the first one by the scheduled task. The nightly failed and is fixed by twitter-openapi #145
-  (merged the same day after the LGTM, next point). Merged as delegated: twitter_openapi_python #87 (ruff 0.17.5, dev only; local check: `uv sync --frozen`,
+- Last daily run: 2026-11-17, the first one by the scheduled task. The nightly failed on two calls and twitter-openapi #145
+  answered it (merged the same day after the LGTM, next two points). Merged as delegated: twitter_openapi_python #87 (ruff 0.17.5, dev only; local check: `uv sync --frozen`,
   ruff findings identical to master, import) and TwitterInternalAPIDocument #1147 (Update Document, no anomaly). The alerts
   are the ones listed below, no issue or outside PR has moved since 11-02, every other workflow run since 11-16 succeeded, and
   no release chain step is due.
-- Spec main is 37b4afd (#145): `AudioSpace.metadata` / `participants` optional (the placeholder space recorded 10-17 is
-  gone and `AudioSpaceById` answers only `is_subscribed`), `TimelineRichTextCashtag` in `BirdwatchEntityRef.type` (a Community
+- Spec main is 37b4afd (#145): `AudioSpace.metadata` / `participants` optional, `TimelineRichTextCashtag` in `BirdwatchEntityRef.type` (a Community
   Note subtitle in `BirdwatchFetchGlobalTimeline`), `TweetSportsCompetitor.score` optional instead of nullable (absent before
   the game; #140 had typed it from the log alone). Checked with the two raw responses at 1.0 and one strict run (130 calls at
   1.0); the nightly of 11-18 is the first one on it.
-- Waiting for review, the second step of that release chain: twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9) and
-  twitter-openapi-typescript #181 (generated 0.1.9 / wrapper 0.1.9), both regenerated from 37b4afd with nothing but the three
-  models changed. In each wrapper the e2e test of the space no longer assumes `metadata`, and the two affected e2e tests pass
-  against X; the suites were not run. After their merge: the TS lockfile follow-up once npm has generated 0.1.9, then the
-  rest of the chain (Routine).
-- Needs an instruction: a recording of a living space for the `AudioSpaceById` placeholder, which only exercises the empty
-  answer now; the wrappers' tests use the same id.
+- The space change of #145 rested on one response and a guess of mine, and the maintainer approved it without that being
+  visible; the rules that came out of it are in `CLAUDE.md` (Delivery rules, zero-tolerance) and in Routine. Examined
+  afterwards (11-17, with the placeholder's request): `metadata` is not gone. Of 16 real spaces from 10-10 to 11-17, 14 answer
+  with `metadata` and `participants` (two running, twelve ended, with and without replay; two of them also with a guest
+  token), two answer only `is_subscribed`: the placeholder's `1qxoNYAlYMXJv`, which still answered in the nightly of 11-16,
+  and one of 10-11. A made-up id answers the same, and the web client shows "Something went wrong" for such an id. Why those
+  two no longer resolve is unknown; it is not an expiry (spaces that ended 30 to 38 days ago answer). Facts in REFERENCE, "X
+  behaviour".
+- The maintainer decides (asked 11-17): whether `metadata` / `participants` stay optional, which types the not-found answer,
+  or go back to required with the sample replaced; and which space replaces the placeholder's (a search among the posts of
+  Elon Musk's companies found none of their own). Until then the nightly passes on the empty answer and exercises nothing of
+  a space.
+- Due in twitter-openapi, not opened on 11-17 because the day's strict run was spent: `AudioSpaceMetadata.title` is required
+  and absent in 2 of the 14 answers (one running, one ended space; the generated model rejects both). The 16 answers are in
+  `recordings/spaces_2026-11-17/`, listed in `validate_args.json`: on 37b4afd 14 validate at 1.0 and those two fail on `title`.
+- twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9) and twitter-openapi-typescript #181 (generated 0.1.9 / wrapper
+  0.1.9) are open, regenerated from 37b4afd, and held by the maintainer (11-17): not to be merged as they are. The spec moves
+  again (`title`, the decision above); after that merge both are regenerated onto the new commit, so that each package is
+  released once. In each wrapper the e2e test of the space no longer assumes `metadata`, and the two affected e2e tests passed
+  against X; the suites were not run.
+- Seen on the way, nothing done: the web client sends `post_ctas_fetch_enabled: true` with `AudioSpaceById` where the
+  placeholder (features recorded 11-05) has `false`; query id, variables and the other 41 features are the same.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
   in the new home: every line bootstrap prints, the spec build, strict client generation and install, `tools/graphql_get.py
   UserByScreenName` (200, no errors: the account is not locked and X is reached directly), `tools/validate_dumps.py` on that response
   (1.0), a Playwright Chromium launch on a blank page, twitter-snap `pnpm install` + `pnpm build` and one guest render,
   twitter-snap-api `pnpm build` + `pnpm test` (it renders with the cookie session), nvenc encoding, decrypting both secrets,
   pushing this repository, opening and merging a PR, and on 11-17 a strict run from a fresh checkout, both client
-  regenerations and single e2e tests of both wrappers. Not tried here yet: any Playwright script against X, the relay
+  regenerations, single e2e tests of both wrappers and a Playwright page view of x.com with the cookie session (no clicks).
+  Not tried here yet: a Playwright script that acts on X, the relay
   (`tools/relay_local`), a whole e2e suite of a wrapper, a commit touching a workflow file (the token has no `workflow` scope).
-- There is no `recordings/`, `tools/out/` or `screenshot/` and no spec worktree: the maintainer left them behind on purpose
-  (2026-11-16). Without an offline validation set a spec change is checked by the strict run alone unless a set is collected
-  again (`tools/README.md`, "Offline validation set").
+- There is no `tools/out/` or `screenshot/` and no spec worktree, and `recordings/` holds nothing but the 16 space answers of
+  11-17: the maintainer left the rest behind on purpose (2026-11-16). Beyond those a spec change is checked by the strict run
+  alone unless a set is collected again (`tools/README.md`, "Offline validation set").
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
-  6c4914f), failed 11-17 on two calls (fixed by #145).
+  6c4914f), failed 11-17 on two calls (#145).
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
   the account (x.com/settings/email).
 - Published: PyPI generated 0.1.7 / wrapper 0.1.8; npm generated 0.1.8 / wrapper 0.1.8 (0.1.7 on npm is a dud without `dist/`);
@@ -141,7 +161,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 - Open PRs in the maintained repos: twitter_openapi_python #88 and twitter-openapi-typescript #181. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
-  strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper).
+  strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
+  present six `SearchTimeline` and twenty `AudioSpaceById` GETs and two page views of a space page.
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.
