@@ -122,21 +122,24 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   afterwards (11-17): `metadata` is not gone. The sample's id no longer resolves (it still answered in the nightly of 11-16),
   and the answer with only `is_subscribed` is the one for any id that resolves to no space. Numbers in the next point, facts
   in REFERENCE, "X behaviour".
-- Waiting for review: twitter-openapi #146 (branch `fix/audio-space-sample-and-title`, 3bb13cd), opened after the maintainer
+- Waiting for review: twitter-openapi #146 (branch `fix/audio-space-sample-and-title`, 2785210), opened after the maintainer
   said that everything in the sandbox is permitted and to do what is necessary. It replaces the sample by a Binance space of
   2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no longer resolve, Elon
-  Musk's accounts link none) and makes `AudioSpaceMetadata.title` and `tweet_results` optional. It rests on 34 real space ids
-  fetched with the placeholder's request: 24 answer with `metadata` (7 running, 17 ended; `title` absent in 2, `tweet_results`
-  in 1), 10 do not resolve; all 22 of the last 31 days answer, of the 12 others only two. Checked: the 41 saved answers and
-  a live GET of the new sample validate at 1.0 with the regenerated strict client. Not checked: a full strict run on the
-  branch (the day's run was spent), why spaces stop resolving and so how long the sample lasts, scheduled or cancelled
-  spaces, a second logged-in account.
-- The maintainer decides (asked in the chat 11-17, no answer yet): whether `metadata` / `participants` stay optional, as
-  `UserResponseData.user` and `TweetResultByRestIdData.tweetResult` are for their not-found answers, or go back to required.
-  Optional means a client gets an object for an unknown id and the nightly keeps passing when the sample dies; required means
-  the nightly turns red on a dead sample and a client raises. #146 leaves them optional.
-- The answers are in `recordings/spaces_2026-11-17/` (35 files, listed in `validate_args.json`): on main 37b4afd three of them
-  fail (`title` twice, `tweet_results` once), on the branch of #146 all validate at 1.0.
+  Musk's accounts link none), makes `AudioSpace.metadata` / `participants` required again and `AudioSpaceMetadata.title` and
+  `tweet_results` optional. It rests on 34 real space ids fetched with the placeholder's request: 24 answer with `metadata`
+  (7 running, 17 ended; `title` absent in 2, `tweet_results` in 1), 10 do not resolve; all 22 of the last 31 days answer, of
+  the 12 others only two. Checked with the regenerated strict client: of the 35 saved answers the 25 with `metadata` validate
+  at 1.0 and the 10 without fail, as do the 47-byte answers Chrome received; a live GET of the new sample is at 1.0. Not
+  checked: a full strict run on the branch (13 hours after the one for #145, with the next nightly 9 hours ahead; the change
+  touches only the `AudioSpace*` schemas and this sample), why spaces stop resolving and so how long the sample lasts,
+  scheduled or cancelled spaces, a second logged-in account.
+- Decided by the maintainer (11-18): `metadata` / `participants` go back to required. What decided it: the web client treats
+  the answer without them as a failure (its error sheet is a branch on the space's error flag in `bundle.AudioSpacePeek`, no
+  exception, REFERENCE "X behaviour"), so the generated client failing on it is the same behaviour, and a sample that stops
+  resolving turns the nightly red. Until #146 is merged main still has them optional, so the nightly passes on the dead
+  sample without checking a space.
+- The answers are in `recordings/spaces_2026-11-17/` (35 files, listed in `validate_args.json`); the console recording of the
+  two Chrome pages and its script are in `recordings/spaces_2026-11-18/`.
 - twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9) and twitter-openapi-typescript #181 (generated 0.1.9 / wrapper
   0.1.9) are open, regenerated from 37b4afd, and held by the maintainer (11-17): not to be merged as they are. The spec moves
   again (#146); after that merge both are regenerated onto the new commit, so that each package is released once, and the

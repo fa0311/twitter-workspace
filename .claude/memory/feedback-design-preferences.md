@@ -6,6 +6,9 @@ metadata:
 ---
 
 - **Model what exists, nothing more.** Follow what X really does; what it dropped is dropped, with no fallback kept for compatibility.
+- **The official client is the measure of a response.** What it renders as a state belongs in the type; what it treats as a
+  failure stays out, and a generated client that fails on it behaves as the original does (my reading of the maintainer's choice
+  of 2026-11-18, made once the client's own handling had been looked up instead of argued).
 - **Declare, don't orchestrate.** Typed literal definitions over registration calls and procedures.
 - **Share only what is the same thing.** A look-alike gets its own type; a shared type is never widened to fit a second use.
 - **Strict where it decides something, loose elsewhere.** Precision goes to values that drive shape, branching or what the user
