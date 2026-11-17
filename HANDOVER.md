@@ -52,7 +52,9 @@ This file holds the environment, the routine and the current state. Past states:
   typed, from the raw responses: validate the recordings set, run strict once, PR. A sample that went bad or a cause that stays
   unknown is reported with what was checked, and the nightly stays red until the maintainer decides.
   A failure before the first `Try:` line with a proxy error is a proxy outage: `gh run rerun <id> --failed`.
-- Recordings of X requests happen on the maintainer's instruction; placeholder values come only from them.
+- Recordings of X requests happen on the maintainer's instruction; placeholder values come only from them. Looking at what the
+  real web client sends and gets for a page, without clicks, is not such a recording: it belongs to any diagnosis (REFERENCE,
+  "Sandbox": the real Chrome).
 - Release chains, each step after an LGTM unless delegated: spec merge → regenerate both clients (wrappers pin the spec hash) → the TS
   lockfile follow-up once npm has the generated package → twitter-snap release PR `update x.y.z` (version only; publish + Docker run on
   the merge) → twitter-snap-api lockfile bump (its Docker builds on push to main, no PR checks: `pnpm build` + `pnpm test` locally) →
@@ -117,24 +119,29 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   1.0); the nightly of 11-18 is the first one on it.
 - The space change of #145 rested on one response and a guess of mine, and the maintainer approved it without that being
   visible; the rules that came out of it are in `CLAUDE.md` (Delivery rules, zero-tolerance) and in Routine. Examined
-  afterwards (11-17, with the placeholder's request): `metadata` is not gone. Of 16 real spaces from 10-10 to 11-17, 14 answer
-  with `metadata` and `participants` (two running, twelve ended, with and without replay; two of them also with a guest
-  token), two answer only `is_subscribed`: the placeholder's `1qxoNYAlYMXJv`, which still answered in the nightly of 11-16,
-  and one of 10-11. A made-up id answers the same, and the web client shows "Something went wrong" for such an id. Why those
-  two no longer resolve is unknown; it is not an expiry (spaces that ended 30 to 38 days ago answer). Facts in REFERENCE, "X
-  behaviour".
-- The maintainer decides (asked 11-17): whether `metadata` / `participants` stay optional, which types the not-found answer,
-  or go back to required with the sample replaced; and which space replaces the placeholder's (a search among the posts of
-  Elon Musk's companies found none of their own). Until then the nightly passes on the empty answer and exercises nothing of
-  a space.
-- Due in twitter-openapi, not opened on 11-17 because the day's strict run was spent: `AudioSpaceMetadata.title` is required
-  and absent in 2 of the 14 answers (one running, one ended space; the generated model rejects both). The 16 answers are in
-  `recordings/spaces_2026-11-17/`, listed in `validate_args.json`: on 37b4afd 14 validate at 1.0 and those two fail on `title`.
+  afterwards (11-17): `metadata` is not gone. The sample's id no longer resolves (it still answered in the nightly of 11-16),
+  and the answer with only `is_subscribed` is the one for any id that resolves to no space. Numbers in the next point, facts
+  in REFERENCE, "X behaviour".
+- Waiting for review: twitter-openapi #146 (branch `fix/audio-space-sample-and-title`, 3bb13cd), opened after the maintainer
+  said that everything in the sandbox is permitted and to do what is necessary. It replaces the sample by a Binance space of
+  2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no longer resolve, Elon
+  Musk's accounts link none) and makes `AudioSpaceMetadata.title` and `tweet_results` optional. It rests on 34 real space ids
+  fetched with the placeholder's request: 24 answer with `metadata` (7 running, 17 ended; `title` absent in 2, `tweet_results`
+  in 1), 10 do not resolve; all 22 of the last 31 days answer, of the 12 others only two. Checked: the 41 saved answers and
+  a live GET of the new sample validate at 1.0 with the regenerated strict client. Not checked: a full strict run on the
+  branch (the day's run was spent), why spaces stop resolving and so how long the sample lasts, scheduled or cancelled
+  spaces, a second logged-in account.
+- The maintainer decides (asked in the chat 11-17, no answer yet): whether `metadata` / `participants` stay optional, as
+  `UserResponseData.user` and `TweetResultByRestIdData.tweetResult` are for their not-found answers, or go back to required.
+  Optional means a client gets an object for an unknown id and the nightly keeps passing when the sample dies; required means
+  the nightly turns red on a dead sample and a client raises. #146 leaves them optional.
+- The answers are in `recordings/spaces_2026-11-17/` (35 files, listed in `validate_args.json`): on main 37b4afd three of them
+  fail (`title` twice, `tweet_results` once), on the branch of #146 all validate at 1.0.
 - twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9) and twitter-openapi-typescript #181 (generated 0.1.9 / wrapper
   0.1.9) are open, regenerated from 37b4afd, and held by the maintainer (11-17): not to be merged as they are. The spec moves
-  again (`title`, the decision above); after that merge both are regenerated onto the new commit, so that each package is
-  released once. In each wrapper the e2e test of the space no longer assumes `metadata`, and the two affected e2e tests passed
-  against X; the suites were not run.
+  again (#146); after that merge both are regenerated onto the new commit, so that each package is released once, and the
+  space tests of both wrappers go back to reading `metadata.title` with the new id: the change that made them tolerate a
+  missing `metadata` hid the dead sample, and a test that fails when the sample dies is the signal. The suites were not run.
 - Seen on the way, nothing done: the web client sends `post_ctas_fetch_enabled: true` with `AudioSpaceById` where the
   placeholder (features recorded 11-05) has `false`; query id, variables and the other 41 features are the same.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
@@ -143,10 +150,11 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   (1.0), a Playwright Chromium launch on a blank page, twitter-snap `pnpm install` + `pnpm build` and one guest render,
   twitter-snap-api `pnpm build` + `pnpm test` (it renders with the cookie session), nvenc encoding, decrypting both secrets,
   pushing this repository, opening and merging a PR, and on 11-17 a strict run from a fresh checkout, both client
-  regenerations, single e2e tests of both wrappers and a Playwright page view of x.com with the cookie session (no clicks).
+  regenerations, single e2e tests of both wrappers and Playwright page views of x.com with the cookie session (no clicks), in
+  the bundled Chromium and in the desktop's Google Chrome.
   Not tried here yet: a Playwright script that acts on X, the relay
   (`tools/relay_local`), a whole e2e suite of a wrapper, a commit touching a workflow file (the token has no `workflow` scope).
-- There is no `tools/out/` or `screenshot/` and no spec worktree, and `recordings/` holds nothing but the 16 space answers of
+- There is no `tools/out/` or `screenshot/` and no spec worktree, and `recordings/` holds nothing but the 35 space answers of
   11-17: the maintainer left the rest behind on purpose (2026-11-16). Beyond those a spec change is checked by the strict run
   alone unless a set is collected again (`tools/README.md`, "Offline validation set").
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
@@ -158,11 +166,11 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: twitter_openapi_python #88 and twitter-openapi-typescript #181. Account use since 11-13:
+- Open PRs in the maintained repos: twitter-openapi #146, twitter_openapi_python #88 and twitter-openapi-typescript #181. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
-  present six `SearchTimeline` and twenty `AudioSpaceById` GETs and two page views of a space page.
+  present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.

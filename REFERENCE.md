@@ -5,6 +5,12 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 ## Sandbox
 - Everything runs as `kasm-user`, who owns the workspace; `sudo` needs no password. What the image ships and what lives in the
   home volume is in `HANDOVER.md`.
+- The desktop has a real Google Chrome (`/usr/bin/google-chrome`, display `:1`). Playwright from the spec venv drives it with
+  `chromium.launch(channel="chrome", headless=False)` and `DISPLAY=:1`; a fresh context with the cookies of `cookie.json`
+  (mapped as in `tools/record_pages.py`) is the sandbox session in the real browser, and x.com loads logged in (2026-11-17).
+  The profile of the Chrome that is already open on the desktop is left alone: whose sessions it holds was never looked at.
+  A page's own requests and answers come from `page.on("response")`; crop a screenshot to the dialog, the timeline behind it
+  shows other people's posts.
 - A `cd` in one Bash call moves the working directory of the following ones: use absolute paths and `git -C`. `pkill -f` matches
   the calling shell; kill by pid.
 - The shell is zsh: an unquoted `$var` is not word-split, an unmatched glob such as `--include=*.ts` aborts the command, `=word` is
@@ -85,11 +91,14 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   in a day, relay CI logins (3 per push / merge; six logins within an hour and about twelve in a morning were each enough). After the maintainer clears it and the session changed, the fresh export goes into
   the sops secret (`cookie_json`, recipe in twitter-secrets' README); delete the workspace's `cookie.json` and rerun bootstrap.
 - `AudioSpaceById` answers 200 without `errors` and with only `is_subscribed` (47 bytes; `"audioSpace": {}` with a guest token)
-  for an id that resolves to no space: a made-up id, an id cut short, and on 2026-11-17 two real ones out of 16 (the
-  placeholder's of 10-17, which still answered in the nightly of 11-16, and one of 10-11; why they stopped is unknown). The web
-  client then shows "Something went wrong. Please try again later." The other 14, from 10-10 to 11-17, answered with `metadata`
-  and `participants`: running and ended, with and without replay, one that ended 38 days before, two of them also with a guest
-  token (`api.x.com/graphql/<queryId>/AudioSpaceById`, `x-guest-token`, no cookie). `metadata.title` was absent in 2 of the 14.
+  for an id that resolves to no space: a made-up id, an id cut short, a space that stopped resolving. The web client then shows
+  "Something went wrong. Please try again later."; for a space that resolves it shows the card without joining (ended: "Play
+  recording"). On 2026-11-17, of 34 ids from posts, 24 answered with `metadata` and `participants` (running and ended, with and
+  without replay, two of them also with a guest token: `api.x.com/graphql/<queryId>/AudioSpaceById`, `x-guest-token`, no
+  cookie) and 10 did not resolve: all 22 of the last 31 days answered, of the 12 others two (2026-10-10, a Binance space of
+  2025-10-09); the four that X's own accounts link (2025) are among the gone, as is the sample recorded on 10-17, which still
+  answered in the nightly of 11-16. Why a space stops resolving is unknown. In the 24, `title` was absent in 2 and
+  `tweet_results` in 1; `sharings` came only with `isMetatagsQuery: false` (the web client asks twice, false then true).
   Every space id in posts of 10-09 .. 10-19 has 13 characters and every one in posts of 11-15 .. 11-17 has 14; a pattern for 13
   cuts a new id into one that does not exist, which looks exactly like a space that no longer resolves.
 - Control samples for an operation come from a search: `tools/graphql_get.py SearchTimeline '{"rawQuery": "filter:spaces",
