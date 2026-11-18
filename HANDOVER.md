@@ -121,7 +121,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   optional instead of nullable (absent before the game; #140 had typed it from the log alone). Checked: one strict run on
   37b4afd (130 calls at 1.0); for #146 the saved space answers (the 25 with `metadata` at 1.0, the 10 without fail, as
   intended) and a live GET of the new sample at 1.0, no strict run of its own (it touches only the `AudioSpace*` schemas
-  and the sample). The nightly of 11-18 is the first one on d31ab31.
+  and the sample). The nightly of 11-18 ran on d31ab31 and passed.
 - What happened around the space (11-17, 11-18): #145 made `metadata` / `participants` optional after one response and a
   guess of mine, and the maintainer approved it without that being visible; the rules that came out of it are in `CLAUDE.md`
   (Delivery rules, zero-tolerance) and in Routine. Examined afterwards: `metadata` is not gone. The old sample's id no longer
@@ -134,16 +134,20 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 - The answers are in `recordings/spaces_2026-11-17/` (35 files). `validate_args.json` lists the 25 with `metadata`, all at
   1.0 on d31ab31; the 10 that resolve to no space fail there as intended and are listed in `unresolved_args.json` next to
   them. The console recording of the two Chrome pages and its script are in `recordings/spaces_2026-11-18/`.
-- Waiting for review: twitter_openapi_python #88 (generated 0.1.8 / wrapper 0.1.9, head 878c15a) and
-  twitter-openapi-typescript #181 (generated 0.1.9 / wrapper 0.1.9, head b6c09dc). Both were built again on 11-18 from
-  d31ab31, two commits each on master; the commits of 11-17 from 37b4afd, which the maintainer had held, are replaced. The
-  generated diff is three models (`AudioSpaceMetadata`, `BirdwatchEntityRef`, `TweetSportsCompetitor`) and the sample id;
-  the wrappers change version, dependency, spec hash and the id in the space test, which reads `metadata.title` as on
-  master and so fails when the sample dies. Checked: the space e2e test of each wrapper passes against X; Python `uv build`
-  of both packages, ruff as on master, pyright 3 errors in untouched files; TS `npm ci` and `npm pack --dry-run` (5,452
-  files), the wrapper build, tsc 7 errors and biome 2 errors in untouched lines. Not checked: the Birdwatch e2e tests again
-  (they passed on 11-17 against model files that are byte-identical now), the rest of both suites. After the LGTM: merge
-  (publishes to PyPI / npm), the TS lockfile follow-up once npm has generated 0.1.9, then the chain in Routine.
+- Both clients are regenerated from d31ab31 and published (11-18, after the LGTM): twitter_openapi_python #88 (master
+  afabd8a; PyPI generated 0.1.8 / wrapper 0.1.9, seen on PyPI) and twitter-openapi-typescript #181 (master 25f4312; npm
+  generated 0.1.9 seen on the registry, wrapper 0.1.9 published by a successful run but not yet in the packument at 13:12
+  JST). The generated diff is three models (`AudioSpaceMetadata`, `BirdwatchEntityRef`, `TweetSportsCompetitor`) and the
+  sample id; the wrappers changed version, dependency, spec hash and the id in the space test, which reads
+  `metadata.title` and so fails when the sample dies. Checked before the merge: the space e2e test of each wrapper against
+  X, the builds, linters as on master. Not checked: the Birdwatch e2e tests again (passed 11-17 on byte-identical model
+  files), the rest of both suites.
+- Waiting for review: twitter-openapi-typescript #182 (`chore/lockfile-generated-0.1.9`, 140d2b9), the wrapper's lockfile
+  on generated 0.1.9; `npm ci` and the build pass, merging publishes nothing.
+- Next in the chain, once npm lists wrapper 0.1.9: a dependency bump in twitter-snap (package.json and lockfile, as 362ea13
+  did) and in private_bot (as its #11). None of twitter-snap, twitter-snap-api and private_bot uses a field that changed,
+  and the placeholder differs from the one they pin only in the space sample id, so no twitter-snap release is proposed
+  for it; the maintainer may still want one.
 - Seen on the way, nothing done: the web client sends `post_ctas_fetch_enabled: true` with `AudioSpaceById` where the
   placeholder (features recorded 11-05) has `false`; query id, variables and the other 41 features are the same.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
@@ -160,15 +164,15 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   11-17 and 11-18: the maintainer left the rest behind on purpose (2026-11-16). Beyond those a spec change is checked by the strict run
   alone unless a set is collected again (`tools/README.md`, "Offline validation set").
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
-  6c4914f), failed 11-17 on two calls (#145).
+  6c4914f), failed 11-17 on two calls (#145), green 11-18 on d31ab31.
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
   the account (x.com/settings/email).
-- Published: PyPI generated 0.1.7 / wrapper 0.1.8; npm generated 0.1.8 / wrapper 0.1.8 (0.1.7 on npm is a dud without `dist/`);
+- Published: PyPI generated 0.1.8 / wrapper 0.1.9; npm generated 0.1.9 / wrapper 0.1.9 (generated 0.1.7 on npm is a dud without `dist/`);
   twitter-snap 0.4.3 (npm + ghcr: resvg-js rasterizer, satori 0.63 with the border-box wrapper, Biome 2.6); twitter-snap-api main
   8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
   25.17.0, hono, vite); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: twitter_openapi_python #88 and twitter-openapi-typescript #181. Account use since 11-13:
+- Open PRs in the maintained repos: twitter-openapi-typescript #182. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
