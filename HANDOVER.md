@@ -112,7 +112,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   delegated: TwitterInternalAPIDocument #1148 (Update Document, no anomaly, `develop` stays). No Dependabot PR was open. The
   alerts are the ones listed below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and webdav 5.11.0 still do not
   reach the fixes), no issue or outside PR has moved since 11-02, every workflow run since the run of 11-17 succeeded, and
-  no release chain step is due beyond the three PRs that wait for review. The run did not use the account.
+  no release chain step is due. The run did not use the account. The three PRs that waited were merged in the same
+  session after the LGTM (below).
 - Spec main is d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
   Binance space of 2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no
   longer resolve, Elon Musk's accounts link none), `AudioSpaceMetadata.title` and `tweet_results` are optional (absent in 2
@@ -142,12 +143,13 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   `metadata.title` and so fails when the sample dies. Checked before the merge: the space e2e test of each wrapper against
   X, the builds, linters as on master. Not checked: the Birdwatch e2e tests again (passed 11-17 on byte-identical model
   files), the rest of both suites.
-- Waiting for review (11-18), the next steps of that chain, none of which releases a package:
-  twitter-openapi-typescript #182 (`chore/lockfile-generated-0.1.9`, 140d2b9: the wrapper's lockfile on generated 0.1.9;
-  `npm ci` and the build pass; the repo has no PR checks), twitter-snap #123 (`chore/clients-0.1.9`, b19ae2c: `package.json`
-  and lockfile on both clients 0.1.9, as 362ea13 did; frozen install, build, lint and typecheck pass locally, the six
-  `unit-tests` jobs of the PR checks passed on b19ae2c; merging rebuilds the Docker image, publishes nothing) and private_bot #12 (`chore/clients-0.1.9`, 1593ad2:
-  the same bump as its #11; frozen install, build, lint and the unit tests pass; merging rebuilds its image).
+- The rest of that chain was merged on 11-18 after the LGTM, none of it releasing a package: twitter-openapi-typescript
+  #182 (master 2e29867: the wrapper's lockfile on generated 0.1.9; the publish run found both versions on npm and published
+  nothing), twitter-snap #123 (master d2566ad: `package.json` and lockfile on both clients 0.1.9; the publish run found
+  0.4.3 on npm, the Docker build passed) and private_bot #12 (master aac51dc: the same bump; the Docker build passed).
+  twitter-snap's `tests` run on d2566ad failed in one of six jobs (ubuntu, lts/-1) on the pixiv test
+  `single_illust_to_image` alone (no output file, `ENOENT`; the 19 Twitter tests of that job passed) and passed on the
+  rerun of that job; why the first attempt produced no file is unknown.
 - No twitter-snap release is proposed for clients 0.1.9: none of twitter-snap, twitter-snap-api and private_bot reads a
   field that changed (grep over their `src`), and the placeholder of d31ab31 differs from the one of 6c4914f only in the
   space sample id. Whether to release anyway was put to the maintainer in the chat (11-18); without a release twitter-snap-api
@@ -173,10 +175,10 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   the account (x.com/settings/email).
 - Published: PyPI generated 0.1.8 / wrapper 0.1.9; npm generated 0.1.9 / wrapper 0.1.9 (generated 0.1.7 on npm is a dud without `dist/`);
   twitter-snap 0.4.3 (npm + ghcr: resvg-js rasterizer, satori 0.63 with the border-box wrapper, Biome 2.6); twitter-snap-api main
-  8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master 0ebbb0a on clients 0.1.8;
-  relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master f5e6d4f is ahead of 0.4.3 by Dependabot bumps only (puppeteer
-  25.17.0, hono, vite); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: twitter-openapi-typescript #182, twitter-snap #123, private_bot #12. Account use since 11-13:
+  8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master aac51dc on clients 0.1.9;
+  relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master d2566ad is ahead of 0.4.3 by dependency bumps only (puppeteer
+  25.17.0, hono, vite, both clients 0.1.9); no release needed until something user-facing lands.
+- Open PRs in the maintained repos: none. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
