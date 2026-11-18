@@ -1,7 +1,7 @@
 # Handover: fa0311's X / Twitter OSS maintenance sandbox
 
 Rules are in `CLAUDE.md`, non-derivable facts in `REFERENCE.md`, the maintainer's judgement calls in memory.
-This file holds the environment, the routine and the current state. Past states: `git log -p -- HANDOVER.md`. Updated 2026-11-17.
+This file holds the environment, the routine and the current state. Past states: `git log -p -- HANDOVER.md`. Updated 2026-11-18.
 
 ## Environment
 
@@ -106,13 +106,13 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 > Finish with a short report in Japanese that links every PR waiting for review and tells which new X features the day's
 > documents reveal.
 
-## State (2026-11-17)
+## State (2026-11-18)
 
-- Last daily run: 2026-11-17, the first one by the scheduled task. The nightly failed on two calls and twitter-openapi #145
-  answered it (merged the same day after the LGTM, next two points). Merged as delegated: twitter_openapi_python #87 (ruff 0.17.5, dev only; local check: `uv sync --frozen`,
-  ruff findings identical to master, import) and TwitterInternalAPIDocument #1147 (Update Document, no anomaly). The alerts
-  are the ones listed below, no issue or outside PR has moved since 11-02, every other workflow run since 11-16 succeeded, and
-  no release chain step is due.
+- Last daily run: 2026-11-18, by the scheduled task. The nightly passed on d31ab31 (129 calls, each at 1.0). Merged as
+  delegated: TwitterInternalAPIDocument #1148 (Update Document, no anomaly, `develop` stays). No Dependabot PR was open. The
+  alerts are the ones listed below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and webdav 5.11.0 still do not
+  reach the fixes), no issue or outside PR has moved since 11-02, every workflow run since the run of 11-17 succeeded, and
+  no release chain step is due beyond the three PRs that wait for review. The run did not use the account.
 - Spec main is d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
   Binance space of 2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no
   longer resolve, Elon Musk's accounts link none), `AudioSpaceMetadata.title` and `tweet_results` are optional (absent in 2
@@ -145,8 +145,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 - Waiting for review (11-18), the next steps of that chain, none of which releases a package:
   twitter-openapi-typescript #182 (`chore/lockfile-generated-0.1.9`, 140d2b9: the wrapper's lockfile on generated 0.1.9;
   `npm ci` and the build pass; the repo has no PR checks), twitter-snap #123 (`chore/clients-0.1.9`, b19ae2c: `package.json`
-  and lockfile on both clients 0.1.9, as 362ea13 did; frozen install, build, lint and typecheck pass locally, `test` runs in
-  the PR checks; merging rebuilds the Docker image, publishes nothing) and private_bot #12 (`chore/clients-0.1.9`, 1593ad2:
+  and lockfile on both clients 0.1.9, as 362ea13 did; frozen install, build, lint and typecheck pass locally, the six
+  `unit-tests` jobs of the PR checks passed on b19ae2c; merging rebuilds the Docker image, publishes nothing) and private_bot #12 (`chore/clients-0.1.9`, 1593ad2:
   the same bump as its #11; frozen install, build, lint and the unit tests pass; merging rebuilds its image).
 - No twitter-snap release is proposed for clients 0.1.9: none of twitter-snap, twitter-snap-api and private_bot reads a
   field that changed (grep over their `src`), and the placeholder of d31ab31 differs from the one of 6c4914f only in the
@@ -182,7 +182,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
   present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock),
   on 11-18 (JST, before the nightly) with the maintainer present two page views of space pages, one `AudioSpaceById` GET and
-  the space e2e test of each wrapper (all answered).
+  the space e2e test of each wrapper (all answered); the daily run of 11-18 used nothing.
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.
