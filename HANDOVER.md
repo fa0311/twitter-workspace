@@ -1,7 +1,7 @@
 # Handover: fa0311's X / Twitter OSS maintenance sandbox
 
 Rules are in `CLAUDE.md`, non-derivable facts in `REFERENCE.md`, the maintainer's judgement calls in memory.
-This file holds the environment, the routine and the current state. Past states: `git log -p -- HANDOVER.md`. Updated 2026-11-18.
+This file holds the environment, the routine and the current state. Past states: `git log -p -- HANDOVER.md`. Updated 2026-11-19.
 
 ## Environment
 
@@ -106,14 +106,18 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
 > Finish with a short report in Japanese that links every PR waiting for review and tells which new X features the day's
 > documents reveal.
 
-## State (2026-11-18)
+## State (2026-11-19)
 
-- Last daily run: 2026-11-18, by the scheduled task. The nightly passed on d31ab31 (129 calls, each at 1.0). Merged as
-  delegated: TwitterInternalAPIDocument #1148 (Update Document, no anomaly, `develop` stays). No Dependabot PR was open. The
-  alerts are the ones listed below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and webdav 5.11.0 still do not
-  reach the fixes), no issue or outside PR has moved since 11-02, every workflow run since the run of 11-17 succeeded, and
-  no release chain step is due. The run did not use the account. The three PRs that waited were merged in the same
-  session after the LGTM (below).
+- Last daily run: 2026-11-19, by the scheduled task. The nightly passed on d31ab31 (130 calls, each at 1.0). Merged as
+  delegated: TwitterInternalAPIDocument #1149 (Update Document, no anomaly, `develop` stays; it changed only the two
+  `MetaData.json`, `serverDate` and the xchat embed build, no operation, feature switch or string). No Dependabot PR was open.
+  One alert is new, twitter-snap #234 (picomatch `<= 4.0.7`, GHSA-fc5q-39xc-vjpf, created 11-18 06:55 UTC, the minute #123 was
+  merged): the advisory names no patched version, 4.0.7 is the newest release on npm, and GitHub withdrew the advisory on 11-18
+  15:38 UTC while the alert still shows as open, so there is nothing to bump. twitter-snap-api, private_bot and the relay lock
+  picomatch 4.0.7 as well and have no alert; why only twitter-snap got one is unknown. The other alerts are the ones listed
+  below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and webdav 5.11.0 still do not reach the fixes), no issue or
+  outside PR has moved since 11-02, every workflow run since the run of 11-18 succeeded, and no release chain step is due. The
+  run did not use the account.
 - Spec main is d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
   Binance space of 2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no
   longer resolve, Elon Musk's accounts link none), `AudioSpaceMetadata.title` and `tweet_results` are optional (absent in 2
@@ -122,7 +126,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   optional instead of nullable (absent before the game; #140 had typed it from the log alone). Checked: one strict run on
   37b4afd (130 calls at 1.0); for #146 the saved space answers (the 25 with `metadata` at 1.0, the 10 without fail, as
   intended) and a live GET of the new sample at 1.0, no strict run of its own (it touches only the `AudioSpace*` schemas
-  and the sample). The nightly of 11-18 ran on d31ab31 and passed.
+  and the sample). The nightlies of 11-18 and 11-19 ran on d31ab31 and passed.
 - What happened around the space (11-17, 11-18): #145 made `metadata` / `participants` optional after one response and a
   guess of mine, and the maintainer approved it without that being visible; the rules that came out of it are in `CLAUDE.md`
   (Delivery rules, zero-tolerance) and in Routine. Examined afterwards: `metadata` is not gone. The old sample's id no longer
@@ -170,7 +174,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   11-17 and 11-18: the maintainer left the rest behind on purpose (2026-11-16). Beyond those a spec change is checked by the strict run
   alone unless a set is collected again (`tools/README.md`, "Offline validation set").
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
-  6c4914f), failed 11-17 on two calls (#145), green 11-18 on d31ab31.
+  6c4914f), failed 11-17 on two calls (#145), green 11-18 and 11-19 on d31ab31.
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
   the account (x.com/settings/email).
 - Published: PyPI generated 0.1.8 / wrapper 0.1.9; npm generated 0.1.9 / wrapper 0.1.9 (generated 0.1.7 on npm is a dud without `dist/`);
@@ -184,10 +188,11 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
   present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock),
   on 11-18 (JST, before the nightly) with the maintainer present two page views of space pages, one `AudioSpaceById` GET and
-  the space e2e test of each wrapper (all answered); the daily run of 11-18 used nothing.
+  the space e2e test of each wrapper (all answered); the daily runs of 11-18 and 11-19 used nothing.
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
-  minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point.
+  minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point. Open without any fixed release:
+  picomatch 4.0.7 (twitter-snap #234, advisory withdrawn).
 - Open for the maintainer: `npm deprecate twitter-openapi-typescript-generated@0.1.7`; `requires-python >= 3.11.5` in twitter-openapi and
   twitter_openapi_python (the soupsieve alert may stay open while the locks keep 2.10 for older Pythons); the leftover branch
   `fix/ffmpeg-timeout-seconds` in twitter-snap-api (closed #19, the sandbox cannot delete unmerged branches); twitter-snap-api's
