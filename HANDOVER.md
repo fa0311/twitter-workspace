@@ -154,10 +154,10 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   twitter-snap's `tests` run on d2566ad failed in one of six jobs (ubuntu, lts/-1) on the pixiv test
   `single_illust_to_image` alone (no output file, `ENOENT`; the 19 Twitter tests of that job passed) and passed on the
   rerun of that job; why the first attempt produced no file is unknown.
-- No twitter-snap release is proposed for clients 0.1.9: none of twitter-snap, twitter-snap-api and private_bot reads a
-  field that changed (grep over their `src`), and the placeholder of d31ab31 differs from the one of 6c4914f only in the
-  space sample id. Whether to release anyway was put to the maintainer in the chat (11-18); without a release twitter-snap-api
-  has nothing to bump.
+- No twitter-snap release for clients 0.1.9: none of twitter-snap, twitter-snap-api and private_bot reads a field that
+  changed (grep over their `src`), and the placeholder of d31ab31 differs from the one of 6c4914f only in the space sample
+  id. Asked whether to release anyway, the maintainer left it to the sandbox (11-19, "either is fine"): decided against, the
+  bumps go out with the next user-facing change, and until then twitter-snap-api has nothing to bump.
 - Seen on the way, nothing done: the web client sends `post_ctas_fetch_enabled: true` with `AudioSpaceById` where the
   placeholder (features recorded 11-05) has `false`; query id, variables and the other 41 features are the same.
 - The home volume was replaced after the previous push (15:37 JST) and set up again from this repository within the hour. Tried
