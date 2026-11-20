@@ -45,6 +45,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   `package.json`'s version is not on npm yet; its Docker image builds on every master push. twitter-snap-api, private_bot, -discord and
   -bookmarklet build Docker on push to the default branch and have no PR checks. The TS / Python wrappers and TIAD have no PR CI either;
   twitter-openapi and twitter-snap do.
+- twitter-openapi's PR check is `build` (`tools/build.py` and the three generators); its live test runs on a PR only when the PR
+  is labeled. The relay's `test` runs on `pull_request` and on pushes to `main`: a branch pushed without a PR logs in nowhere.
 - Stacked PRs get no CI in twitter-snap (`pull_request` against master only; retargeting does not trigger it): `gh workflow run
   test.yml --ref <branch>` or push a commit.
 - Dependabot: `groups` are configured everywhere; version updates are off in the relay, twitter-snap-api and private_bot (every relay
@@ -69,6 +71,17 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Logged-out x.com is static HTML with no scripts; guest-token GraphQL still works. `UserByRestId` / `UsersByRestIds` are 403 for
   non-browser clients, and the two `UsersByRestIds` requests of a space page were 403 in the real Chrome driven by Playwright
   as well (2026-11-18, console). Other users' likes are empty. Every list answers `ListByRestId` with a partial `BadRequestError` (harness skips it).
+- A field can belong to a query version: on 2026-11-20 the same target answered without `BadgeCounts.grok_bot_*`,
+  `AboutProfile.created_country_accurate`, `verification_info.is_identity_verified` and `allowSpineClicks` on home timeline ads
+  with the previous queryId and with them on the recorded one, while `ProfileBio.with_held_scope` and
+  `Tweet.conversation_control_details` came with both. Compare both ids on one target before naming the cause.
+- The web client sent one value per feature switch in every operation of a session (64 keys, 2026-11-20). New query versions
+  arrive in batches: 36 of the spec's operations changed the day after the recording of 2026-11-05. TwitterInternalAPIDocument's
+  `docs/json` listed the queryId the real Chrome sent for each of the 76 placeholder operations seen on 2026-11-20.
+- Profile pages, the own one included, send `UserOriginalsTimeline` / `UserRepliesTimeline` / `UserRepostsTimeline` /
+  `UserVideoTimeline`, not `UserTweets` / `UserTweetsAndReplies` / `UserMedia`; `/<org>/affiliates` sends
+  `UserBusinessProfileTeamTimeline`, not `affiliatesQuery`; `/i/bookmarks` lands on `/i/history` and `{me}/likes` on
+  `/i/history/likes` (2026-11-20).
 - Two frontends: logged-out `x.com/home` lands on the new x-web app (`abs.twimg.com/x-web/...`, Rolldown build); `x.com/i/jf/` and the
   logged-in `/home` are the responsive-web shell (inline webpack runtime, `loading-x-anim` frames). Both hash
   `METHOD!path!time` + `obfiowerehiring` + animationKey for `x-client-transaction-id`, with the URL pathname as is. X does not reject a
@@ -87,6 +100,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
 - Typing-triggered operations are reachable via URLs (`/i/lists/search?q=`, `/i/communities/suggested?q=`); bookmarks search needs its
   own button. Setting an X Chat passcode is forbidden.
 - Rate limits per 15 minutes vary by an order of magnitude between operations (search is the scarce one); read `x-rate-limit-*`.
+  `ViewerBadgeCounts` and `CreatorStudioTabBarItemQuery` go out on every page load: 53 page loads with their tabs in 14 minutes
+  ended in 429 for both during the last minute; twelve minutes later a strict run got 200 for both.
 - Lock: GraphQL answers 200 with data plus `errors[].code 326` and `bounce_location: …/account/access`; web pages redirect to
   `/account/access` behind a Cloudflare challenge; the relay's CI login times out after 120 s. Triggers so far: sweeps, several suites
   in a day, relay CI logins (3 per push / merge; six logins within an hour and about twelve in a morning were each enough). After the maintainer clears it and the session changed, the fresh export goes into
@@ -124,12 +139,19 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   optional non-nullable. The nightly's log cannot tell the two apart (`input_value=None` for a missing key and for a `null`): fetch
   the raw with `tools/graphql_get.py` (`DUMP_TO`) before typing. A match rate above 1.0 is such an absent key typed nullable; the
   harness fails only below 1.
+- The harness's comparison accepts `false`, `[]`, `{}` and `null` where the model has no field, so a new field with such a value
+  passes the nightly (`allowSpineClicks: false`, `is_identity_verified: false` on 2026-11-20); `tools/validate_recorded.py` lists
+  them. A field that only a newer query version returns is typed optional: answers of the earlier version stay in the offline set.
+- `dist/` is committed with the source in every spec commit (`git rebase -x 'uv run python tools/build.py >/dev/null 2>&1 && git
+  add dist && git commit -q --amend --no-edit' origin/main` rebuilds it inside each commit of a series).
 - Conventions: `src/openapi/paths/*.yaml` hold paths and their response schemas, shared objects live in `src/openapi/schemas/*.yaml`,
   `__typename` values must be in `schemas/typename.yaml`, tags map to generated API classes, hooks inject the placeholder parameters at
   build time. Schema sharing only for the same backend object under the same key; a look-alike site gets its own type. Enum vs string
   per `CONTRIBUTING.md`. An operation is POST wherever the frontend was recorded sending POST.
 - Placeholder: values only from recordings of the real web client (relay catalog `requests.ndjson` applied with
-  `tools/update_placeholder.py <file|url>`, the relay's `twitter-api-safe-dump --cookies`, a HAR). Sample values are elonmusk /
+  `tools/update_placeholder.py <file|url>`, the relay's `twitter-api-safe-dump --cookies`, a HAR; recipe in `tools/README.md`,
+  "Re-recording the placeholder"). It has 117 GraphQL entries, 86 of them with a spec path; the tool overwrites `features` /
+  `fieldToggles` only when the request carries them and never removes one. Sample values are elonmusk /
   44196397 / 1349129669258448897; viewer-bound entries are recorded on the sandbox. TIAD's GraphQL.json is only a detector of changed queryIds.
 - `tools/sweep_tweets.py` (broad strict sweep) and `tools/json_to_schema.py` (schema drafts; check its shared-type guesses, reduced
   users are not `User`) live in the workspace's `tools/`.

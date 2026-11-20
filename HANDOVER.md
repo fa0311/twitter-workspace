@@ -124,14 +124,35 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   is unknown. The other alerts are the ones listed below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and
   webdav 5.11.0 still do not reach the fixes), no issue or outside PR has moved since 11-02, every workflow run since the
   run of 11-19 succeeded, and no release chain step is due. The run did not use the account.
-- Seen by that run in the documents' history, nothing done: TwitterInternalAPIDocument's `docs/json/GraphQL.json` lists
-  another queryId than the placeholder for 56 of the spec's 117 GraphQL operations. 18 of them differed before the
-  placeholder was recorded on 11-05 and are among the operations #139 names as not sent by the browser session. The other
-  38 had the placeholder's id on 11-05 and another one afterwards: 36 from 11-06 (`HomeTimeline`, `HomeLatestTimeline`,
-  `TweetDetail`, `SearchTimeline`, `Likes`, `Bookmarks`, `Followers`, `Following`, `NotificationsTimeline`, the list,
-  community and user-tab timelines and others), `ViewerBadgeCounts` from 11-08, `BroadcastQuery` from 11-13. The nightly
-  passes with the placeholder's ids. Not looked at: what the real web client sends for these operations now, and whether
-  the newer versions answer in another shape. A re-recording is the maintainer's to order.
+- twitter-openapi #147 waits for the LGTM (`chore/placeholder-2026-11-20`, three commits on d31ab31, head b92c0ac, `build`
+  passed). The daily run had found that TwitterInternalAPIDocument listed another queryId than the placeholder for 56 of
+  the spec's 117 GraphQL operations, 38 of them since the day after the recording of 11-05, and the maintainer ordered a
+  re-recording ("しようか、暇だから時間かけて丁寧にやっていいよ"). Recorded on 11-20 with the relay's dump in the desktop's Chrome, 53 pages in 14 minutes,
+  logged from the network side as well (`tools/wire_tee.mjs`): every catalog line has an identical request on the wire.
+  42 entries change (40 new queryIds; `post_ctas_fetch_enabled` true in 40; two more features in the two community
+  timelines), 34 were sent and stay, 41 were sent by no page. Typed from the recorded answers: five fields that only the
+  recorded query versions return, each compared on one target with both queryIds (commit 2), and shapes that do not
+  depend on the queryId (commit 3: `AboutProfile` of other accounts, `ProfileBio.with_held_scope`,
+  `Tweet.conversation_control_details` on the sandbox's own posts, four fields of the community page seen on 16
+  communities). Checked: one strict run on the branch (130 calls at 1.0, before `is_identity_verified` was added; its
+  answers are at 1.0 with the final client), 595 of the 596 recorded answers, 16 control GETs, the stored sets. Not
+  checked: the mutations, a second account, the wrappers' suites. The PR text has the numbers.
+- Asked of the maintainer with #147 (11-20), no answer yet: a `record_actions.py` session for the mutations and the list
+  dialogs (eleven entries no page sent still carry `post_ctas_fetch_enabled: false`, `CreateTweet` among them, and 16
+  entries still have another queryId than TwitterInternalAPIDocument: `BirdwatchFetchContributorNotesSlice`,
+  `BroadcastQuery`, `CommunityHashtagsTimeline`, `CreateTweet`, `DelegatedAccountListQuery`, `DmAllSearchSlice`,
+  `Favoriters`, `ListCreationRecommendedUsers`, `ListEditRecommendedUsers`, `ListOwnerships`, `PremiumContentQuery`,
+  `UserMedia`, `UserTweets`, `UserTweetsAndReplies`, `affiliatesQuery`, `useSubscriptionProductDetailsQuery`);
+  `membersSliceTimeline_Query` is sent without `features` while its entry keeps one, and `ProfileSpotlightsQuery` has
+  `features: {}` (the tool never removes, and removing changes the generated signature); `mode` of
+  `conversation_control_details` as a string (as proposed) or an enum of the two recorded values; the affiliate label
+  with a mention on the community page (one answer, not typed, `recordings/placeholder_2026-11-20/open_args.json`).
+- Due after the LGTM of #147: the chain of Routine from the merged hash (both clients, the TS lockfile follow-up).
+  Whether twitter-snap then gets a release is open: the earlier decision waits for a user-facing change, and this
+  placeholder moves `TweetDetail` and the features of `TweetResultByRestId`, which twitter-snap calls.
+- Not done: the relay's catalog (`packages/server/requests.ndjson`) can be refreshed from the same recording. The
+  session's latest requests carry ids of other people's posts and communities, so the variables need a pass before
+  anything is published, or a run of the dump with its own page list; the PR belongs to a day without a suite.
 - Spec main is d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
   Binance space of 2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no
   longer resolve, Elon Musk's accounts link none), `AudioSpaceMetadata.title` and `tweet_results` are optional (absent in 2
@@ -182,11 +203,16 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   pushing this repository, opening and merging a PR, and on 11-17 a strict run from a fresh checkout, both client
   regenerations, single e2e tests of both wrappers and Playwright page views of x.com with the cookie session (no clicks), in
   the bundled Chromium and in the desktop's Google Chrome.
-  Not tried here yet: a Playwright script that acts on X, the relay
+  On 11-20 the relay's `pnpm install` and its dump in the desktop's Chrome (in the daily run's worktree; the workspace's
+  relay checkout has no `node_modules`).
+  Not tried here yet: a Playwright script that acts on X, the relay itself
   (`tools/relay_local`), a whole e2e suite of a wrapper, a commit touching a workflow file (the token has no `workflow` scope).
-- There is no `tools/out/` or `screenshot/` and no spec worktree, and `recordings/` holds nothing but the space answers of
-  11-17 and 11-18: the maintainer left the rest behind on purpose (2026-11-16). Beyond those a spec change is checked by the strict run
-  alone unless a set is collected again (`tools/README.md`, "Offline validation set").
+- There is no `tools/out/` or `screenshot/` and no spec worktree; the maintainer left the earlier recordings behind on
+  purpose (2026-11-16). `recordings/` holds the space answers of 11-17 and 11-18, `placeholder_2026-11-20/` (the dump's
+  `requests.ndjson` and `responses/`, the tee's `wire.ndjson` and 680 `wire_responses/`, 16 `controls/`),
+  `cache_raw_2026-11-17/` (the strict run of 11-17, on the previous queryIds) and `cache_raw_2026-11-20/` (the strict run
+  on #147). `validate_args.json` lists 881 answers, all at 1.0 with the client of b92c0ac; the two that do not validate
+  are listed next to their files (`unresolved_args.json`, `open_args.json`).
 - Nightly green 2026-11-12 .. 11-16 on spec main e48c4bd (6c4914f plus lockfile / CI-only commits; the published clients pin
   6c4914f), failed 11-17 on two calls (#145), green 11-18 .. 11-20 on d31ab31.
   The "Review your email" half cover that broke 11-08 .. 11-11 is typed (#141); it may return until someone confirms the email on
@@ -196,13 +222,18 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master aac51dc on clients 0.1.9;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master d2566ad is ahead of 0.4.3 by dependency bumps only (puppeteer
   25.17.0, hono, vite, both clients 0.1.9); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: none. Account use since 11-13:
+- Open PRs in the maintained repos: twitter-openapi #147. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
   present nine `SearchTimeline` and 39 `AudioSpaceById` GETs and four page views of space pages (every answer 200, no lock),
   on 11-18 (JST, before the nightly) with the maintainer present two page views of space pages, one `AudioSpaceById` GET and
-  the space e2e test of each wrapper (all answered); the daily runs of 11-18 .. 11-20 used nothing.
+  the space e2e test of each wrapper (all answered); the daily runs of 11-18 .. 11-20 used nothing; on 11-20 after the
+  daily run, on the maintainer's order, one recording session (53 page views with their tabs and no click that changes
+  anything; what the web client writes by itself on such pages went out: notifications marked as seen, one
+  `PutClientEducationFlag`, the push permission state of the new browser), 19 single GETs (`UserByScreenName` three times, the controls of #147) and one strict run (every answer 200
+  except the session's seven 403 of `UsersByRestIds` and nine 429 at its end; `UserByScreenName` answered 200 without
+  errors afterwards).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point. Open without any fixed release:
