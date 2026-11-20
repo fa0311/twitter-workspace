@@ -124,9 +124,9 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   is unknown. The other alerts are the ones listed below (the newest satori 0.63.2, `@hono/vite-dev-server` 0.26.1 and
   webdav 5.11.0 still do not reach the fixes), no issue or outside PR has moved since 11-02, every workflow run since the
   run of 11-19 succeeded, and no release chain step is due. The run did not use the account.
-- twitter-openapi #147 waits for the LGTM (`chore/placeholder-2026-11-20`, three commits on d31ab31, head b92c0ac, `build`
-  passed). The daily run had found that TwitterInternalAPIDocument listed another queryId than the placeholder for 56 of
-  the spec's 117 GraphQL operations, 38 of them since the day after the recording of 11-05, and the maintainer ordered a
+- Spec main is 0773fc8: twitter-openapi #147 (three commits on d31ab31) was merged on 11-20 after the LGTM, and `build`
+  passed on main. The nightly of 11-21 is the first on it. The daily run had found that TwitterInternalAPIDocument
+  listed another queryId than the placeholder for 56 of the spec's 117 GraphQL operations, 38 of them since the day after the recording of 11-05, and the maintainer ordered a
   re-recording ("しようか、暇だから時間かけて丁寧にやっていいよ"). Recorded on 11-20 with the relay's dump in the desktop's Chrome, 53 pages in 14 minutes,
   logged from the network side as well (`tools/wire_tee.mjs`): every catalog line has an identical request on the wire.
   42 entries change (40 new queryIds; `post_ctas_fetch_enabled` true in 40; two more features in the two community
@@ -147,13 +147,19 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   `features: {}` (the tool never removes, and removing changes the generated signature); `mode` of
   `conversation_control_details` as a string (as proposed) or an enum of the two recorded values; the affiliate label
   with a mention on the community page (one answer, not typed, `recordings/placeholder_2026-11-20/open_args.json`).
-- Due after the LGTM of #147: the chain of Routine from the merged hash (both clients, the TS lockfile follow-up).
+- Both clients are regenerated from 0773fc8 and wait for the LGTM: twitter_openapi_python #89 (generated 0.1.9, wrapper
+  0.1.10) and twitter-openapi-typescript #183 (generated 0.1.10, wrapper 0.1.10 on `^0.1.10`). The generated diff is the
+  eight models of #147, the new `ConversationControlDetails` and the defaults in the API docs; the wrappers change
+  version, dependency and spec hash. Checked for each: four single e2e tests against X (`ViewerBadgeCounts`,
+  `AboutAccountQuery`, `TweetDetail`, `CommunitiesFetchOneQuery`), the recorded answers of 11-20 parsed offline into the
+  new fields, the builds, linters as on master (Python: identical output; TS: the counts #181 reported). Not checked: the
+  rest of both suites. Merging publishes to PyPI and npm; then the TS lockfile follow-up once npm has generated 0.1.10.
   Whether twitter-snap then gets a release is open: the earlier decision waits for a user-facing change, and this
   placeholder moves `TweetDetail` and the features of `TweetResultByRestId`, which twitter-snap calls.
 - Not done: the relay's catalog (`packages/server/requests.ndjson`) can be refreshed from the same recording. The
   session's latest requests carry ids of other people's posts and communities, so the variables need a pass before
   anything is published, or a run of the dump with its own page list; the PR belongs to a day without a suite.
-- Spec main is d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
+- Before #147 the spec was d31ab31 (#146, merged 11-18 after the LGTM; before it #145, 37b4afd). The `AudioSpaceById` sample is a
   Binance space of 2025-10-09 that the real Chrome still shows (`1yNGabwXqXnJj`; the four spaces X's own accounts link no
   longer resolve, Elon Musk's accounts link none), `AudioSpaceMetadata.title` and `tweet_results` are optional (absent in 2
   and 1 of 24 spaces), `AudioSpace.metadata` / `participants` are required as before #145, `TimelineRichTextCashtag` is in
@@ -222,7 +228,7 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   8b63e01 on twitter-snap 0.4.3 (Docker green; the maintainer pulls the image); private_bot master aac51dc on clients 0.1.9;
   relay 0.4.3 / dashboard 0.2.3 / mcp 0.4.2. twitter-snap master d2566ad is ahead of 0.4.3 by dependency bumps only (puppeteer
   25.17.0, hono, vite, both clients 0.1.9); no release needed until something user-facing lands.
-- Open PRs in the maintained repos: twitter-openapi #147. Account use since 11-13:
+- Open PRs in the maintained repos: twitter_openapi_python #89, twitter-openapi-typescript #183. Account use since 11-13:
   the nightlies, plus on 11-16 twelve single GETs (`UserByScreenName`, `TweetResultByRestId`) and one twitter-snap-api test run
   (three renders with the cookie session), on 11-17 two single GETs (`AudioSpaceById`, `BirdwatchFetchGlobalTimeline`), one
   strict run and four single e2e tests (the space and the Birdwatch timeline in each wrapper), then with the maintainer
@@ -233,7 +239,8 @@ The task lives in T3's state inside the home volume. When `list_scheduled_tasks`
   anything; what the web client writes by itself on such pages went out: notifications marked as seen, one
   `PutClientEducationFlag`, the push permission state of the new browser), 19 single GETs (`UserByScreenName` three times, the controls of #147) and one strict run (every answer 200
   except the session's seven 403 of `UsersByRestIds` and nine 429 at its end; `UserByScreenName` answered 200 without
-  errors afterwards).
+  errors afterwards), and after the LGTM of #147 four single e2e tests in each wrapper and one more `UserByScreenName`
+  GET (200, no errors).
 - Alerts that stay open because no release of the parent reaches the fix: fflate 0.7.3 pinned by satori (twitter-snap,
   twitter-snap-api); minimatch 9.0.9 and `@hono/node-server` 1.19 under the newest `@hono/vite-dev-server`, dev only (twitter-snap);
   minimatch 9.0.9 under the newest webdav (private_bot); soupsieve, see the next point. Open without any fixed release:
