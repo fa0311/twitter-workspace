@@ -3,8 +3,9 @@
     python3 ../tools/tiad_check.py                  # from the TwitterInternalAPIDocument checkout; exits 1 on an anomaly
     python3 ../tools/tiad_check.py <old> <new>      # any two commits, e.g. the parents of an earlier merge
 Anomalies: a change outside docs/, a deleted file, invalid JSON, a file that lost more than 10 % of its size, a value of the
-sandbox cookie in the documents, a user entity other than the sandbox account. The report lists the GraphQL operations, the
-feature switches and the translation strings (en, with ja where it is translated) that were added, removed or changed.
+sandbox cookie in the documents, a user entity other than the sandbox account. The report lists, for the web client
+(docs/json) and for X Pro (docs/deck/json), the GraphQL operations, the feature switches (defaults and the account's values)
+and the translation strings (en, with ja where it is translated) that were added, removed or changed.
 """
 import json, os, subprocess, sys
 from urllib.parse import unquote
@@ -48,15 +49,18 @@ def delta(title, old, new, show=lambda k, v: f"{k} = {v}"):
     print(f"== {title}: {len(old)} -> {len(new)}" + ("" if rows else " (no change)")); print("\n".join(rows)) if rows else None
 
 print(f"{len(changed)} files changed, {OLD[:7]}..{NEW}")
-ops = lambda ref: {e["exports"]["operationName"]: e["exports"]["queryId"] for e in load(ref, "docs/json/GraphQL.json")}
-old, new = ops(OLD), ops(NEW)
-delta("GraphQL operations", {k: "" for k in old}, {k: "" for k in new}, lambda k, v: k)
-print("  queryId changed:", ", ".join(k for k in new if k in old and old[k] != new[k]) or "none")
-switches = lambda ref: {k: v.get("value") for k, v in load(ref, "docs/json/InitialState.json")["featureSwitch"]["defaultConfig"].items()}
-delta("feature switches", switches(OLD), switches(NEW))
-ja = load(NEW, "docs/json/i18n/ja.json") | load(OLD, "docs/json/i18n/ja.json")
-delta("translation strings (en)", load(OLD, "docs/json/i18n/en.json"), load(NEW, "docs/json/i18n/en.json"),
-      lambda k, v: f"{v!r}" + (f"  [ja: {ja[k]!r}]" if ja.get(k, v) != v else ""))
+for root in ("docs/json", "docs/deck/json"):
+    print(f"# {root}")
+    ops = lambda ref: {e["exports"]["operationName"]: e["exports"]["queryId"] for e in load(ref, f"{root}/GraphQL.json")}
+    old, new = ops(OLD), ops(NEW)
+    delta("GraphQL operations", {k: "" for k in old}, {k: "" for k in new}, lambda k, v: k)
+    print("  queryId changed:", ", ".join(k for k in new if k in old and old[k] != new[k]) or "none")
+    for title, config in (("feature switches (default)", lambda s: s["defaultConfig"]), ("feature switches (the account's values)", lambda s: s["user"]["config"])):
+        switches = lambda ref: {k: v.get("value") for k, v in config(load(ref, f"{root}/InitialState.json")["featureSwitch"]).items()}
+        delta(title, switches(OLD), switches(NEW))
+    ja = load(NEW, f"{root}/i18n/ja.json") | load(OLD, f"{root}/i18n/ja.json")
+    delta("translation strings (en)", load(OLD, f"{root}/i18n/en.json"), load(NEW, f"{root}/i18n/en.json"),
+          lambda k, v: f"{v!r}" + (f"  [ja: {ja[k]!r}]" if ja.get(k, v) != v else ""))
 
 print("== anomalies:", "none" if not anomalies else ""); print("\n".join(f"  ! {a}" for a in anomalies)) if anomalies else None
 sys.exit(1 if anomalies else 0)
