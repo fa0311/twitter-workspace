@@ -210,7 +210,8 @@ Facts that are not derivable from the repos or the web. History and PR numbers a
   (`tools/tiad_check.py` first, merge commit, `develop` stays); the merge call once answered 502 after the merge had gone
   through, so read the PR back before retrying. New X features show up in `docs/json/i18n/<lang>.json` (the web client's strings
   by hash; a new string is English in every language until it is translated), in `GraphQL.json` and in the feature switches of
-  `InitialState.json`. Avoid changes to its code unless asked; Dependabot is delegated there too. No PR checks, and code runs
+  `InitialState.json`. `docs/deck/` is the same set read from pro.x.com (X Pro), a build of its own: it lacked what
+  `docs/json` had on 2026-11-17 .. 11-19 and carried a switch and query ids that `docs/json` did not have on 11-20. Avoid changes to its code unless asked; Dependabot is delegated there too. No PR checks, and code runs
   from `master`: the local check is `uv sync --frozen` on the merged lock, `lib.md.gen_md_graphql` over `docs/json/GraphQL.json`
   compared with the committed `docs/markdown/GraphQL.md` (pandas only feeds `to_markdown`), and `ruff check` against master's findings.
 - x-client-transaction-id-pair-dict: `pnpm start` yields 30 pairs in a few minutes without a proxy (`PAIR_MAX=2` for a quick check);
